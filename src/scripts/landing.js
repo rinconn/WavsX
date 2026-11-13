@@ -40,6 +40,15 @@ $$('[data-words]').forEach((el) => {
     .join('');
 });
 
+/* ---------- carrusel: se enciende lo que pasa bajo la cabeza de reproducción ---------- */
+const mq = $('.marquee');
+if (mq) {
+  const io2 = new IntersectionObserver((entries) => {
+    entries.forEach((e) => e.target.classList.toggle('on', e.isIntersecting));
+  }, { root: mq, rootMargin: '0px -49% 0px -49%' });
+  mq.querySelectorAll('.marquee__item').forEach((el) => io2.observe(el));
+}
+
 /* ---------- 2 · foco que sigue al ratón en las tarjetas ---------- */
 $$('.keep').forEach((card) => {
   card.addEventListener('pointermove', (e) => {

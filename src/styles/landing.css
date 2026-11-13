@@ -59,18 +59,31 @@ html { scroll-behavior: smooth; }
 /* hero C/D: deja asomar el carrusel en la parte baja de la pantalla */
 .heroC:has(#wavefield) { min-height: calc(100vh - 88px); }
 
-/* ---------- carrusel de lo que guarda cada canción ---------- */
-.marquee { position: relative; overflow: hidden; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .012);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
-.marquee__track { display: flex; width: max-content; animation: marq 46s linear infinite; }
+/* ---------- carrusel: línea de tiempo de estudio ---------- */
+.marquee { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); padding: 0 0 18px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.marquee__track { display: flex; width: max-content; animation: marq 48s linear infinite; }
 .marquee:hover .marquee__track { animation-play-state: paused; }
-.marquee__group { list-style: none; margin: 0; padding: 0 12px 0 0; display: flex; gap: 12px; }
-.marquee__item { display: inline-flex; align-items: center; gap: 10px; padding: 9px 18px 9px 11px; border-radius: 999px; background: rgba(255, 255, 255, .035); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); white-space: nowrap; transition: background .2s, box-shadow .2s, transform .2s var(--ease); }
-.marquee__item:hover { background: rgba(var(--c1-rgb), .1); box-shadow: inset 0 0 0 1px rgba(var(--c1-rgb), .35); transform: translateY(-2px); }
-.marquee__ico { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; color: var(--c1); background: rgba(var(--c1-rgb), .1); }
-.marquee__ico svg { width: 17px; height: 17px; }
-.marquee__item b { font-size: 14px; font-weight: 600; }
-.marquee__item small { font-size: 13px; color: var(--muted); }
+/* regla de la línea de tiempo: marcas cada 12 px y más largas cada 60 px (alineada por grupo, el bucle no salta) */
+.marquee__group { list-style: none; margin: 0; padding: 30px 0 0; display: flex; align-items: center;
+  background:
+    repeating-linear-gradient(90deg, rgba(243, 241, 246, .34) 0 1px, transparent 1px 60px) 0 0 / 100% 11px no-repeat,
+    repeating-linear-gradient(90deg, rgba(243, 241, 246, .14) 0 1px, transparent 1px 12px) 0 0 / 100% 6px no-repeat; }
+.marquee__item { position: relative; display: inline-flex; align-items: baseline; gap: 10px; padding: 0 34px; white-space: nowrap; color: var(--text-2); transition: color .25s; }
+.marquee__item::after { content: ''; position: absolute; right: -2px; top: 50%; width: 7px; height: 12px; margin-top: -6px; opacity: .28;
+  background: linear-gradient(var(--text-2), var(--text-2)) 0 100% / 2px 55% no-repeat, linear-gradient(var(--text-2), var(--text-2)) 50% 100% / 2px 100% no-repeat, linear-gradient(var(--text-2), var(--text-2)) 100% 100% / 2px 75% no-repeat; }
+.marquee__n { font-size: 12px; font-weight: 700; letter-spacing: .06em; color: var(--c1); opacity: .6; font-variant-numeric: tabular-nums; align-self: center; }
+.marquee__ico { align-self: center; display: inline-flex; color: var(--c1); opacity: .7; transition: opacity .25s, transform .3s var(--ease); }
+.marquee__ico svg { width: 20px; height: 20px; }
+.marquee__item b { font-size: 21px; font-weight: 600; letter-spacing: -0.03em; }
+.marquee__item small { font-size: 13px; color: var(--muted); transition: color .25s; }
+.marquee__item.on { color: var(--text); }
+.marquee__item.on .marquee__ico { opacity: 1; transform: scale(1.15); }
+.marquee__item.on .marquee__n { opacity: 1; }
+.marquee__item.on small { color: var(--c1); }
+/* cabeza de reproducción fija en el centro */
+.marquee::before { content: ''; position: absolute; z-index: 2; left: 50%; top: 0; bottom: 0; width: 1px; background: linear-gradient(var(--c1), rgba(var(--c1-rgb), .15)); pointer-events: none; }
+.marquee::after { content: ''; position: absolute; z-index: 2; left: 50%; top: 0; margin-left: -5px; border: 5px solid transparent; border-top: 8px solid var(--c1); pointer-events: none; }
 @keyframes marq { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .marquee { overflow-x: auto; } .marquee__track { animation: none; } }
 
