@@ -56,6 +56,24 @@ html { scroll-behavior: smooth; }
 #wavefield { height: 46vh; animation-duration: .6s; animation-delay: .1s; }
 .heroC:has(#wavefield) .heroC__content { padding-top: 12vh; }
 .heroC .hero__title { font-size: clamp(44px, 6.2vw, 96px); }
+/* hero C/D: deja asomar el carrusel en la parte baja de la pantalla */
+.heroC:has(#wavefield) { min-height: calc(100vh - 88px); }
+
+/* ---------- carrusel de lo que guarda cada canción ---------- */
+.marquee { position: relative; overflow: hidden; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .012);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+.marquee__track { display: flex; width: max-content; animation: marq 46s linear infinite; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+.marquee__group { list-style: none; margin: 0; padding: 0 12px 0 0; display: flex; gap: 12px; }
+.marquee__item { display: inline-flex; align-items: center; gap: 10px; padding: 9px 18px 9px 11px; border-radius: 999px; background: rgba(255, 255, 255, .035); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); white-space: nowrap; transition: background .2s, box-shadow .2s, transform .2s var(--ease); }
+.marquee__item:hover { background: rgba(var(--c1-rgb), .1); box-shadow: inset 0 0 0 1px rgba(var(--c1-rgb), .35); transform: translateY(-2px); }
+.marquee__ico { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; color: var(--c1); background: rgba(var(--c1-rgb), .1); }
+.marquee__ico svg { width: 17px; height: 17px; }
+.marquee__item b { font-size: 14px; font-weight: 600; }
+.marquee__item small { font-size: 13px; color: var(--muted); }
+@keyframes marq { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee { overflow-x: auto; } .marquee__track { animation: none; } }
+
 /* botones del hero: hover y pulsado con cuerpo (sin filter: brightness, que desvaía el color) */
 .heroC .btn { transition: background .2s, border-color .2s, box-shadow .25s, transform .2s var(--ease), color .2s; }
 .heroC .btn--neon { box-shadow: 0 6px 24px rgba(var(--c1-rgb), .18); }

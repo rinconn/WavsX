@@ -1,6 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
 import '../styles/landing.css';
+const keeps = [
+  ['wav', 'Audio WAV', '24-bit · 48 kHz'],
+  ['stems', 'Stems', '12 pistas'],
+  ['portada', 'Portadas', '3000 × 3000'],
+  ['letra', 'Letra', 'con sincronía'],
+  ['creditos', 'Créditos', '60 / 40'],
+  ['versiones', 'Versiones', 'v1 → v9'],
+  ['enlace', 'Enlaces privados', 'solo escuchar'],
+  ['lanzar', 'Lanzamiento', 'checklist y paquete']
+];
 ---
 <Base title="WavsX — Tu música, antes de salir" description="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
 <header class="nav">
@@ -87,6 +97,19 @@ import '../styles/landing.css';
       </div>
     </div>
   </section>
+
+  <!-- CARRUSEL · lo que guarda cada canción -->
+  <div class="marquee" aria-label="Lo que guarda cada canción">
+    <div class="marquee__track">
+      {[0, 1].map((n) => (
+        <ul class="marquee__group" aria-hidden={n === 1 ? 'true' : undefined}>
+          {keeps.map(([ic, label, tag]) => (
+            <li class="marquee__item"><span class="marquee__ico" data-icon={ic}></span><b>{label}</b><small>{tag}</small></li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  </div>
 
   <div class="ledline" aria-hidden="true"><span></span></div>
 
