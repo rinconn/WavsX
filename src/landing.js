@@ -1,4 +1,4 @@
-import { createVinyl } from './vinyl.js';
+import { createField } from './field.js';
 import { icon, sticker } from './icons.js';
 import { waveHeights, renderWave } from './data.js';
 
@@ -13,22 +13,8 @@ $$('[data-icon]').forEach((el) => {
   el.innerHTML = icon(el.dataset.icon, big ? 26 : 20);
 });
 
-/* ---------- 1 · hero ---------- */
-const pos = wide ? { cx: 0.7, cy: 0.48, size: 0.3 } : { cx: 0.5, cy: 0.3, size: 0.42 };
-const hero = $('.hero');
-hero.style.setProperty('--vx', `${pos.cx * 100}%`);
-hero.style.setProperty('--vy', `${pos.cy * 100}%`);
-createVinyl($('#vinyl'), pos);
-renderWave($('#fc-wave'), waveHeights(1.3, 22, 24), 0.55);
-
-// las tarjetas flotantes se mueven un poco con el ratón
-if (!reduce) {
-  const floats = $('.floats');
-  window.addEventListener('pointermove', (e) => {
-    floats.style.setProperty('--px', (e.clientX / innerWidth - 0.5).toFixed(3));
-    floats.style.setProperty('--py', (e.clientY / innerHeight - 0.5).toFixed(3));
-  }, { passive: true });
-}
+/* ---------- 1 · hero: campo de vinilos ---------- */
+createField($('#field'), { horizon: wide ? 0.6 : 0.62 });
 
 // subtítulo palabra a palabra
 $$('[data-words]').forEach((el) => {

@@ -5,25 +5,16 @@
 //   c2..c4 → acompañan en degradados, iconos, pasos y el vinilo
 // Cuando elijas la definitiva: deja solo esa en PALETTES y pon SHOW_PICKER = false.
 (function () {
-  var SHOW_PICKER = true;
+  // De momento una sola paleta. Más adelante cada usuario podrá elegir la suya en Ajustes.
+  var SHOW_PICKER = false;
   var PALETTES = [
     {
-      id: 'golden', name: 'Golden hour',
-      c: ['#FF8A3D', '#FF4F8B', '#8B6CFF', '#3DD6F5'],
-      bg: ['#0A090E', '#131219', '#1A1922', '#211F2A', '#26242F', '#34313F']
-    },
-    {
-      id: 'tungsteno', name: 'Tungsteno',
-      c: ['#FFB347', '#FF6B5A', '#F0D3A8', '#5FB3A8'],
-      bg: ['#0E0B0A', '#171311', '#1E1916', '#26201C', '#2C2521', '#3A312B']
-    },
-    {
-      id: 'acuario', name: 'Acuario',
-      c: ['#3DE0F5', '#4F8BFF', '#9B7BFF', '#5CF2B5'],
-      bg: ['#070A0F', '#0F141B', '#151B24', '#1B222D', '#1F2732', '#2B3542']
+      id: 'iris', name: 'Iris',
+      c: ['#9DB4FF', '#C7A6FF', '#FFA8D2', '#FFD1A1'],
+      bg: ['#09090B', '#121215', '#19191D', '#202025', '#25252B', '#323239']
     }
   ];
-  var KEY = 'wavsx-palette';
+  var KEY = 'wavsx-palette-v2';
   var BG_VARS = ['--bg', '--surface', '--surface-2', '--raised', '--line', '--line-2'];
 
   function rgb(hex) {

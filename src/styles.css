@@ -2,20 +2,20 @@
    Tema oscuro + un único neón (lima ácido).
    El neón va en: botón principal, play, onda reproducida, estado "Lista" y el vinilo de partículas. */
 :root {
-  /* valores por defecto = paleta "Golden hour" (public/theme.js los cambia en vivo) */
-  --bg: #0A090E;
-  --surface: #131219;
-  --surface-2: #1A1922;
-  --raised: #211F2A;
-  --line: #26242F;
-  --line-2: #34313F;
+  /* valores por defecto = paleta "Iris" (public/theme.js los cambia en vivo) */
+  --bg: #09090B;
+  --surface: #121215;
+  --surface-2: #19191D;
+  --raised: #202025;
+  --line: #25252B;
+  --line-2: #323239;
   --text: #F3F1F6;
   --text-2: #BDB8C8;
   --muted: #8C879A;
-  --c1: #FF8A3D; --c1-rgb: 255, 138, 61;
-  --c2: #FF4F8B; --c2-rgb: 255, 79, 139;
-  --c3: #8B6CFF; --c3-rgb: 139, 108, 255;
-  --c4: #3DD6F5; --c4-rgb: 61, 214, 245;
+  --c1: #9DB4FF; --c1-rgb: 157, 180, 255;
+  --c2: #C7A6FF; --c2-rgb: 199, 166, 255;
+  --c3: #FFA8D2; --c3-rgb: 255, 168, 210;
+  --c4: #FFD1A1; --c4-rgb: 255, 209, 161;
   --grad: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4));
   --accent: var(--c1);
   --accent-rgb: var(--c1-rgb);
