@@ -136,20 +136,6 @@ export function createWaveField(canvas, options = {}) {
     }
     ctx.globalAlpha = 1;
 
-    // etiqueta de la cabeza de reproducción: versión y tiempo
-    if (head > 40 && head < w - 60 && age > 1.6) {
-      ctx.setLineDash([]);
-      const label = `v5 · ${fmt(Math.min(1, head / w) * DUR)}`;
-      ctx.font = '600 12px "Plus Jakarta Sans", system-ui, sans-serif';
-      const tw = ctx.measureText(label).width + 20;
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.beginPath(); ctx.roundRect(head - tw / 2, h - 34, tw, 22, 11); ctx.fill();
-      ctx.fillStyle = '#09090B';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(label, head, h - 22.5);
-      ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
-      ctx.fillRect(head - 1, h - 12, 2, 12);
-    }
     updatePin(mid);
   }
 
