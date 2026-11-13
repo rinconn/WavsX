@@ -3,183 +3,101 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WavsX — Tu estudio</title>
+  <title>WavsX — Tu música, antes de salir</title>
+  <meta name="description" content="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/styles.css">
-  <link rel="stylesheet" href="/src/panel.css">
+  <link rel="stylesheet" href="/src/landing.css">
 </head>
 <body>
-<div class="app">
 
-  <aside class="sidebar">
-    <div class="brand">
-      <span class="brand__name display">wavs<span class="brand__x">X</span></span>
-      <span class="label" style="letter-spacing: 0.24em">STUDIO OS · v0.1</span>
+<header class="nav">
+  <a href="/" class="logo" data-logo aria-label="WavsX, inicio">wavsX</a>
+  <nav aria-label="Principal" class="nav__links">
+    <a href="#producto">Producto</a>
+    <a href="#artistas">Para artistas</a>
+    <a href="#precios">Precios</a>
+    <a href="#nosotros">Sobre nosotros</a>
+  </nav>
+  <a href="/login.html" class="btn btn--ink">Iniciar sesión</a>
+</header>
+
+<main>
+  <section class="hero">
+    <h1 class="hero__title">
+      <span class="line"><span>Tu música no espera.</span></span>
+      <span class="line"><span>Tú decides cuándo sale.</span></span>
+    </h1>
+    <p class="hero__sub" data-words>En WavsX cada canción tiene su sitio: WAVs, stems, portadas, versiones y lanzamiento, ordenados y listos para salir.</p>
+    <div class="hero__cta">
+      <a href="/login.html" class="btn btn--ink btn--lg">Empieza gratis</a>
+      <a href="#producto" class="btn btn--lg">Cómo funciona</a>
     </div>
-
-    <button type="button" class="btn btn--primary btn--block">
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>
-      Subir archivos
-    </button>
-
-    <nav aria-label="Principal">
-      <span class="label nav__title">Espacio</span>
-      <ul class="nav">
-        <li><a class="nav__a is-active" href="/" aria-current="page">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>
-          Canciones<span class="mono nav__count">14</span></a></li>
-        <li><a class="nav__a" href="#">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="3" width="13" height="13" rx="2"/><path d="M20 7v13H7"/></svg>
-          Discos y EPs<span class="mono nav__count">2</span></a></li>
-        <li><a class="nav__a" href="#">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-          Archivos</a></li>
-        <li><a class="nav__a" href="#">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
-          Enlaces compartidos<span class="mono nav__count">3</span></a></li>
-        <li><a class="nav__a" href="#">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
-          Lanzamientos</a></li>
-        <li><a class="nav__a" href="#">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
-          Equipo</a></li>
-      </ul>
-    </nav>
-
-    <div class="panel storage">
-      <div class="storage__head"><span class="label">Almacenamiento</span><span class="mono" style="font-size: 12px">41.2<span style="color: var(--muted)">/100 GB</span></span></div>
-      <div class="storage__bar"><span style="width: 31%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan)"></span><span style="width: 8%; background: var(--violet)"></span><span style="width: 2%; background: var(--magenta)"></span></div>
-      <div class="mono storage__legend">
-        <span><i class="dot" style="background: var(--cyan)"></i>WAV</span>
-        <span><i class="dot" style="background: var(--violet)"></i>Stems</span>
-        <span><i class="dot" style="background: var(--magenta)"></i>Fotos</span>
-      </div>
+    <div class="hero__sphere">
+      <canvas id="sphere" aria-hidden="true"></canvas>
+      <span class="bpm num" aria-hidden="true"><i></i>128 BPM</span>
     </div>
+  </section>
 
-    <div class="neon-frame now">
-      <div class="now__head">
-        <span class="label">Sonando ahora</span>
-        <span class="mono" style="font-size: 10px; color: var(--green); display: flex; align-items: center; gap: 6px"><i class="dot dot--live pulse"></i>LIVE</span>
-      </div>
-      <div class="now__song">
-        <div class="now__thumb" id="np-thumb" aria-hidden="true"></div>
-        <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
-          <span class="now__title" id="np-title"></span>
-          <span class="mono" style="font-size: 11px; color: var(--muted)" id="np-meta"></span>
-        </div>
-      </div>
-      <div class="wave glow" id="np-wave" style="height: 34px" role="img" aria-label="Forma de onda, 38% reproducido"></div>
-      <div class="mono now__time"><span style="color: var(--cyan)">01:17</span><span id="np-dur"></span></div>
-      <div class="now__controls">
-        <button type="button" class="icon-btn" id="np-prev" aria-label="Anterior"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20 9 12l10-8z"/><path d="M5 19V5"/></svg></button>
-        <button type="button" class="play-btn" id="np-play" style="width: 52px; height: 52px"></button>
-        <button type="button" class="icon-btn" id="np-next" aria-label="Siguiente"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 4 10 8-10 8z"/><path d="M19 5v14"/></svg></button>
-      </div>
-    </div>
+  <section class="intro" id="producto">
+    <h2 class="reveal">Una canción.<br>Todo lo que la rodea.</h2>
+    <p class="reveal">Deja de buscar el master en WhatsApp, la portada en el escritorio y la letra en las notas del móvil. WavsX lo agrupa por canción, del primer audio a la distribuidora.</p>
+  </section>
 
-    <div class="user">
-      <div class="avatar"><span>K</span></div>
-      <div style="display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 13px">Kairo</span><span class="mono" style="font-size: 10px; color: var(--muted)">Plan Pro · Artista</span></div>
-    </div>
-  </aside>
+  <section class="features" aria-label="Funciones">
+    <article class="feature reveal">
+      <span class="feature__n num">01</span>
+      <h3>Todo por canción</h3>
+      <p>Cada tema es un disco con sus WAV, stems, fotos y textos dentro. Sin carpetas perdidas.</p>
+      <div class="demo demo--files" aria-hidden="true">
+        <div class="demo__row"><span class="demo__ic"></span><b>mezcla_v5.wav</b><small class="num">41 MB</small></div>
+        <div class="demo__row"><span class="demo__ic"></span><b>stems_v5.zip</b><small class="num">486 MB</small></div>
+        <div class="demo__row"><span class="demo__ic demo__ic--img"></span><b>portada_3000.jpg</b><small class="num">4 MB</small></div>
+      </div>
+    </article>
 
-  <main class="main">
-    <div class="mono statusbar">
-      <div style="display: flex; flex-wrap: wrap; gap: 18px">
-        <span style="display: flex; align-items: center; gap: 6px"><i class="dot dot--live pulse"></i>SINCRONIZADO</span>
-        <span>ÚLTIMA COPIA 10:58</span>
-        <span>3 ENLACES ACTIVOS</span>
+    <article class="feature reveal">
+      <span class="feature__n num">02</span>
+      <h3>Versiones con comentarios</h3>
+      <p>Sube la v6 sin perder la v5 y deja notas en el segundo exacto: «sube la voz en el 0:48».</p>
+      <div class="demo demo--wave" aria-hidden="true">
+        <div class="wave" id="feature-wave" style="height: 64px"></div>
+        <span class="demo__pin" style="left: 34%">0:48</span>
       </div>
-      <span id="clock"></span>
-    </div>
+    </article>
 
-    <header class="header">
-      <div style="display: flex; flex-direction: column; gap: 8px">
-        <span class="mono" style="font-size: 11px; letter-spacing: 0.24em; color: var(--cyan)">// PANEL DEL ARTISTA</span>
-        <h1 class="display header__title">Tu estudio, Kairo</h1>
+    <article class="feature reveal">
+      <span class="feature__n num">03</span>
+      <h3>Listo para lanzar</h3>
+      <p>Checklist de lanzamiento y un paquete con todo lo que te pide la distribuidora.</p>
+      <div class="demo demo--checks" aria-hidden="true">
+        <div><i class="ok"></i>Portada 3000 × 3000</div>
+        <div><i class="ok"></i>Créditos y reparto</div>
+        <div><i></i>Master final en WAV</div>
       </div>
-      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
-        <label class="search">
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <span class="sr-only">Buscar</span>
-          <input type="search" id="search" placeholder="Buscar canción, BPM, tono…">
-          <span class="mono kbd">⌘K</span>
-        </label>
-        <button type="button" class="btn btn--magenta">
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          Nueva canción
-        </button>
-      </div>
-    </header>
+    </article>
+  </section>
 
-    <section aria-label="Próximo lanzamiento" class="neon-frame release">
-      <div class="release__cover cover" aria-hidden="true" style="background: conic-gradient(from 200deg at 70% 70%, #2B59FF 0 25%, #BDF3FF 25% 100%); box-shadow: 0 0 30px rgba(43,89,255,0.55)"><div class="scan"></div></div>
-      <div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 260px">
-        <span class="mono" style="font-size: 11px; letter-spacing: 0.22em; color: #FF8BE6">PRÓXIMO LANZAMIENTO</span>
-        <span class="display" style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Cristal <span style="color: var(--muted); font-weight: 500">— 28 nov</span></span>
-        <span style="color: #A3ABC6">Quedan 2 tareas: ISRC y confirmar la fecha en la distribuidora.</span>
-      </div>
-      <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center">
-        <div class="counter"><span class="mono counter__n" style="color: var(--cyan); text-shadow: 0 0 16px rgba(61,245,255,0.7)">15</span><span class="label" style="letter-spacing: 0.18em">Días</span></div>
-        <div class="counter"><span class="mono counter__n" style="color: var(--magenta); text-shadow: 0 0 16px rgba(255,79,216,0.7)">7/9</span><span class="label" style="letter-spacing: 0.18em">Checklist</span></div>
-        <a href="/cancion.html" class="btn btn--primary">Abrir lanzamiento
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-      </div>
-    </section>
+  <section class="numbers reveal" id="artistas" aria-label="Datos">
+    <div><b class="num">1</b><span>sitio para cada canción</span></div>
+    <div><b class="num">∞</b><span>versiones guardadas</span></div>
+    <div><b class="num">0</b><span>archivos perdidos en el móvil</span></div>
+  </section>
 
-    <section aria-label="Resumen" class="stats">
-      <div class="panel stat">
-        <span class="label">Sin sacar</span>
-        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
-          <span class="display stat__n" id="stat-total">14</span>
-          <span class="mono" style="font-size: 11px; color: var(--green)">+2 este mes</span>
-        </div>
-        <span style="font-size: 12px; color: var(--muted)">canciones en tu estudio</span>
-      </div>
+  <section class="cta" id="precios">
+    <h2 class="reveal">Tus canciones sin sacar<br>te están esperando.</h2>
+    <a href="/login.html" class="btn btn--light btn--lg reveal">Crear cuenta gratis</a>
+  </section>
+</main>
 
-      <div class="panel stat stat--wide">
-        <div style="display: flex; justify-content: space-between; align-items: center">
-          <span class="label">Pipeline</span>
-          <span class="mono" style="font-size: 11px; color: var(--muted)">idea → lista</span>
-        </div>
-        <div class="pipe" id="pipe-bar" role="img"></div>
-        <div class="pipe__legend" id="pipe-legend"></div>
-      </div>
+<footer class="footer" id="nosotros">
+  <span class="logo" data-logo style="font-size: 16px">wavsX</span>
+  <span class="muted">Hecho para artistas que todavía no han sacado su mejor tema.</span>
+</footer>
 
-      <div class="panel stat">
-        <div style="display: flex; justify-content: space-between; align-items: center">
-          <span class="label">Actividad · 7 días</span>
-          <span class="mono" style="font-size: 11px; color: var(--cyan)">23 subidas</span>
-        </div>
-        <div class="activity" role="img" aria-label="Subidas por día: 2, 5, 1, 4, 6, 3, 2">
-          <span style="height: 33%"></span><span style="height: 83%"></span><span style="height: 17%"></span><span style="height: 67%"></span><span class="is-top" style="height: 100%"></span><span style="height: 50%"></span><span style="height: 33%"></span>
-        </div>
-        <div class="mono" style="display: flex; justify-content: space-between; font-size: 10px; color: var(--muted)"><span>S</span><span>D</span><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span></div>
-      </div>
-    </section>
-
-    <section aria-labelledby="canciones-t" class="songs">
-      <div class="songs__head">
-        <h2 id="canciones-t" class="display songs__title">Canciones sin sacar <span class="mono songs__count" id="shown"></span></h2>
-        <label class="mono sort">ORDENAR
-          <select id="sort">
-            <option value="recent">Última edición</option>
-            <option value="state">Estado</option>
-            <option value="title">Título</option>
-            <option value="bpm">BPM</option>
-          </select>
-        </label>
-      </div>
-      <div role="group" aria-label="Filtrar por estado" class="filters" id="filters"></div>
-      <div class="grid" id="grid"></div>
-      <p class="empty" id="empty" hidden>No hay canciones que coincidan.</p>
-    </section>
-  </main>
-</div>
-
-<script type="module" src="/src/panel.js"></script>
+<script type="module" src="/src/logo.js"></script>
+<script type="module" src="/src/landing.js"></script>
 </body>
 </html>
