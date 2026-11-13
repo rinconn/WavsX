@@ -34,7 +34,7 @@
   background: var(--surface); border: 1px solid var(--line); min-width: 320px; color: var(--muted);
   transition: border-color .2s, box-shadow .2s;
 }
-.search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(198, 255, 61, .1); }
+.search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .1); }
 .search input { flex: 1; min-width: 0; border: none; background: transparent; color: var(--text); outline: none; }
 .search input::placeholder { color: #5E5E6E; }
 .search kbd { font: inherit; font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line-2); }
@@ -42,7 +42,7 @@
 /* próximo lanzamiento */
 .release {
   display: flex; flex-wrap: wrap; align-items: center; gap: 28px; padding: 22px 28px 22px 22px; border-radius: 24px;
-  background: var(--surface); border: 1px solid rgba(198, 255, 61, .22);
+  background: var(--surface); border: 1px solid rgba(var(--accent-rgb), .22);
 }
 .release__cover { width: 88px; height: 88px; flex: none; }
 .release__text { flex: 1 1 300px; display: flex; flex-direction: column; gap: 6px; }
@@ -52,7 +52,7 @@
 .release__progress .bar { width: 220px; max-width: 50%; height: 4px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
 .release__progress .bar span { display: block; height: 100%; background: var(--accent); }
 .release__count { display: flex; flex-direction: column; align-items: center; padding: 0 12px; }
-.release__count b { font-size: 52px; line-height: 1; letter-spacing: -0.05em; font-weight: 700; color: var(--accent); text-shadow: 0 0 24px rgba(198, 255, 61, .35); }
+.release__count b { font-size: 52px; line-height: 1; letter-spacing: -0.05em; font-weight: 700; color: var(--accent); text-shadow: 0 0 24px rgba(var(--accent-rgb), .35); }
 .release__count span { font-size: 13px; color: var(--muted); }
 
 /* filtros */

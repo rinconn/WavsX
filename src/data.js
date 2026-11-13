@@ -8,13 +8,13 @@ export const STATES = {
   grabando: { name: 'Grabando', color: '#9A9AAE', step: 2 },
   mezcla:   { name: 'Mezcla',   color: '#C9C9D6', step: 3 },
   master:   { name: 'Master',   color: '#FFFFFF', step: 4 },
-  lista:    { name: 'Lista',    color: '#C6FF3D', step: 5 }
+  lista:    { name: 'Lista',    color: 'var(--accent)', step: 5 }
 };
 
 export const STATE_ORDER = ['idea', 'demo', 'grabando', 'mezcla', 'master', 'lista'];
 
 // Paleta de portadas de ejemplo (misma familia que la web)
-const K = '#0A0A0D', W = '#EDEDF2', A = '#C6FF3D', G = '#3A3A46', D = '#24242C', S = '#8E8EA0', B = '#16161B';
+const K = '#0A0A0D', W = '#EDEDF2', A = 'var(--accent)', G = '#3A3A46', D = '#24242C', S = '#8E8EA0', B = '#16161B';
 
 // cover: si pones una ruta (p. ej. '/covers/neon.jpg' dentro de /public) se usa la imagen real.
 export const SONGS = [

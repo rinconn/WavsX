@@ -22,7 +22,7 @@ form { display: flex; flex-direction: column; gap: 16px; }
   font-size: 16px; outline: none; transition: border-color .2s, box-shadow .2s;
 }
 .field input::placeholder { color: #5E5E6E; }
-.field input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(198, 255, 61, .12); }
+.field input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .12); }
 .field input.is-error { border-color: #FF5C5C; }
 .field__pass { position: relative; }
 .field__pass .icon-btn { position: absolute; right: 6px; top: 6px; }

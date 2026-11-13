@@ -12,8 +12,9 @@
   --text-2: #B9B9C6;
   --muted: #8A8A9C;
   --accent: #C6FF3D;
+  --accent-rgb: 198, 255, 61;
   --on-accent: #0A0A0A;
-  --glow: 0 0 24px rgba(198, 255, 61, .35);
+  --glow: 0 0 24px rgba(var(--accent-rgb), .35);
   --font: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
   --ease: cubic-bezier(.2, .8, .2, 1);
 }
@@ -52,7 +53,7 @@ button { cursor: pointer; }
 }
 .btn:hover { background: var(--surface-2); border-color: #4A4A58; }
 .btn--neon { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
-.btn--neon:hover { background: #D6FF6E; border-color: #D6FF6E; box-shadow: var(--glow); }
+.btn--neon:hover { filter: brightness(1.08); box-shadow: var(--glow); }
 .btn--white { background: var(--text); color: var(--on-accent); border-color: var(--text); }
 .btn--white:hover { background: #fff; border-color: #fff; }
 .btn--lg { height: 54px; padding: 0 26px; font-size: 16px; }
@@ -69,7 +70,7 @@ button { cursor: pointer; }
   display: inline-flex; align-items: center; justify-content: center;
   box-shadow: var(--glow); transition: transform .2s var(--ease), box-shadow .2s;
 }
-.play:hover { transform: scale(1.06); box-shadow: 0 0 34px rgba(198, 255, 61, .5); }
+.play:hover { transform: scale(1.06); box-shadow: 0 0 34px rgba(var(--accent-rgb), .5); }
 
 /* estado: punto + texto */
 .status { display: inline-flex; align-items: center; gap: 7px; color: var(--text-2); font-weight: 500; }
@@ -78,13 +79,13 @@ button { cursor: pointer; }
 /* forma de onda (neón en lo reproducido) */
 .wave { display: flex; align-items: center; gap: 2px; }
 .wave span { flex: 1; min-width: 2px; border-radius: 2px; background: #2C2C37; transition: background .2s; }
-.wave span.on { background: var(--accent); box-shadow: 0 0 6px rgba(198, 255, 61, .45); }
+.wave span.on { background: var(--accent); box-shadow: 0 0 6px rgba(var(--accent-rgb), .45); }
 
 /* vinilo + portada */
 .disc {
   border-radius: 50%;
   background:
-    radial-gradient(circle, var(--bg) 0 3%, var(--label, #C6FF3D) 3.5% 18%, #050506 18.5% 20%, transparent 20.5%),
+    radial-gradient(circle, var(--bg) 0 3%, var(--label, var(--accent)) 3.5% 18%, #050506 18.5% 20%, transparent 20.5%),
     repeating-radial-gradient(circle, #0D0D10 0 2px, #16161B 2px 3px);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 12px 28px rgba(0, 0, 0, .6);
 }
@@ -99,3 +100,15 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
 }
+
+/* selector de color (temporal, para decidir el acento) */
+.tweak {
+  position: fixed; left: 16px; bottom: 16px; z-index: 50;
+  display: flex; align-items: center; gap: 6px; padding: 6px 8px 6px 14px; border-radius: 999px;
+  background: rgba(17, 17, 22, .85); border: 1px solid var(--line-2); backdrop-filter: blur(12px);
+  font-size: 12px; font-weight: 600; color: var(--muted);
+}
+.tweak span { margin-right: 4px; }
+.tweak button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; background: var(--sw); padding: 0; transition: transform .15s; }
+.tweak button:hover { transform: scale(1.12); }
+.tweak button[aria-pressed="true"] { border-color: var(--text); box-shadow: 0 0 12px var(--sw); }

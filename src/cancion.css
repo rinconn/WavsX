@@ -11,7 +11,7 @@
 /* cabecera */
 .hero { display: flex; flex-wrap: wrap; align-items: center; gap: 56px; padding: 32px 0 16px; }
 .hero__art { position: relative; width: 420px; max-width: 100%; aspect-ratio: 1.4; flex: none; animation: rise .8s var(--ease) both; }
-.hero__cover { position: absolute; left: 0; top: 0; width: 71%; aspect-ratio: 1; border-radius: 14px; background: radial-gradient(circle at 34% 40%, #0A0A0D 0 28%, transparent 28.5%), #C6FF3D; box-shadow: 0 24px 60px rgba(0, 0, 0, .6), 0 0 80px rgba(198, 255, 61, .15); }
+.hero__cover { position: absolute; left: 0; top: 0; width: 71%; aspect-ratio: 1; border-radius: 14px; background: radial-gradient(circle at 34% 40%, #0A0A0D 0 28%, transparent 28.5%), var(--accent); box-shadow: 0 24px 60px rgba(0, 0, 0, .6), 0 0 80px rgba(var(--accent-rgb), .15); }
 .hero__disc { position: absolute; right: 0; top: 4%; width: 64%; aspect-ratio: 1; }
 .hero__disc .disc { width: 100%; height: 100%; }
 .hero__info { flex: 1 1 440px; display: flex; flex-direction: column; gap: 18px; animation: rise .8s var(--ease) .1s both; }
@@ -28,7 +28,7 @@
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 26px; padding: 28px; display: flex; flex-direction: column; gap: 18px; }
 .card h2 { margin: 0; font-size: 22px; letter-spacing: -0.035em; font-weight: 700; }
 .card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
-.card--ink { border-color: rgba(198, 255, 61, .25); }
+.card--ink { border-color: rgba(var(--accent-rgb), .25); }
 .card--ink .card__head span { color: var(--accent); font-weight: 600; }
 
 /* escuchar */
@@ -62,7 +62,7 @@
 .files__name small { font-size: 12px; color: var(--muted); }
 .thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .thumbs > * { aspect-ratio: 1; border-radius: 10px; box-shadow: none; }
-.thumbs .is-main { background: radial-gradient(circle at 34% 40%, #0A0A0D 0 28%, transparent 28.5%), #C6FF3D; outline: 2px solid var(--text); outline-offset: 2px; }
+.thumbs .is-main { background: radial-gradient(circle at 34% 40%, #0A0A0D 0 28%, transparent 28.5%), var(--accent); outline: 2px solid var(--text); outline-offset: 2px; }
 .thumbs__more { border: 1px dashed var(--line-2); background: transparent; color: var(--muted); font-weight: 600; }
 .docs { display: flex; flex-wrap: wrap; gap: 8px; }
 .docs span { padding: 8px 14px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 14px; }
@@ -83,7 +83,7 @@
 
 /* lanzamiento (negro) */
 .progress { height: 4px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
-.progress span { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 10px rgba(198, 255, 61, .5); transition: width .3s var(--ease); }
+.progress span { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), .5); transition: width .3s var(--ease); }
 .checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .check { width: 100%; min-height: 46px; display: flex; align-items: center; gap: 12px; padding: 0; border: none; background: transparent; color: var(--text); text-align: left; font-size: 15px; }
 .check__box { width: 22px; height: 22px; flex: none; border-radius: 6px; border: 1.5px solid #4A4A58; display: flex; align-items: center; justify-content: center; transition: background .2s, border-color .2s; }

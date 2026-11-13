@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="/theme.js"></script>
   <link rel="stylesheet" href="/src/styles.css">
   <link rel="stylesheet" href="/src/landing.css">
 </head>
@@ -18,15 +19,24 @@
   <nav aria-label="Principal" class="nav__links">
     <a href="#producto">Producto</a>
     <a href="#como">Cómo funciona</a>
-    <a href="#precios">Precios</a>
+    <a href="#empezar">Precios</a>
   </nav>
   <a href="/login.html" class="btn btn--neon nav__cta">Entrar</a>
 </header>
 
 <main>
+  <!-- 1 · HERO -->
   <section class="hero">
     <canvas id="vinyl" class="hero__canvas" aria-hidden="true"></canvas>
     <div class="hero__shade" aria-hidden="true"></div>
+
+    <div class="deck" id="deck">
+      <button type="button" class="deck__play" id="deck-play" aria-label="Escuchar la demo" aria-pressed="false">
+        <svg class="i-play" aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+        <svg class="i-pause" aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>
+      </button>
+      <span class="deck__hint" id="deck-hint">Pulsa y escúchalo</span>
+    </div>
 
     <div class="hero__content">
       <span class="eyebrow"><i></i>Estudio online para artistas</span>
@@ -36,79 +46,118 @@
       </h1>
       <p class="hero__sub" data-words>WAVs, stems, portadas, versiones y lanzamiento. Cada canción en su sitio, lista para cuando tú decidas.</p>
       <div class="hero__cta">
-        <a href="/login.html" class="btn btn--neon btn--lg">Empieza gratis</a>
-        <a href="#como" class="btn btn--lg">Ver cómo funciona</a>
+        <a href="/login.html" class="btn btn--neon btn--lg">Entrar en mi estudio</a>
+        <a href="#producto" class="btn btn--lg">Ver por dentro</a>
       </div>
     </div>
 
-    <div class="hero__tag num" aria-hidden="true"><i></i>128 BPM<span>·</span>girando</div>
-  </section>
-
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee__track">
-      <span>Idea</span><b>→</b><span>Demo</span><b>→</b><span>Grabando</span><b>→</b><span>Mezcla</span><b>→</b><span>Master</span><b>→</b><span class="accent">Lista</span><b>✦</b>
-      <span>Idea</span><b>→</b><span>Demo</span><b>→</b><span>Grabando</span><b>→</b><span>Mezcla</span><b>→</b><span>Master</span><b>→</b><span class="accent">Lista</span><b>✦</b>
+    <div class="nowplaying" id="nowplaying" aria-live="polite">
+      <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span id="np-text">128 BPM · en reposo</span>
     </div>
-  </div>
-
-  <section class="intro" id="producto">
-    <h2 class="reveal">Una canción.<br><span class="muted">Todo lo que la rodea.</span></h2>
-    <p class="reveal">Deja de buscar el master en WhatsApp, la portada en el escritorio y la letra en las notas del móvil. WavsX lo agrupa por canción, del primer audio a la distribuidora.</p>
+    <a href="#producto" class="scroll-cue" aria-label="Bajar"><span></span></a>
   </section>
 
-  <section class="features" id="como" aria-label="Funciones">
-    <article class="feature reveal">
-      <span class="feature__n num">01</span>
-      <h3>Todo por canción</h3>
-      <p>Cada tema es un disco con sus WAV, stems, fotos y textos dentro. Sin carpetas perdidas.</p>
-      <div class="demo demo--files" aria-hidden="true">
-        <div class="demo__row"><span class="demo__ic"></span><b>mezcla_v5.wav</b><small class="num">41 MB</small></div>
-        <div class="demo__row"><span class="demo__ic"></span><b>stems_v5.zip</b><small class="num">486 MB</small></div>
-        <div class="demo__row"><span class="demo__ic demo__ic--neon"></span><b>portada_3000.jpg</b><small class="num">4 MB</small></div>
+  <!-- 2 · EL PANEL POR DENTRO (se endereza al hacer scroll) -->
+  <section class="inside" id="producto">
+    <div class="inside__sticky">
+      <div class="inside__head">
+        <span class="kicker">Por dentro</span>
+        <h2>Cada canción es un disco.<br><span class="muted">Y tu estudio, una estantería.</span></h2>
       </div>
-    </article>
-
-    <article class="feature feature--wide reveal">
-      <span class="feature__n num">02</span>
-      <h3>Versiones con comentarios en el segundo exacto</h3>
-      <p>Sube la v6 sin perder la v5. Tu productor deja «sube la voz» justo en el 0:48.</p>
-      <div class="demo demo--wave" aria-hidden="true">
-        <span class="demo__pin" style="left: 34%">0:48 · sube la voz</span>
-        <div class="wave" id="feature-wave" style="height: 80px"></div>
+      <div class="inside__stage">
+        <div class="mock" id="mock" aria-label="Vista previa del panel de WavsX" role="img"></div>
       </div>
-    </article>
-
-    <article class="feature reveal">
-      <span class="feature__n num">03</span>
-      <h3>Listo para lanzar</h3>
-      <p>Checklist y un paquete con todo lo que te pide la distribuidora.</p>
-      <div class="demo demo--checks" aria-hidden="true">
-        <div><i class="ok"></i>Portada 3000 × 3000</div>
-        <div><i class="ok"></i>Créditos y reparto</div>
-        <div><i></i>Master final en WAV</div>
-      </div>
-    </article>
-
-    <article class="feature feature--stat reveal">
-      <span class="feature__n num">04</span>
-      <h3>Comparte sin soltar el archivo</h3>
-      <p>Enlaces privados para tu productor o un sello, con la descarga apagada si quieres.</p>
-      <div class="demo demo--link" aria-hidden="true"><code>wavsx.app/s/k4ir0-n30n</code><span>Solo escuchar</span></div>
-    </article>
+    </div>
   </section>
 
-  <section class="cta" id="precios">
-    <h2 class="reveal">Tus canciones sin sacar<br>te están esperando.</h2>
-    <div class="cta__row reveal">
-      <a href="/login.html" class="btn btn--lg cta__btn">Crear cuenta gratis</a>
-      <span>Gratis hasta 10 canciones. Sin tarjeta.</span>
+  <!-- 3 · LA VIDA DE UNA CANCIÓN (scroll por pasos) -->
+  <section class="story" id="como">
+    <div class="story__sticky">
+      <div class="story__text">
+        <span class="kicker">De la primera idea a la distribuidora</span>
+        <h2>La vida de una canción,<br>en un solo sitio.</h2>
+        <ol class="steps" id="steps">
+          <li class="is-active"><b class="num">01</b><div><h3>Súbelo todo</h3><p>Arrastra la carpeta y WavsX separa audio, stems, portadas y letras.</p></div></li>
+          <li><b class="num">02</b><div><h3>Versiona sin perder nada</h3><p>Cada mezcla nueva es una versión. Las anteriores siguen ahí.</p></div></li>
+          <li><b class="num">03</b><div><h3>Comparte sin soltar el archivo</h3><p>Un enlace privado para tu productor. Escucha, comenta, no descarga.</p></div></li>
+          <li><b class="num">04</b><div><h3>Lánzala</h3><p>Checklist completo y paquete listo para tu distribuidora.</p></div></li>
+        </ol>
+      </div>
+
+      <div class="story__stage" aria-hidden="true">
+        <div class="songcard">
+          <div class="songcard__top">
+            <div class="songcard__cover" id="sc-cover"></div>
+            <div>
+              <b>Neón en la M-30</b>
+              <span class="songcard__status" id="sc-status">Demo · v1</span>
+            </div>
+          </div>
+
+          <div class="scene is-active" data-scene="0">
+            <div class="drop">Suelta aquí tus archivos</div>
+            <ul class="files">
+              <li><span class="ft ft--wav">WAV</span>mezcla_v1.wav<small class="num">38 MB</small></li>
+              <li><span class="ft ft--zip">ZIP</span>stems.zip<small class="num">412 MB</small></li>
+              <li><span class="ft ft--img">JPG</span>portada.jpg<small class="num">4 MB</small></li>
+              <li><span class="ft ft--txt">TXT</span>letra.txt<small class="num">2 KB</small></li>
+            </ul>
+          </div>
+
+          <div class="scene" data-scene="1">
+            <div class="vers"><span>v1</span><span>v2</span><span>v3</span><span>v4</span><span class="on">v5</span></div>
+            <div class="bigwave">
+              <span class="pin" style="left: 28%">0:48 · sube la voz</span>
+              <div class="wave" id="story-wave" style="height: 96px"></div>
+            </div>
+            <p class="note"><b>Productor</b> comentó en el 0:48</p>
+          </div>
+
+          <div class="scene" data-scene="2">
+            <div class="share">
+              <span class="share__label">Enlace privado · v5</span>
+              <code>wavsx.app/s/k4ir0-n30n</code>
+              <div class="share__row"><span>Permitir descarga</span><i class="sw"></i></div>
+            </div>
+            <ul class="activity">
+              <li><span class="av">P</span><div><b>Productor</b> lo ha escuchado 3 veces</div><small>hace 2 min</small></li>
+              <li><span class="av">S</span><div><b>Sello</b> ha abierto el enlace</div><small>hace 1 h</small></li>
+            </ul>
+          </div>
+
+          <div class="scene" data-scene="3">
+            <ul class="checks">
+              <li><i></i>Portada 3000 × 3000</li>
+              <li><i></i>Créditos y reparto</li>
+              <li><i></i>Master final en WAV</li>
+              <li><i></i>ISRC y fecha de salida</li>
+            </ul>
+            <div class="ready"><span class="ready__dot"></span>Lista para salir · 28 nov</div>
+          </div>
+        </div>
+        <div class="progress-rail"><span id="rail"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · CIERRE -->
+  <section class="final" id="empezar">
+    <canvas id="vinyl2" class="final__canvas" aria-hidden="true"></canvas>
+    <div class="final__content">
+      <h2>Tu próximo single<br><span class="accent">ya está aquí dentro.</span></h2>
+      <p>Gratis hasta 10 canciones. Sin tarjeta.</p>
+      <div class="final__cta">
+        <a href="/login.html" class="btn btn--neon btn--lg">Crear cuenta gratis</a>
+        <a href="/login.html" class="btn btn--lg">Ya tengo cuenta</a>
+      </div>
     </div>
   </section>
 </main>
 
 <footer class="footer">
   <span class="logo" data-logo style="font-size: 16px">wavsX</span>
-  <span class="muted">Hecho para artistas que todavía no han sacado su mejor tema.</span>
+  <span class="muted">El sonido de esta página se genera en tu navegador.</span>
 </footer>
 
 <script type="module" src="/src/logo.js"></script>

@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="/theme.js"></script>
   <link rel="stylesheet" href="/src/styles.css">
   <link rel="stylesheet" href="/src/cancion.css">
 </head>
@@ -31,7 +32,7 @@
 
   <section class="hero" aria-label="Canción">
     <div class="hero__art" aria-hidden="true">
-      <div class="hero__disc"><div class="disc" id="disc" style="--label: #C6FF3D"></div></div>
+      <div class="hero__disc"><div class="disc" id="disc" style="--label: var(--accent)"></div></div>
       <div class="cover hero__cover"></div>
     </div>
     <div class="hero__info">
@@ -83,7 +84,7 @@
       <h3 class="group">Imágenes</h3>
       <div class="thumbs">
         <div class="cover is-main" role="img" aria-label="Portada final"></div>
-        <div class="cover" role="img" aria-label="Portada alternativa" style="background: linear-gradient(180deg, #C6FF3D 0 60%, #16161B 60% 100%)"></div>
+        <div class="cover" role="img" aria-label="Portada alternativa" style="background: linear-gradient(180deg, var(--accent) 0 60%, #16161B 60% 100%)"></div>
         <div class="cover" role="img" aria-label="Foto de sesión" style="background: repeating-linear-gradient(135deg, #0A0A0D 0 12px, #3A3A46 12px 24px)"></div>
         <button type="button" class="thumbs__more num" aria-label="Ver 5 imágenes más">+5</button>
       </div>
