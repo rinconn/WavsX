@@ -4,21 +4,21 @@
 // una cabeza de reproducción pervinca barre de izquierda a derecha y el ratón
 // levanta las barras que tiene cerca.
 
-function accentRGB() {
-  const v = getComputedStyle(document.documentElement).getPropertyValue('--c1').trim();
+function accentRGB(name = '--c1', fallback = [143, 166, 255]) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   if (v.startsWith('#')) {
     const n = parseInt(v.slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
-  return [143, 166, 255];
+  return fallback;
 }
 
 export function createWaveField(canvas, options = {}) {
   const o = { gap: 13, step: 7, ...options };
   const ctx = canvas.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let acc = accentRGB();
-  addEventListener('accentchange', () => { acc = accentRGB(); });
+  let acc = accentRGB(), accB = accentRGB('--c2', [199, 166, 255]);
+  addEventListener('accentchange', () => { acc = accentRGB(); accB = accentRGB('--c2', [199, 166, 255]); });
 
   let w = 0, h = 0, bars = 0, seeds = [];
   function resize() {
@@ -44,6 +44,14 @@ export function createWaveField(canvas, options = {}) {
     const maxH = h * 0.5;
     const beat = Math.pow(Math.max(0, Math.cos(t * 7.2)), 8) * 0.07;     // latido
     const head = ((t * 0.11) % 1.25 - 0.12) * w;                          // cabeza de reproducción
+    const [c1, c2] = [acc, accB];
+
+    // luz suave sobre la línea central, siguiendo la cabeza
+    const gl = ctx.createRadialGradient(head, mid, 0, head, mid, w * 0.22);
+    gl.addColorStop(0, `rgba(${c1[0]},${c1[1]},${c1[2]},0.20)`);
+    gl.addColorStop(1, `rgba(${c1[0]},${c1[1]},${c1[2]},0)`);
+    ctx.fillStyle = gl;
+    ctx.fillRect(0, mid - maxH, w, maxH * 2);
 
     for (let i = 0; i < bars; i++) {
       const x = (i + 0.5) * o._gap;
@@ -63,21 +71,31 @@ export function createWaveField(canvas, options = {}) {
 
       for (let k = 0; k < n; k++) {
         const y = k * o.step + 2;
-        const fall = 1 - k / (n + 2);                                     // se apaga hacia la punta
-        const size = (2.1 - k / n * 0.9) * (1 + lit * 0.35);
-        const alpha = Math.min(1, (0.2 + 0.55 * fall) + lit * 0.45);
-        const tt = lit * (0.4 + 0.6 * fall);
-        const r = Math.round(243 + (acc[0] - 243) * tt);
-        const g = Math.round(241 + (acc[1] - 241) * tt);
-        const b = Math.round(246 + (acc[2] - 246) * tt);
+        const up = k / n;                                                 // 0 centro → 1 punta
+        const fall = 1 - up;
+        const size = (2.2 - up * 0.9) * (1 + lit * 0.4);
+        const alpha = Math.min(1, 0.3 + 0.5 * fall + lit * 0.5);
+        // degradado pervinca (centro) → lila (punta); en reposo, teñido y apagado
+        const c = Math.min(1, up * 1.1);
+        const tint = 0.45 + lit * 0.55;
+        const white = (1 - tint) * 0.55 + lit * lit * 0.3;               // blanco que se mezcla
+        const r = Math.round((c1[0] + (c2[0] - c1[0]) * c) * (1 - white) + 255 * white);
+        const g = Math.round((c1[1] + (c2[1] - c1[1]) * c) * (1 - white) + 255 * white);
+        const b = Math.round((c1[2] + (c2[2] - c1[2]) * c) * (1 - white) + 255 * white);
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
         ctx.beginPath(); ctx.arc(x, mid - y, size, 0, 6.2832); ctx.fill();   // arriba
-        ctx.globalAlpha = 0.45;
+        ctx.globalAlpha = 0.4;
         ctx.beginPath(); ctx.arc(x, mid + y, size * 0.9, 0, 6.2832); ctx.fill(); // reflejo abajo
         ctx.globalAlpha = 1;
+        if (lit > 0.2) {                                                  // halo de luz
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.fillStyle = `rgba(${r},${g},${b},${(0.07 * lit).toFixed(3)})`;
+          ctx.beginPath(); ctx.arc(x, mid - y, size * 3.4, 0, 6.2832); ctx.fill();
+          ctx.globalCompositeOperation = 'source-over';
+        }
       }
       // punto de la línea central
-      ctx.fillStyle = `rgba(${acc[0]},${acc[1]},${acc[2]},${(0.35 + lit * 0.65).toFixed(3)})`;
+      ctx.fillStyle = `rgba(${c1[0]},${c1[1]},${c1[2]},${(0.4 + lit * 0.6).toFixed(3)})`;
       ctx.beginPath(); ctx.arc(x, mid, 1.6 + lit * 0.9, 0, 6.2832); ctx.fill();
     }
   }
