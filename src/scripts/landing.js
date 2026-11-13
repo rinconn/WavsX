@@ -1,4 +1,5 @@
 import { createField } from './field.js';
+import { createDome } from './dome.js';
 import { icon, sticker } from './icons.js';
 import { waveHeights, renderWave } from './data.js';
 
@@ -14,7 +15,12 @@ $$('[data-icon]').forEach((el) => {
 });
 
 /* ---------- 1 · hero: campo de vinilos ---------- */
-if (new URLSearchParams(location.search).get('hero') === 'b') {
+const heroOpt = new URLSearchParams(location.search).get('hero');
+if (heroOpt === 'c') {
+  $('.hero').hidden = true;
+  $('.heroC').hidden = false;
+  createDome($('#dome'));
+} else if (heroOpt === 'b') {
   $('.hero').hidden = true;
   $('.heroB').hidden = false;
   renderWave($('#heroB-wave'), waveHeights(2.4, 90, 88), 0.42);
