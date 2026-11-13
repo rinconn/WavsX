@@ -1,10 +1,11 @@
 // Onda de sonido gigante (hero D).
 // Un ecualizador espejo de punta a punta: cada barra es una columna de puntos
-// que crece desde la línea central. Viaja una onda lenta, hay un latido suave,
-// una cabeza de reproducción pervinca barre de izquierda a derecha y el ratón
-// levanta las barras que tiene cerca.
+// que crece desde la línea central. Cada barra tiene un solo color y el espectro
+// va de pervinca (izquierda) a lila y a rosa (derecha). Sobre cada barra flota
+// un punto de pico blanco que cae despacio, como en un medidor de verdad.
+// Una cabeza de reproducción barre la onda y el ratón levanta las barras cercanas.
 
-function accentRGB(name = '--c1', fallback = [143, 166, 255]) {
+function readRGB(name, fallback) {
   const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   if (v.startsWith('#')) {
     const n = parseInt(v.slice(1), 16);
@@ -12,15 +13,28 @@ function accentRGB(name = '--c1', fallback = [143, 166, 255]) {
   }
   return fallback;
 }
+const readPalette = () => [
+  readRGB('--c1', [143, 166, 255]),
+  readRGB('--c2', [199, 166, 255]),
+  readRGB('--c3', [255, 168, 210])
+];
+
+// color del espectro en la posición u (0–1): c1 → c2 → c3
+function spectrum(pal, u) {
+  const x = Math.max(0, Math.min(0.9999, u)) * 2;
+  const i = Math.floor(x), f = x - i;
+  const a = pal[i], b = pal[i + 1];
+  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+}
 
 export function createWaveField(canvas, options = {}) {
-  const o = { gap: 13, step: 7, ...options };
+  const o = { gap: 15, step: 5, ...options };
   const ctx = canvas.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let acc = accentRGB(), accB = accentRGB('--c2', [199, 166, 255]);
-  addEventListener('accentchange', () => { acc = accentRGB(); accB = accentRGB('--c2', [199, 166, 255]); });
+  let pal = readPalette();
+  addEventListener('accentchange', () => { pal = readPalette(); });
 
-  let w = 0, h = 0, bars = 0, seeds = [];
+  let w = 0, h = 0, bars = 0, seeds = [], peaks = [];
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
     const b = canvas.getBoundingClientRect();
@@ -32,26 +46,20 @@ export function createWaveField(canvas, options = {}) {
     bars = Math.floor(w / gap);
     o._gap = w / bars;
     seeds = Array.from({ length: bars }, () => Math.random() * 6.28);
+    peaks = new Array(bars).fill(0);
   }
 
   let px = -999;
   const onMove = (e) => { const b = canvas.getBoundingClientRect(); px = e.clientY - b.top > -80 ? e.clientX - b.left : -999; };
 
-  let raf = 0, visible = true;
+  let raf = 0, visible = true, last = 0;
   function draw(t) {
+    const dt = Math.min(0.05, Math.max(0, t - last)); last = t;
     ctx.clearRect(0, 0, w, h);
-    const mid = h * 0.58;
-    const maxH = h * 0.5;
+    const mid = h * 0.6;
+    const maxH = h * 0.56;
     const beat = Math.pow(Math.max(0, Math.cos(t * 7.2)), 8) * 0.07;     // latido
     const head = ((t * 0.11) % 1.25 - 0.12) * w;                          // cabeza de reproducción
-    const [c1, c2] = [acc, accB];
-
-    // luz suave sobre la línea central, siguiendo la cabeza
-    const gl = ctx.createRadialGradient(head, mid, 0, head, mid, w * 0.22);
-    gl.addColorStop(0, `rgba(${c1[0]},${c1[1]},${c1[2]},0.20)`);
-    gl.addColorStop(1, `rgba(${c1[0]},${c1[1]},${c1[2]},0)`);
-    ctx.fillStyle = gl;
-    ctx.fillRect(0, mid - maxH, w, maxH * 2);
 
     for (let i = 0; i < bars; i++) {
       const x = (i + 0.5) * o._gap;
@@ -65,38 +73,51 @@ export function createWaveField(canvas, options = {}) {
       if (px > -900) { const d = x - px; m = Math.exp(-(d * d) / 9000); a += m * 0.28; }
       a = Math.min(1, Math.max(0.03, a));
 
-      const hd = Math.abs(x - head);
+      const hd = x - head;
       const lit = Math.min(1, Math.exp(-(hd * hd) / 26000) + m * 0.9);    // brillo de cabeza / ratón
       const n = Math.max(1, Math.round((a * maxH) / o.step));
+
+      // pico que cae despacio
+      peaks[i] = Math.max(n, peaks[i] - dt * 14);
+      const pk = Math.round(peaks[i]) + 2;
+
+      const col = spectrum(pal, u);                                       // un solo color por barra
+      const cr = col[0], cg = col[1], cb = col[2];
 
       for (let k = 0; k < n; k++) {
         const y = k * o.step + 2;
         const up = k / n;                                                 // 0 centro → 1 punta
-        const fall = 1 - up;
-        const size = (2.2 - up * 0.9) * (1 + lit * 0.4);
-        const alpha = Math.min(1, 0.3 + 0.5 * fall + lit * 0.5);
-        // degradado pervinca (centro) → lila (punta); en reposo, teñido y apagado
-        const c = Math.min(1, up * 1.1);
-        const tint = 0.45 + lit * 0.55;
-        const white = (1 - tint) * 0.55 + lit * lit * 0.3;               // blanco que se mezcla
-        const r = Math.round((c1[0] + (c2[0] - c1[0]) * c) * (1 - white) + 255 * white);
-        const g = Math.round((c1[1] + (c2[1] - c1[1]) * c) * (1 - white) + 255 * white);
-        const b = Math.round((c1[2] + (c2[2] - c1[2]) * c) * (1 - white) + 255 * white);
+        const size = (2.9 - up * 1.0) * (1 + lit * 0.3);
+        const alpha = Math.min(1, 0.5 + 0.4 * (1 - up) + lit * 0.35);
+        // la punta se aclara hacia blanco; con luz, toda la barra se enciende
+        const white = up * up * 0.35 + lit * lit * 0.3;
+        const r = Math.round(cr * (1 - white) + 255 * white);
+        const g = Math.round(cg * (1 - white) + 255 * white);
+        const b = Math.round(cb * (1 - white) + 255 * white);
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha.toFixed(3)})`;
         ctx.beginPath(); ctx.arc(x, mid - y, size, 0, 6.2832); ctx.fill();   // arriba
-        ctx.globalAlpha = 0.4;
+        ctx.globalAlpha = 0.38;
         ctx.beginPath(); ctx.arc(x, mid + y, size * 0.9, 0, 6.2832); ctx.fill(); // reflejo abajo
         ctx.globalAlpha = 1;
-        if (lit > 0.2) {                                                  // halo de luz
+        if (lit > 0.25 && k % 2 === 0) {                                  // halo de luz
           ctx.globalCompositeOperation = 'lighter';
-          ctx.fillStyle = `rgba(${r},${g},${b},${(0.07 * lit).toFixed(3)})`;
-          ctx.beginPath(); ctx.arc(x, mid - y, size * 3.4, 0, 6.2832); ctx.fill();
+          ctx.fillStyle = `rgba(${cr | 0},${cg | 0},${cb | 0},${(0.08 * lit).toFixed(3)})`;
+          ctx.beginPath(); ctx.arc(x, mid - y, size * 3.2, 0, 6.2832); ctx.fill();
           ctx.globalCompositeOperation = 'source-over';
         }
       }
+
+      // punto de pico (blanco) y su reflejo
+      const py = pk * o.step + 2;
+      ctx.fillStyle = `rgba(255,255,255,${(0.75 + lit * 0.25).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(x, mid - py, 2.1, 0, 6.2832); ctx.fill();
+      ctx.globalAlpha = 0.25;
+      ctx.beginPath(); ctx.arc(x, mid + py, 1.9, 0, 6.2832); ctx.fill();
+      ctx.globalAlpha = 1;
+
       // punto de la línea central
-      ctx.fillStyle = `rgba(${c1[0]},${c1[1]},${c1[2]},${(0.4 + lit * 0.6).toFixed(3)})`;
-      ctx.beginPath(); ctx.arc(x, mid, 1.6 + lit * 0.9, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = `rgba(${cr | 0},${cg | 0},${cb | 0},${(0.5 + lit * 0.5).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(x, mid, 1.8 + lit, 0, 6.2832); ctx.fill();
     }
   }
 
