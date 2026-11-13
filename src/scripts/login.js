@@ -19,7 +19,7 @@ function enter() {
   submit.classList.add('is-loading');
   submit.textContent = 'Entrando…';
   // TODO: llamar al backend (POST /api/auth/login) cuando exista
-  setTimeout(() => { window.location.href = '/app.html'; }, 600);
+  setTimeout(() => { window.location.href = '/app'; }, 600);
 }
 
 form.addEventListener('submit', (e) => {

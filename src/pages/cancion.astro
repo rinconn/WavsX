@@ -1,24 +1,15 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WavsX — Neón en la M-30</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="/theme.js"></script>
-  <link rel="stylesheet" href="/src/styles.css">
-  <link rel="stylesheet" href="/src/cancion.css">
-</head>
-<body>
+---
+import Base from '../layouts/Base.astro';
+import '../styles/cancion.css';
+---
+<Base title="WavsX — Neón en la M-30">
 <div class="page">
 
   <header class="bar">
     <div class="bar__left">
-      <a href="/app.html" class="logo" data-logo aria-label="WavsX, panel"></a>
+      <a href="/app" class="logo" data-logo aria-label="WavsX, panel"></a>
       <nav aria-label="Ruta" class="crumbs">
-        <a href="/app.html">Canciones</a><span aria-hidden="true">/</span><span aria-current="page">Neón en la M-30</span>
+        <a href="/app">Canciones</a><span aria-hidden="true">/</span><span aria-current="page">Neón en la M-30</span>
       </nav>
     </div>
     <div class="bar__right">
@@ -123,8 +114,5 @@
     </section>
   </div>
 </div>
-
-<script type="module" src="/src/logo.js"></script>
-<script type="module" src="/src/cancion.js"></script>
-</body>
-</html>
+<script>import '../scripts/cancion.js';</script>
+</Base>

@@ -1,25 +1,16 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WavsX — Tus canciones</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="/theme.js"></script>
-  <link rel="stylesheet" href="/src/styles.css">
-  <link rel="stylesheet" href="/src/app.css">
-</head>
-<body>
+---
+import Base from '../layouts/Base.astro';
+import '../styles/app.css';
+---
+<Base title="WavsX — Tus canciones">
 <div class="shell">
 
   <aside class="side">
-    <a href="/app.html" class="logo" data-logo aria-label="WavsX, panel">wavsX</a>
+    <a href="/app" class="logo" data-logo aria-label="WavsX, panel">wavsX</a>
 
     <nav aria-label="Principal">
       <ul class="menu">
-        <li><a href="/app.html" class="is-active" aria-current="page">
+        <li><a href="/app" class="is-active" aria-current="page">
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>
           Canciones <span class="num">14</span></a></li>
         <li><a href="#">
@@ -85,7 +76,7 @@
       <div class="release__count">
         <b class="num">15</b><span>días</span>
       </div>
-      <a href="/cancion.html" class="btn btn--white">Ver lanzamiento</a>
+      <a href="/cancion" class="btn btn--white">Ver lanzamiento</a>
     </section>
 
     <section class="songs" aria-labelledby="songs-t">
@@ -123,8 +114,5 @@
     </div>
   </main>
 </div>
-
-<script type="module" src="/src/logo.js"></script>
-<script type="module" src="/src/app.js"></script>
-</body>
-</html>
+<script>import '../scripts/app.js';</script>
+</Base>

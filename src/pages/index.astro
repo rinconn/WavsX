@@ -1,19 +1,8 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WavsX — Tu música, antes de salir</title>
-  <meta name="description" content="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="/theme.js"></script>
-  <link rel="stylesheet" href="/src/styles.css">
-  <link rel="stylesheet" href="/src/landing.css">
-</head>
-<body>
-
+---
+import Base from '../layouts/Base.astro';
+import '../styles/landing.css';
+---
+<Base title="WavsX — Tu música, antes de salir" description="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
 <header class="nav">
   <a href="/" class="logo" data-logo aria-label="WavsX, inicio">wavsX</a>
   <nav aria-label="Principal" class="nav__links">
@@ -21,7 +10,7 @@
     <a href="#como">Cómo funciona</a>
     <a href="#empezar">Precios</a>
   </nav>
-  <a href="/login.html" class="btn btn--neon nav__cta">Entrar</a>
+  <a href="/login" class="btn btn--neon nav__cta">Entrar</a>
   <span class="nav__progress" id="read" aria-hidden="true"></span>
 </header>
 
@@ -37,7 +26,7 @@
       </h1>
       <p class="hero__sub" data-words>El estudio online para artistas. Cada tema con sus WAVs, stems, portadas y versiones, en un solo sitio.</p>
       <div class="hero__cta">
-        <a href="/login.html" class="btn btn--neon btn--lg">Entrar en mi estudio</a>
+        <a href="/login" class="btn btn--neon btn--lg">Entrar en mi estudio</a>
         <a href="#como" class="btn btn--lg btn--ghost">Ver cómo funciona <span aria-hidden="true">→</span></a>
       </div>
     </div>
@@ -165,8 +154,8 @@
     <h2 class="reveal">Tu estudio<br><span class="grad-text">está abierto.</span></h2>
     <p class="reveal">Gratis hasta 10 canciones. Sin tarjeta.</p>
     <div class="onair__cta reveal">
-      <a href="/login.html" class="btn btn--neon btn--lg">Crear cuenta gratis</a>
-      <a href="/login.html" class="btn btn--lg">Ya tengo cuenta</a>
+      <a href="/login" class="btn btn--neon btn--lg">Crear cuenta gratis</a>
+      <a href="/login" class="btn btn--lg">Ya tengo cuenta</a>
     </div>
   </section>
 </main>
@@ -175,8 +164,5 @@
   <span class="logo" data-logo style="font-size: 16px">wavsX</span>
   <span class="muted">Hecho para artistas que todavía no han sacado su mejor tema.</span>
 </footer>
-
-<script type="module" src="/src/logo.js"></script>
-<script type="module" src="/src/landing.js"></script>
-</body>
-</html>
+<script>import '../scripts/landing.js';</script>
+</Base>

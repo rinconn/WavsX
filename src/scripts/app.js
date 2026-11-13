@@ -41,12 +41,12 @@ function card(s, k) {
     <div class="card__media">
       <div class="card__disc"><div class="disc ${on ? 'spin' : ''}" style="--label:${s.c2 === '#0A0A0D' || s.c2 === '#16161B' ? s.c1 : s.c2}"></div></div>
       <div class="cover" style="background:${coverArt(s)}"></div>
-      <a class="card__link" href="/cancion.html" tabindex="-1" aria-hidden="true"></a>
+      <a class="card__link" href="/cancion" tabindex="-1" aria-hidden="true"></a>
       <button type="button" class="play card__play ${on ? 'is-on' : ''}" data-play="${s.i}" aria-label="${on ? 'Pausar' : 'Reproducir'} ${esc(s.title)}">${on ? ICONS.pause(18) : ICONS.play(18)}</button>
     </div>
     <div class="card__body">
       <div class="card__row">
-        <h3 class="card__title"><a href="/cancion.html">${esc(s.title)}</a></h3>
+        <h3 class="card__title"><a href="/cancion">${esc(s.title)}</a></h3>
         <button type="button" class="icon-btn" aria-label="Más opciones de ${esc(s.title)}" style="width:32px;height:32px">${ICONS.dots}</button>
       </div>
       <div class="card__meta"><span class="status" style="--c:${st.color}">${st.name}</span><span class="num">${s.bpm} BPM</span><span>${s.key}</span><span class="num">${s.dur}</span></div>

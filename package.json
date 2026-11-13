@@ -1,14 +1,14 @@
 {
   "name": "wavsx",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --open",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
   },
-  "devDependencies": {
-    "vite": "^6.3.5"
+  "dependencies": {
+    "astro": "^5.0.0"
   }
 }
