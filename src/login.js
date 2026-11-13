@@ -1,11 +1,6 @@
-import { createSphere } from './sphere.js';
+import { createVinyl } from './vinyl.js';
 
-createSphere(document.getElementById('sphere'), {
-  color: '244,244,241',
-  radius: 0.4,
-  centerY: 0.42,
-  count: 1400
-});
+createVinyl(document.getElementById('vinyl'), { cx: 0.5, cy: 0.5, size: 0.36, tilt: 1.05 });
 
 const form = document.getElementById('login');
 const email = document.getElementById('email');

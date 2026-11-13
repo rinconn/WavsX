@@ -1,9 +1,10 @@
-// Logo compartido: un vinilo con la X dentro. Se inyecta en cualquier [data-logo].
+// Logo compartido: un vinilo con la etiqueta en neón. Se inyecta en cualquier [data-logo].
 const MARK = `<svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true">
-  <circle cx="16" cy="16" r="15" fill="currentColor"/>
-  <circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--logo-groove, #3a3a3a)" stroke-width="0.8"/>
-  <circle cx="16" cy="16" r="6.5" fill="#FF4A1C"/>
-  <path d="M13.6 13.6l4.8 4.8M18.4 13.6l-4.8 4.8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="16" cy="16" r="15" fill="#16161B" stroke="#30303B"/>
+  <circle cx="16" cy="16" r="11" fill="none" stroke="#2A2A33" stroke-width="0.8"/>
+  <circle cx="16" cy="16" r="7.5" fill="none" stroke="#2A2A33" stroke-width="0.8"/>
+  <circle cx="16" cy="16" r="4.5" fill="#C6FF3D"/>
+  <circle cx="16" cy="16" r="1.1" fill="#08080B"/>
 </svg>`;
 
 document.querySelectorAll('[data-logo]').forEach((el) => {

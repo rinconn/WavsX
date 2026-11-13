@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WavsX — Iniciar sesión</title>
+  <title>WavsX — Entrar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,51 +11,46 @@
   <link rel="stylesheet" href="/src/login.css">
 </head>
 <body>
-<div class="auth">
-  <section class="auth__form">
-    <a href="/" class="logo" data-logo aria-label="WavsX, volver al inicio">wavsX</a>
+<canvas id="vinyl" class="bg-vinyl" aria-hidden="true"></canvas>
+<div class="bg-shade" aria-hidden="true"></div>
 
-    <div class="auth__box">
-      <h1>Bienvenido<br>de vuelta.</h1>
-      <p class="muted">Tus canciones siguen donde las dejaste.</p>
+<header class="auth-top">
+  <a href="/" class="logo" data-logo aria-label="WavsX, volver al inicio">wavsX</a>
+  <a href="/" class="btn" style="height: 38px">Volver</a>
+</header>
 
-      <form id="login" novalidate>
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="email" placeholder="tu@email.com">
+<main class="auth">
+  <div class="auth__card">
+    <span class="auth__eyebrow"><i></i>Tus 14 canciones te esperan</span>
+    <h1>Entra en<br>tu estudio.</h1>
+
+    <form id="login" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="tu@email.com">
+      </div>
+      <div class="field">
+        <div class="field__row"><label for="pass">Contraseña</label><a href="#" class="link">¿La has olvidado?</a></div>
+        <div class="field__pass">
+          <input id="pass" name="pass" type="password" autocomplete="current-password" placeholder="••••••••">
+          <button type="button" class="icon-btn" id="toggle-pass" aria-label="Mostrar contraseña" aria-pressed="false">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
         </div>
-        <div class="field">
-          <div class="field__row"><label for="pass">Contraseña</label><a href="#" class="link">¿La has olvidado?</a></div>
-          <div class="field__pass">
-            <input id="pass" name="pass" type="password" autocomplete="current-password" placeholder="••••••••">
-            <button type="button" class="icon-btn" id="toggle-pass" aria-label="Mostrar contraseña" aria-pressed="false">
-              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
-        <label class="check"><input type="checkbox" checked> Mantener la sesión iniciada</label>
-        <button type="submit" class="btn btn--ink btn--lg btn--block" id="submit">Entrar</button>
-      </form>
+      </div>
+      <label class="check"><input type="checkbox" checked> Mantener la sesión iniciada</label>
+      <button type="submit" class="btn btn--neon btn--lg btn--block" id="submit">Entrar</button>
+    </form>
 
-      <div class="divider"><span>o</span></div>
-      <button type="button" class="btn btn--lg btn--block" id="google">
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h6c-.3 1.4-1.1 2.6-2.3 3.4v2.8h3.7c2.1-2 3.2-4.9 3.2-8.2z"/><path fill="#34A853" d="M12 23c3.1 0 5.6-1 7.5-2.8l-3.7-2.8c-1 .7-2.3 1.1-3.8 1.1-3 0-5.5-2-6.4-4.7H1.8v2.9C3.7 20.5 7.6 23 12 23z"/><path fill="#FBBC05" d="M5.6 13.8c-.2-.7-.4-1.4-.4-2.1s.1-1.4.4-2.1V6.7H1.8C1 8.2.6 9.9.6 11.7s.4 3.5 1.2 5l3.8-2.9z"/><path fill="#EA4335" d="M12 4.9c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.6 1.4 15.1.4 12 .4 7.6.4 3.7 2.9 1.8 6.7l3.8 2.9C6.5 6.9 9 4.9 12 4.9z"/></svg>
-        Continuar con Google
-      </button>
-      <p class="auth__alt">¿Aún no tienes cuenta? <a href="#" class="link">Crea una gratis</a></p>
-    </div>
-
-    <p class="auth__legal muted">Demo: escribe cualquier email y contraseña.</p>
-  </section>
-
-  <aside class="auth__art" aria-hidden="true">
-    <canvas id="sphere"></canvas>
-    <div class="auth__quote">
-      <p>«Tu próximo single<br>ya está aquí dentro.»</p>
-      <span class="num">14 canciones · 312 archivos · 1 sitio</span>
-    </div>
-  </aside>
-</div>
+    <div class="divider"><span>o</span></div>
+    <button type="button" class="btn btn--lg btn--block" id="google">
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.6 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h6c-.3 1.4-1.1 2.6-2.3 3.4v2.8h3.7c2.1-2 3.2-4.9 3.2-8.2z"/><path fill="#34A853" d="M12 23c3.1 0 5.6-1 7.5-2.8l-3.7-2.8c-1 .7-2.3 1.1-3.8 1.1-3 0-5.5-2-6.4-4.7H1.8v2.9C3.7 20.5 7.6 23 12 23z"/><path fill="#FBBC05" d="M5.6 13.8c-.2-.7-.4-1.4-.4-2.1s.1-1.4.4-2.1V6.7H1.8C1 8.2.6 9.9.6 11.7s.4 3.5 1.2 5l3.8-2.9z"/><path fill="#EA4335" d="M12 4.9c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.6 1.4 15.1.4 12 .4 7.6.4 3.7 2.9 1.8 6.7l3.8 2.9C6.5 6.9 9 4.9 12 4.9z"/></svg>
+      Continuar con Google
+    </button>
+    <p class="auth__alt">¿Aún no tienes cuenta? <a href="#" class="link">Crea una gratis</a></p>
+  </div>
+  <p class="auth__legal muted">Demo: escribe cualquier email y contraseña.</p>
+</main>
 
 <script type="module" src="/src/logo.js"></script>
 <script type="module" src="/src/login.js"></script>

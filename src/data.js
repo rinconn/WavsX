@@ -1,20 +1,20 @@
 // Datos de ejemplo hasta que haya backend.
 
-// Los estados van de gris claro a negro conforme la canción se acerca a salir.
-// "Lista" es el único que usa el acento.
+// Los estados se iluminan (de gris oscuro a blanco) conforme la canción se acerca a salir.
+// "Lista" es el único en neón.
 export const STATES = {
-  idea:     { name: 'Idea',     color: '#CFCFC9', step: 0 },
-  demo:     { name: 'Demo',     color: '#A3A39D', step: 1 },
-  grabando: { name: 'Grabando', color: '#77776F', step: 2 },
-  mezcla:   { name: 'Mezcla',   color: '#45453F', step: 3 },
-  master:   { name: 'Master',   color: '#0E0E0E', step: 4 },
-  lista:    { name: 'Lista',    color: '#FF4A1C', step: 5 }
+  idea:     { name: 'Idea',     color: '#4A4A58', step: 0 },
+  demo:     { name: 'Demo',     color: '#6E6E80', step: 1 },
+  grabando: { name: 'Grabando', color: '#9A9AAE', step: 2 },
+  mezcla:   { name: 'Mezcla',   color: '#C9C9D6', step: 3 },
+  master:   { name: 'Master',   color: '#FFFFFF', step: 4 },
+  lista:    { name: 'Lista',    color: '#C6FF3D', step: 5 }
 };
 
 export const STATE_ORDER = ['idea', 'demo', 'grabando', 'mezcla', 'master', 'lista'];
 
 // Paleta de portadas de ejemplo (misma familia que la web)
-const K = '#0E0E0E', W = '#F4F4F1', A = '#FF4A1C', G = '#BDBDB6', D = '#5E5E58', S = '#E7DFD2', B = '#2A2A27';
+const K = '#0A0A0D', W = '#EDEDF2', A = '#C6FF3D', G = '#3A3A46', D = '#24242C', S = '#8E8EA0', B = '#16161B';
 
 // cover: si pones una ruta (p. ej. '/covers/neon.jpg' dentro de /public) se usa la imagen real.
 export const SONGS = [

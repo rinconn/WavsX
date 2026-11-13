@@ -39,7 +39,7 @@ function card(s, k) {
   return `
   <article class="card" style="animation-delay:${Math.min(k, 12) * 0.04}s">
     <div class="card__media">
-      <div class="card__disc"><div class="disc ${on ? 'spin' : ''}" style="--label:${s.c2 === '#0E0E0E' ? s.c1 : s.c2}"></div></div>
+      <div class="card__disc"><div class="disc ${on ? 'spin' : ''}" style="--label:${s.c2 === '#0A0A0D' || s.c2 === '#16161B' ? s.c1 : s.c2}"></div></div>
       <div class="cover" style="background:${coverArt(s)}"></div>
       <a class="card__link" href="/cancion.html" tabindex="-1" aria-hidden="true"></a>
       <button type="button" class="play card__play ${on ? 'is-on' : ''}" data-play="${s.i}" aria-label="${on ? 'Pausar' : 'Reproducir'} ${esc(s.title)}">${on ? ICONS.pause(18) : ICONS.play(18)}</button>
