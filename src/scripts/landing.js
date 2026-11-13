@@ -1,5 +1,6 @@
 import { createField } from './field.js';
 import { createDome } from './dome.js';
+import { createWaveField } from './wavefield.js';
 import { icon, sticker } from './icons.js';
 import { waveHeights, renderWave } from './data.js';
 
@@ -16,10 +17,11 @@ $$('[data-icon]').forEach((el) => {
 
 /* ---------- 1 · hero: campo de vinilos ---------- */
 const heroOpt = new URLSearchParams(location.search).get('hero');
-if (heroOpt === 'c') {
+if (heroOpt === 'c' || heroOpt === 'd') {
   $('.hero').hidden = true;
   $('.heroC').hidden = false;
-  createDome($('#dome'));
+  if (heroOpt === 'c') { $('#wavefield').remove(); createDome($('#dome')); }
+  else { $('#dome').remove(); createWaveField($('#wavefield')); }
 } else if (heroOpt === 'b') {
   $('.hero').hidden = true;
   $('.heroB').hidden = false;
