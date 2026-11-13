@@ -34,12 +34,7 @@ html { scroll-behavior: smooth; }
 .hero__title .line { display: block; overflow: hidden; padding-bottom: .08em; }
 .hero__title .line > span { display: inline-block; animation: rise 1s var(--ease) .1s both; }
 .hero__title .line:nth-child(2) > span { animation-delay: .22s; }
-.iris-text {
-  background: linear-gradient(100deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c1)); background-size: 220% 100%;
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  animation: rise 1s var(--ease) .22s both, iris 9s linear infinite !important;
-}
-@keyframes iris { to { background-position: 220% 0; } }
+.title-dim { color: #5E5E68; }
 .hero__sub { max-width: 560px; margin: 26px 0 0; font-size: 19px; line-height: 1.55; color: var(--text-2); }
 .hero__sub .w { display: inline-block; opacity: 0; animation: blurIn .7s ease both; white-space: pre; }
 .hero__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 34px; opacity: 0; animation: rise .8s var(--ease) 1.1s both; }
