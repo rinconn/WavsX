@@ -10,7 +10,7 @@
   var PALETTES = [
     {
       id: 'iris', name: 'Iris',
-      c: ['#9DB4FF', '#C7A6FF', '#FFA8D2', '#FFD1A1'],
+      c: ['#8FA6FF', '#C7A6FF', '#FFA8D2', '#FFD1A1'],
       bg: ['#09090B', '#121215', '#19191D', '#202025', '#25252B', '#323239']
     }
   ];

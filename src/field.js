@@ -3,7 +3,9 @@
 // lanza un haz de luz hacia arriba y se apaga despacio; luego otro, con otro color.
 // El disco que flota delante está en gris y también entra en el juego.
 
-const COLORS = ['#9DB4FF', '#C7A6FF', '#FFA8D2', '#FFD1A1', '#8FE3D0', '#FFE08A'];
+// el principal (--accent) sale la mitad de las veces; el resto acompañan
+const SECONDARY = ['#C7A6FF', '#FFA8D2', '#FFD1A1', '#8FE3D0'];
+const readAccent = () => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#8FA6FF';
 
 const rgb = (hex) => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
 const lerp = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
@@ -14,7 +16,9 @@ export function createField(canvas, options = {}) {
   const o = { horizon: 0.6, ...options };
   const ctx = canvas.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const palette = COLORS.map(rgb);
+  let accent = rgb(readAccent());
+  const secondary = SECONDARY.map(rgb);
+  window.addEventListener('accentchange', () => { accent = rgb(readAccent()); });
 
   function discTemplate(rings, density) {
     const pts = [];
@@ -22,16 +26,18 @@ export function createField(canvas, options = {}) {
       const r = 0.28 + (k / (rings - 1)) * 0.72;
       const n = Math.round(10 + r * density);
       const off = Math.random() * 6.28;
-      for (let j = 0; j < n; j++) pts.push({ r, a: off + (j / n) * 6.2832 });
+      for (let j = 0; j < n; j++) pts.push({ r, k, a: off + (j / n) * 6.2832 });
     }
     return pts;
   }
-  const dim = discTemplate(6, 34);
+  const dim = discTemplate(10, 52);
+  const dimLabel = [];
+  for (let k = 0; k < 3; k++) { const r = 0.08 + k * 0.07; const n = 8 + k * 6; for (let j = 0; j < n; j++) dimLabel.push({ r, a: (j / n) * 6.2832 }); }
   const front = discTemplate(26, 120);
   for (let k = 0; k < 5; k++) { const r = 0.06 + k * 0.045; const n = Math.round(8 + r * 90); for (let j = 0; j < n; j++) front.push({ r, a: (j / n) * 6.2832, label: true }); }
 
   const SP = 2.3, discs = [];
-  for (let row = 0; row < 9; row++) {
+  for (let row = 0; row < 8; row++) {
     const z = 3.2 + row * SP;
     for (let col = -7; col <= 7; col++) {
       const x = col * SP + (row % 2 ? SP / 2 : 0);
@@ -49,13 +55,14 @@ export function createField(canvas, options = {}) {
     return discs.filter((d) => d.z < 15 && Math.abs(d.x - camX) < d.z * 0.9);
   }
   function spawn(t, camX) {
-    let ci; do { ci = Math.floor(Math.random() * palette.length); } while (ci === lastColor);
-    lastColor = ci;
     count++;
+    let color;
+    if (count % 2 === 1) color = accent;
+    else { let ci; do { ci = Math.floor(Math.random() * secondary.length); } while (ci === lastColor); lastColor = ci; color = secondary[ci]; }
     const pool = visibleDiscs(camX).filter((d) => !lights.some((l) => l.target === d));
     const target = count % 4 === 1 || !pool.length ? HERO : pool[Math.floor(Math.random() * pool.length)];
     if (lights.some((l) => l.target === target)) return;
-    lights.push({ target, color: palette[ci], start: t, dur: 4.2 + Math.random() * 1.6 });
+    lights.push({ target, color, start: t, dur: 4.2 + Math.random() * 1.6 });
   }
   function level(target, t) {
     let best = 0, color = null;
@@ -132,13 +139,26 @@ export function createField(canvas, options = {}) {
       if (fade <= 0) continue;
       const [e, c] = level(d, t);
       const col = e > 0 ? lerp(GRAY, c, e) : GRAY;
-      ctx.fillStyle = css(col, 0.05 + fade * 0.26 + e * 0.6);
+      const [cx0, cy0] = project(d.x, 0, d.z);
+      if (cx0 < -R * f / d.z - 10 || cx0 > w + R * f / d.z + 10) continue;
       const rot = d.spin + t * (d.speed + e * 0.6);
+      const bob = Math.sin(t * 0.8 + d.spin) * 0.03;
+      // surcos: los de fuera un poco más tenues, como un vinilo de verdad
+      let lastK = -1;
       for (const p of dim) {
+        if (p.k !== lastK) { lastK = p.k; ctx.fillStyle = css(col, (0.07 + fade * 0.34) * (1 - Math.abs(p.r - 0.62) * 0.6) + e * 0.6); }
         const a = p.a + rot;
-        const [sx, sy, s] = project(d.x + Math.cos(a) * p.r * R, 0, d.z + Math.sin(a) * p.r * R);
-        if (sx < -4 || sx > w + 4 || sy > h + 4) continue;
-        const sz = Math.max(0.6, s * 0.016 * (1 + e * 0.5));
+        const [sx, sy, s] = project(d.x + Math.cos(a) * p.r * R, bob, d.z + Math.sin(a) * p.r * R);
+        if (sy > h + 4) continue;
+        const sz = Math.max(0.7, s * 0.018 * (1 + e * 0.5));
+        ctx.fillRect(sx - sz / 2, sy - sz / 2, sz, sz);
+      }
+      // etiqueta central
+      const lab = e > 0 ? lerp([120, 120, 132], c, e) : [120, 120, 132];
+      ctx.fillStyle = css(lab, 0.18 + fade * 0.3 + e * 0.5);
+      for (const p of dimLabel) {
+        const [sx, sy, s] = project(d.x + Math.cos(p.a + rot) * p.r * R, bob, d.z + Math.sin(p.a + rot) * p.r * R);
+        const sz = Math.max(0.7, s * 0.02);
         ctx.fillRect(sx - sz / 2, sy - sz / 2, sz, sz);
       }
     }
@@ -161,7 +181,9 @@ export function createField(canvas, options = {}) {
       const z2 = -ly * st + lz * ct;
       const [sx, sy, s] = project(HERO.x + lx, lift + y2, HERO.z + z2);
       const depth = 0.5 - z2 / (R * 2.3);
-      const col = eh > 0 ? lerp(GRAY, ch, eh) : GRAY;
+      let col = eh > 0 ? lerp(GRAY, ch, eh) : GRAY;
+      if (p.label) col = eh > 0 ? lerp(accent, ch, eh) : accent;
+      else if (wave > 0.15 && eh < 0.3) col = lerp(col, accent, Math.min(1, wave));
       const alpha = p.label ? 0.6 + eh * 0.4 : Math.min(1, 0.22 + depth * 0.5 + wave * 0.35 + eh * 0.25);
       ctx.fillStyle = css(col, alpha);
       const sz = Math.max(0.8, s * (p.label ? 0.03 : 0.022) * (1 + wave * 0.4));
