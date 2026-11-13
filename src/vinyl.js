@@ -1,31 +1,61 @@
 // Vinilo de partículas en <canvas>.
-// Anillos de puntos inclinados que giran. En reposo late suave a 128 BPM.
-// Con audio (synth) gira como un plato, cada anillo sube con su frecuencia
-// (graves en el centro, agudos fuera) y el bombo lanza una onda de neón.
+// Anillos de puntos inclinados que giran despacio. Cada pulso (128 BPM) lanza
+// una onda desde el centro que levanta los puntos y los enciende con los
+// colores de la paleta: c1 en el centro → c4 en el borde.
 
-function readAccent() {
-  const v = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim();
-  return v || '198, 255, 61';
+function hexToRgb(hex) {
+  const n = parseInt(hex.trim().replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function readPalette() {
+  const cs = getComputedStyle(document.documentElement);
+  const out = [];
+  for (let i = 1; i <= 4; i++) {
+    const v = cs.getPropertyValue(`--c${i}`).trim();
+    out.push(v.startsWith('#') ? hexToRgb(v) : [255, 138, 61]);
+  }
+  return out;
+}
+
+// color en la posición t (0–1) del degradado de 4 paradas
+function mix(pal, t) {
+  const x = Math.max(0, Math.min(0.9999, t)) * 3;
+  const i = Math.floor(x), f = x - i;
+  const a = pal[i], b = pal[i + 1];
+  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
 }
 
 export function createVinyl(canvas, options = {}) {
   const o = {
     rings: 42,
-    color: '242, 242, 245',
     size: 0.46,
     cx: 0.5,
     cy: 0.55,
     tilt: 1.02,
     bpm: 128,
-    follow: true,     // seguir al ratón
+    speed: 0.14,
+    follow: true,
     ...options
   };
 
   const ctx = canvas.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let accent = readAccent();
-  const onAccent = () => { accent = readAccent(); };
-  window.addEventListener('accentchange', onAccent);
+
+  // colores precalculados por anillo
+  let ringRGB = [], labelRGB = '255,138,61';
+  function buildColors() {
+    const pal = readPalette();
+    ringRGB = [];
+    for (let k = 0; k < o.rings; k++) {
+      const c = mix(pal, k / (o.rings - 1));
+      ringRGB.push(c.map(Math.round));
+    }
+    labelRGB = pal[0].join(',');
+  }
+  buildColors();
+  const onPalette = () => { buildColors(); if (reduce) draw(0.2); };
+  window.addEventListener('accentchange', onPalette);
 
   const pts = [];
   for (let k = 0; k < o.rings; k++) {
@@ -54,51 +84,24 @@ export function createVinyl(canvas, options = {}) {
 
   let mx = 0, my = 0, tx = 0, ty = 0;
   const onMove = (e) => { tx = e.clientX / window.innerWidth - 0.5; ty = e.clientY / window.innerHeight - 0.5; };
-
   const beat = 60 / o.bpm;
-  let audio = null;
-  let angle = 0, speed = 0.12, last = 0, energy = 0;
-  const ringLevel = new Float32Array(o.rings);
   let raf = 0, visible = true;
 
   function draw(t) {
-    const dt = Math.min(0.05, last ? t - last : 0.016);
-    last = t;
     if (o.follow) { mx += (tx - mx) * 0.04; my += (ty - my) * 0.04; }
-
-    // datos de audio
-    const lv = audio && audio.levels();
-    const ap = audio && audio.beatPhase();
-    const live = !!lv;
-    speed += ((live ? 0.9 : 0.12) - speed) * 0.025;   // arranca/frena como un plato
-    angle += speed * dt;
-
-    let bassNow = 0;
-    if (live) {
-      for (let k = 0; k < o.rings; k++) {
-        const bin = Math.min(100, Math.floor(1 + Math.pow(k / o.rings, 1.6) * 90));
-        const v = lv[bin] / 255;
-        ringLevel[k] += (v * v - ringLevel[k]) * 0.35;
-      }
-      bassNow = (lv[1] + lv[2] + lv[3]) / 765;
-    } else {
-      for (let k = 0; k < o.rings; k++) ringLevel[k] *= 0.92;
-    }
-    energy += ((live ? bassNow : 0) - energy) * 0.2;
-
     ctx.clearRect(0, 0, w, h);
-    const R = Math.min(w, h * 1.6) * o.size * (1 + energy * 0.04);
+
+    const R = Math.min(w, h * 1.6) * o.size;
     const cx = w * o.cx + mx * 30, cy = h * o.cy + my * 20;
+    const spin = t * o.speed;
     const tilt = o.tilt + my * 0.25;
     const cT = Math.cos(tilt), sT = Math.sin(tilt);
     const yaw = mx * 0.35, cY = Math.cos(yaw), sY = Math.sin(yaw);
-
-    const phase = ap !== null && ap !== undefined ? ap : (t % beat) / beat;
+    const phase = (t % beat) / beat;
     const fronts = [phase * 1.25, (phase + 1) * 1.25];
-    const waveAmp = live ? 0.11 : 0.05;
 
     for (const p of pts) {
-      const a = p.a + angle;
+      const a = p.a + spin;
       const r = p.r + p.jitter;
       const x = r * Math.cos(a);
       const z = r * Math.sin(a);
@@ -107,12 +110,9 @@ export function createVinyl(canvas, options = {}) {
       for (const f of fronts) {
         const d = r - f;
         const g = Math.exp(-(d * d) / 0.006);
-        lift += g * waveAmp * (1.3 - f * 0.6);
+        lift += g * 0.06 * (1.3 - f * 0.6);
         glow = Math.max(glow, g * (1.25 - f * 0.55));
       }
-      const lvl = p.k >= 0 ? ringLevel[p.k] : 0;
-      lift += lvl * 0.14 * (0.6 + 0.4 * Math.sin(a * 3 + t * 2));
-      glow = Math.max(glow, lvl * 0.9);
       const y = lift + 0.012 * Math.sin(t * 1.4 + r * 9);
 
       const x2 = x * cY - z * sY;
@@ -126,17 +126,20 @@ export function createVinyl(canvas, options = {}) {
       if (sx < -8 || sx > w + 8 || sy < -8 || sy > h + 8) continue;
 
       const depth = (z3 + 1) / 2;
-      const base = 0.18 + depth * 0.62;
+      const base = 0.16 + depth * 0.6;
       let size = (0.55 + depth * 1.25) * (p.big ? 1.8 : 1) * persp;
 
       if (p.label) {
-        ctx.fillStyle = `rgba(${accent},${(0.55 + depth * 0.45).toFixed(3)})`;
-        size *= 1 + energy * 0.5;
-      } else if (glow > 0.08) {
-        ctx.fillStyle = `rgba(${accent},${Math.min(1, base + glow).toFixed(3)})`;
-        size *= 1 + glow * 0.6;
+        ctx.fillStyle = `rgba(${labelRGB},${(0.55 + depth * 0.45).toFixed(3)})`;
       } else {
-        ctx.fillStyle = `rgba(${o.color},${base.toFixed(3)})`;
+        const c = ringRGB[p.k];
+        // en reposo: blanco cálido teñido un poco del color de su anillo; con la onda: color pleno
+        const tint = Math.min(1, 0.28 + glow);
+        const rr = Math.round(242 + (c[0] - 242) * tint);
+        const gg = Math.round(240 + (c[1] - 240) * tint);
+        const bb = Math.round(246 + (c[2] - 246) * tint);
+        ctx.fillStyle = `rgba(${rr},${gg},${bb},${Math.min(1, base + glow * 0.8).toFixed(3)})`;
+        if (glow > 0.08) size *= 1 + glow * 0.6;
       }
       ctx.beginPath();
       ctx.arc(sx, sy, size, 0, 6.2832);
@@ -154,20 +157,16 @@ export function createVinyl(canvas, options = {}) {
   if (reduce) {
     draw(0.2);
     window.addEventListener('resize', () => draw(0.2));
-    window.addEventListener('accentchange', () => draw(0.2));
   } else {
     if (o.follow) window.addEventListener('pointermove', onMove, { passive: true });
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
     raf = requestAnimationFrame(loop);
   }
 
-  return {
-    setAudio(a) { audio = a; },
-    destroy() {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('accentchange', onAccent);
-    }
+  return () => {
+    cancelAnimationFrame(raf);
+    window.removeEventListener('resize', resize);
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('accentchange', onPalette);
   };
 }

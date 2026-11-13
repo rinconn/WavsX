@@ -2,18 +2,24 @@
    Tema oscuro + un único neón (lima ácido).
    El neón va en: botón principal, play, onda reproducida, estado "Lista" y el vinilo de partículas. */
 :root {
-  --bg: #08080B;
-  --surface: #111116;
-  --surface-2: #18181F;
-  --raised: #1E1E26;
-  --line: #22222B;
-  --line-2: #30303B;
-  --text: #F2F2F5;
-  --text-2: #B9B9C6;
-  --muted: #8A8A9C;
-  --accent: #C6FF3D;
-  --accent-rgb: 198, 255, 61;
-  --on-accent: #0A0A0A;
+  /* valores por defecto = paleta "Golden hour" (public/theme.js los cambia en vivo) */
+  --bg: #0A090E;
+  --surface: #131219;
+  --surface-2: #1A1922;
+  --raised: #211F2A;
+  --line: #26242F;
+  --line-2: #34313F;
+  --text: #F3F1F6;
+  --text-2: #BDB8C8;
+  --muted: #8C879A;
+  --c1: #FF8A3D; --c1-rgb: 255, 138, 61;
+  --c2: #FF4F8B; --c2-rgb: 255, 79, 139;
+  --c3: #8B6CFF; --c3-rgb: 139, 108, 255;
+  --c4: #3DD6F5; --c4-rgb: 61, 214, 245;
+  --grad: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4));
+  --accent: var(--c1);
+  --accent-rgb: var(--c1-rgb);
+  --on-accent: #0B0A0D;
   --glow: 0 0 24px rgba(var(--accent-rgb), .35);
   --font: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
   --ease: cubic-bezier(.2, .8, .2, 1);
@@ -101,14 +107,18 @@ button { cursor: pointer; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
 }
 
-/* selector de color (temporal, para decidir el acento) */
+/* selector de paleta (temporal, para decidir) */
 .tweak {
   position: fixed; left: 16px; bottom: 16px; z-index: 50;
-  display: flex; align-items: center; gap: 6px; padding: 6px 8px 6px 14px; border-radius: 999px;
-  background: rgba(17, 17, 22, .85); border: 1px solid var(--line-2); backdrop-filter: blur(12px);
+  display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 14px; border-radius: 999px;
+  background: rgba(19, 18, 25, .88); border: 1px solid var(--line-2); backdrop-filter: blur(12px);
   font-size: 12px; font-weight: 600; color: var(--muted);
 }
 .tweak span { margin-right: 4px; }
-.tweak button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; background: var(--sw); padding: 0; transition: transform .15s; }
-.tweak button:hover { transform: scale(1.12); }
-.tweak button[aria-pressed="true"] { border-color: var(--text); box-shadow: 0 0 12px var(--sw); }
+.tweak button {
+  position: relative; height: 30px; padding: 0 12px 0 30px; border-radius: 999px; border: 1px solid var(--line-2);
+  background: transparent; color: var(--text-2); font-size: 12px; font-weight: 600;
+}
+.tweak button::before { content: ''; position: absolute; left: 8px; top: 8px; width: 14px; height: 14px; border-radius: 50%; background: var(--sw); }
+.tweak button[aria-pressed="true"] { border-color: var(--text); color: var(--text); }
+.grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }

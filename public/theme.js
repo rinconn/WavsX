@@ -1,57 +1,75 @@
-// Color de acento de toda la web + selector para probar colores.
+// Paletas de WavsX ("luces de estudio") + selector para probarlas.
 // Script clásico (no módulo) cargado en el <head> para que no haya parpadeo.
-// Cuando elijas color definitivo: deja solo ese en ACCENTS y pon SHOW_PICKER = false.
+// Cada paleta tiene 4 colores que se usan siempre en el mismo orden:
+//   c1 → acción principal (botones, play, estado "Lista")
+//   c2..c4 → acompañan en degradados, iconos, pasos y el vinilo
+// Cuando elijas la definitiva: deja solo esa en PALETTES y pon SHOW_PICKER = false.
 (function () {
   var SHOW_PICKER = true;
-  var ACCENTS = [
-    { id: 'lima',    name: 'Lima',    hex: '#C6FF3D' },
-    { id: 'cian',    name: 'Cian',    hex: '#3DF5FF' },
-    { id: 'violeta', name: 'Violeta', hex: '#9B7BFF' },
-    { id: 'naranja', name: 'Naranja', hex: '#FF6A2B' },
-    { id: 'rosa',    name: 'Rosa',    hex: '#FF4FD8' }
+  var PALETTES = [
+    {
+      id: 'golden', name: 'Golden hour',
+      c: ['#FF8A3D', '#FF4F8B', '#8B6CFF', '#3DD6F5'],
+      bg: ['#0A090E', '#131219', '#1A1922', '#211F2A', '#26242F', '#34313F']
+    },
+    {
+      id: 'tungsteno', name: 'Tungsteno',
+      c: ['#FFB347', '#FF6B5A', '#F0D3A8', '#5FB3A8'],
+      bg: ['#0E0B0A', '#171311', '#1E1916', '#26201C', '#2C2521', '#3A312B']
+    },
+    {
+      id: 'acuario', name: 'Acuario',
+      c: ['#3DE0F5', '#4F8BFF', '#9B7BFF', '#5CF2B5'],
+      bg: ['#070A0F', '#0F141B', '#151B24', '#1B222D', '#1F2732', '#2B3542']
+    }
   ];
-  var KEY = 'wavsx-accent';
+  var KEY = 'wavsx-palette';
+  var BG_VARS = ['--bg', '--surface', '--surface-2', '--raised', '--line', '--line-2'];
 
   function rgb(hex) {
     var n = parseInt(hex.slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(', ');
   }
-
   function find(id) {
-    for (var i = 0; i < ACCENTS.length; i++) if (ACCENTS[i].id === id) return ACCENTS[i];
-    return ACCENTS[0];
+    for (var i = 0; i < PALETTES.length; i++) if (PALETTES[i].id === id) return PALETTES[i];
+    return PALETTES[0];
   }
 
   function apply(id) {
-    var a = find(id);
-    var root = document.documentElement.style;
-    root.setProperty('--accent', a.hex);
-    root.setProperty('--accent-rgb', rgb(a.hex));
-    try { localStorage.setItem(KEY, a.id); } catch (e) { /* modo privado */ }
-    window.dispatchEvent(new CustomEvent('accentchange', { detail: a }));
-    var btns = document.querySelectorAll('.tweak [data-accent]');
-    for (var i = 0; i < btns.length; i++) btns[i].setAttribute('aria-pressed', String(btns[i].getAttribute('data-accent') === a.id));
+    var p = find(id);
+    var s = document.documentElement.style;
+    for (var i = 0; i < 4; i++) {
+      s.setProperty('--c' + (i + 1), p.c[i]);
+      s.setProperty('--c' + (i + 1) + '-rgb', rgb(p.c[i]));
+    }
+    s.setProperty('--accent', p.c[0]);
+    s.setProperty('--accent-rgb', rgb(p.c[0]));
+    s.setProperty('--grad', 'linear-gradient(90deg, ' + p.c.join(', ') + ')');
+    for (var j = 0; j < BG_VARS.length; j++) s.setProperty(BG_VARS[j], p.bg[j]);
+    try { localStorage.setItem(KEY, p.id); } catch (e) { /* modo privado */ }
+    window.dispatchEvent(new CustomEvent('accentchange', { detail: p }));
+    var btns = document.querySelectorAll('.tweak [data-palette]');
+    for (var k = 0; k < btns.length; k++) btns[k].setAttribute('aria-pressed', String(btns[k].getAttribute('data-palette') === p.id));
   }
 
-  var saved = null;
-  try { saved = localStorage.getItem(KEY); } catch (e) { /* nada */ }
-  apply(saved || ACCENTS[0].id);
-  window.wavsxAccent = { apply: apply, list: ACCENTS };
+  function saved() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  apply(saved() || PALETTES[0].id);
+  window.wavsxPalette = { apply: apply, list: PALETTES };
 
   if (!SHOW_PICKER) return;
   document.addEventListener('DOMContentLoaded', function () {
     var box = document.createElement('div');
     box.className = 'tweak';
     box.setAttribute('role', 'group');
-    box.setAttribute('aria-label', 'Probar color de acento');
-    box.innerHTML = '<span>Color</span>' + ACCENTS.map(function (a) {
-      return '<button type="button" data-accent="' + a.id + '" aria-label="' + a.name + '" title="' + a.name + '" style="--sw:' + a.hex + '"></button>';
+    box.setAttribute('aria-label', 'Probar paleta de colores');
+    box.innerHTML = '<span>Paleta</span>' + PALETTES.map(function (p) {
+      return '<button type="button" data-palette="' + p.id + '" style="--sw: linear-gradient(90deg, ' + p.c.join(', ') + ')">' + p.name + '</button>';
     }).join('');
     box.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-accent]');
-      if (b) apply(b.getAttribute('data-accent'));
+      var b = e.target.closest('[data-palette]');
+      if (b) apply(b.getAttribute('data-palette'));
     });
     document.body.appendChild(box);
-    apply((function () { try { return localStorage.getItem(KEY); } catch (e) { return null; } })() || ACCENTS[0].id);
+    apply(saved() || PALETTES[0].id);
   });
 })();
