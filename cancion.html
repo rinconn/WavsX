@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WavsX — Neón en la M-30</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles.css">
+  <link rel="stylesheet" href="/src/cancion.css">
+</head>
+<body class="song-page">
+<div class="wrap">
+
+  <div class="topbar">
+    <nav aria-label="Ruta" class="mono crumbs">
+      <a href="/" class="btn" style="height: 40px; padding: 0 14px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em">
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>CANCIONES</a>
+      <span>/</span><span style="color: var(--text)">TRK 01 · NEÓN EN LA M-30</span>
+    </nav>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px">
+      <button type="button" class="btn" style="height: 44px">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>Compartir
+      </button>
+      <button type="button" class="btn btn--primary" style="height: 44px">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>Subir versión nueva
+      </button>
+    </div>
+  </div>
+
+  <section class="neon-frame hero" aria-label="Canción">
+    <div class="hero__art" aria-hidden="true">
+      <div class="hero__disc"><div class="disc" id="disc" style="--label: #FFD23F; --c: var(--cyan)"></div></div>
+      <div class="cover hero__cover">
+        <div class="scan"></div>
+        <span class="mono hero__res">3000 × 3000</span>
+      </div>
+    </div>
+
+    <div class="hero__info">
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+        <span class="badge" style="--c: var(--amber); font-size: 11px; padding: 5px 10px"><i class="dot pulse"></i>EN MEZCLA</span>
+        <span class="mono" style="font-size: 11px; color: var(--muted); letter-spacing: 0.08em">TRK 01 · EP MADRUGADA</span>
+      </div>
+      <h1 class="display hero__title">Neón en la M-30</h1>
+      <div class="chips">
+        <span class="chip big"><b>BPM</b> 128</span>
+        <span class="chip big"><b>TONO</b> Fm</span>
+        <span class="chip big"><b>DUR</b> 03:24</span>
+        <span class="chip big"><b>FMT</b> 24-bit / 48 kHz</span>
+        <span class="chip big"><b>LUFS</b> −9.2</span>
+      </div>
+      <ol class="steps" aria-label="Progreso de la canción">
+        <li class="done"><span></span><b>IDEA ✓</b></li>
+        <li class="done"><span></span><b>DEMO ✓</b></li>
+        <li class="done"><span></span><b>GRABACIÓN ✓</b></li>
+        <li class="current" aria-current="step"><span></span><b>MEZCLA · 60%</b></li>
+        <li><span></span><b>MASTER</b></li>
+        <li><span></span><b>LISTA</b></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="panel player" aria-labelledby="versiones-t">
+    <div class="player__head">
+      <h2 id="versiones-t" class="label" style="margin: 0; font-weight: 500">Versiones · <span id="cur-version"></span></h2>
+      <div role="group" aria-label="Elegir versión" class="versions" id="versions"></div>
+    </div>
+
+    <div class="player__body">
+      <button type="button" class="play-btn" id="play" style="width: 64px; height: 64px; flex: none"></button>
+      <div class="player__track">
+        <span class="mono marker" style="left: 23%; background: var(--magenta); color: #12030F; box-shadow: 0 0 14px rgba(255,79,216,0.6)">00:48</span>
+        <span class="mono marker" style="left: 61%; background: var(--amber); color: #140E02; box-shadow: 0 0 14px rgba(255,194,77,0.6)">02:05</span>
+        <span class="playhead" aria-hidden="true"></span>
+        <div class="wave glow" id="wave" style="height: 120px" role="img" aria-label="Forma de onda de la versión seleccionada, 38% reproducido"></div>
+      </div>
+    </div>
+    <div class="mono player__time"><span style="color: var(--cyan)">01:17</span><span id="cur-meta"></span><span>03:24</span></div>
+
+    <div class="comments">
+      <div class="comment">
+        <span class="comment__av" style="background: var(--magenta); color: #12030F">P</span>
+        <div><span class="mono comment__who">PRODUCTOR · 00:48</span><p>Subir la voz 1 dB en el estribillo, se pierde con el synth.</p></div>
+      </div>
+      <div class="comment">
+        <span class="comment__av" style="background: var(--amber); color: #140E02">K</span>
+        <div><span class="mono comment__who">TÚ · 02:05</span><p>El bajo se come el kick en el drop. Revisar sidechain.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="panel col" aria-labelledby="archivos-t">
+      <div class="col__head"><h2 id="archivos-t" class="label" style="margin: 0; font-weight: 500">Archivos · 22</h2><span class="mono" style="font-size: 11px; color: var(--cyan)">612 MB</span></div>
+
+      <span class="label" style="color: var(--cyan)">Audio</span>
+      <ul class="files" id="files"></ul>
+
+      <span class="label" style="color: var(--magenta)">Visual</span>
+      <div class="thumbs">
+        <div class="cover is-picked" role="img" aria-label="Portada final, seleccionada" style="background: radial-gradient(circle at 32% 38%, #FFD23F 0 30%, transparent 30.5%), #FF3D6E"></div>
+        <div class="cover" role="img" aria-label="Portada alternativa B" style="background: linear-gradient(180deg, #FF3D6E 0 58%, #FFD23F 58% 100%)"></div>
+        <div class="cover" role="img" aria-label="Foto de sesión 1" style="background: repeating-linear-gradient(135deg, #1A0A12 0 12px, #FF3D6E 12px 24px)"></div>
+        <div class="thumbs__more mono">+5</div>
+      </div>
+
+      <span class="label" style="color: #B49BFF">Texto</span>
+      <div class="chips">
+        <span class="chip big">letra.txt</span>
+        <span class="chip big">creditos.pdf</span>
+        <span class="chip big">notas_mezcla.md</span>
+      </div>
+    </section>
+
+    <section class="panel col" aria-labelledby="ficha-t">
+      <h2 id="ficha-t" class="label" style="margin: 0; font-weight: 500">Ficha técnica</h2>
+      <dl class="facts">
+        <div><dt class="label">BPM</dt><dd class="display big">128</dd></div>
+        <div><dt class="label">Tonalidad</dt><dd class="display big">Fm</dd></div>
+        <div><dt class="label">Género</dt><dd>Electrónica / Pop</dd></div>
+        <div><dt class="label">ISRC</dt><dd class="mono" style="color: var(--amber); font-size: 13px">PENDIENTE</dd></div>
+      </dl>
+
+      <h3 class="label" style="margin: 4px 0 0; font-weight: 500">Créditos y reparto</h3>
+      <ul class="credits">
+        <li><span class="avatar"><span>K</span></span><div><b>Kairo</b><small class="mono">Artista · Letra · Composición</small></div><span class="mono pct">60%</span></li>
+        <li><span class="comment__av" style="background: var(--magenta); color: #12030F">P</span><div><b>[Productor]</b><small class="mono">Producción · Mezcla</small></div><span class="mono pct">40%</span></li>
+        <li><span class="comment__av add" aria-hidden="true">+</span><div><b style="color: #A3ABC6">Ingeniero de master</b><small class="mono">Sin asignar</small></div></li>
+      </ul>
+      <div class="split" role="img" aria-label="Reparto: Kairo 60%, productor 40%"><span style="width: 60%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan)"></span><span style="width: 40%; background: var(--magenta)"></span></div>
+    </section>
+
+    <section class="neon-frame col release-box" aria-labelledby="lanz-t">
+      <div class="col__head"><h2 id="lanz-t" class="label" style="margin: 0; font-weight: 500">Lanzamiento</h2><span class="mono" style="font-size: 12px; color: var(--cyan)" id="check-count"></span></div>
+      <div class="progress"><div id="check-bar"></div></div>
+      <ul class="checks" id="checks"></ul>
+
+      <hr>
+      <span class="label">Publicar y compartir</span>
+      <button type="button" class="btn btn--primary btn--block">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8l-9-5-9 5v8l9 5z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg>Preparar paquete para distribuidora
+      </button>
+      <button type="button" class="btn btn--magenta btn--block">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg>Subir a SoundCloud
+      </button>
+      <p class="note">Spotify, Apple Music y el resto se publican a través de una distribuidora. El paquete incluye master WAV, portada, letra, créditos y metadatos.</p>
+
+      <div class="share">
+        <span class="label">Enlace privado · mezcla v5</span>
+        <div style="display: flex; gap: 8px; align-items: center">
+          <span class="mono share__url" id="share-url">wavsx.app/s/k4ir0-n30n-v5</span>
+          <button type="button" class="btn" id="copy" style="height: 36px; padding: 0 12px; font-size: 12px">Copiar</button>
+        </div>
+        <button type="button" class="toggle" id="dl" aria-pressed="false">Permitir descarga <span class="toggle__track" aria-hidden="true"><span></span></span></button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script type="module" src="/src/cancion.js"></script>
+</body>
+</html>
