@@ -14,7 +14,13 @@ $$('[data-icon]').forEach((el) => {
 });
 
 /* ---------- 1 · hero: campo de vinilos ---------- */
-createField($('#field'), { horizon: wide ? 0.6 : 0.62 });
+if (new URLSearchParams(location.search).get('hero') === 'b') {
+  $('.hero').hidden = true;
+  $('.heroB').hidden = false;
+  renderWave($('#heroB-wave'), waveHeights(2.4, 90, 88), 0.42);
+} else {
+  createField($('#field'), { horizon: wide ? 0.6 : 0.62 });
+}
 
 // subtítulo palabra a palabra
 $$('[data-words]').forEach((el) => {
