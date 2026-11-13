@@ -36,8 +36,35 @@ export function createWaveField(canvas, options = {}) {
     peaks = new Array(bars).fill(0);
   }
 
-  let px = -999;
-  const onMove = (e) => { const b = canvas.getBoundingClientRect(); px = e.clientY - b.top > -80 ? e.clientX - b.left : -999; };
+  let px = -999, inside = false;
+  const onMove = (e) => {
+    const b = canvas.getBoundingClientRect();
+    px = e.clientY - b.top > -80 ? e.clientX - b.left : -999;
+    inside = e.clientY >= b.top && e.clientY <= b.bottom;
+  };
+  const onLeave = () => { px = -999; inside = false; };
+
+  // comentario flotante al pasar por una barra (la función de comentarios en el segundo exacto)
+  const NOTES = ['sube la voz', 'más reverb aquí', 'entra el bajo', 'recorta el final', 'coro más fuerte', 'bájale el hi-hat', 'aquí va el drop'];
+  const DUR = 222;                                                         // 3:42
+  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const pin = document.createElement('div');
+  pin.className = 'wf-pin';
+  pin.setAttribute('aria-hidden', 'true');
+  canvas.parentElement.appendChild(pin);
+  let pinFor = -1, heights = [];
+  function updatePin(mid) {
+    const i = Math.round(px / o._gap - 0.5);
+    if (!inside || i < 0 || i >= bars) { pin.classList.remove('on'); pinFor = -1; return; }
+    if (i !== pinFor) {
+      pinFor = i;
+      pin.textContent = `${fmt(((i + 0.5) / bars) * DUR)} · ${NOTES[(i * 7) % NOTES.length]}`;
+    }
+    const y = mid - 2 - (heights[i] || 1) * o.step - 22;
+    pin.style.transform = `translate(${canvas.offsetLeft + (i + 0.5) * o._gap}px, ${canvas.offsetTop + y}px) translate(-50%, -100%)`;
+    pin.classList.add('on');
+  }
+  let t0 = -1;
 
   const mix = (k) => `${Math.round(c[0] + (255 - c[0]) * k)},${Math.round(c[1] + (255 - c[1]) * k)},${Math.round(c[2] + (255 - c[2]) * k)}`;
   // dibuja una columna punteada de n puntos desde y0 hacia arriba (dir -1) o abajo (+1)
@@ -55,12 +82,14 @@ export function createWaveField(canvas, options = {}) {
   let raf = 0, visible = true, last = 0;
   function draw(t) {
     const dt = Math.min(0.05, Math.max(0, t - last)); last = t;
+    if (t0 < 0) t0 = t;
+    const age = reduce ? 9 : t - t0;
     ctx.clearRect(0, 0, w, h);
     ctx.lineCap = 'round';
     ctx.setLineDash([0, o.step]);
 
     const mid = h * 0.6;
-    const maxH = h * 0.56;
+    const maxH = h * 0.5;
     const beat = Math.pow(Math.max(0, Math.cos(t * 7.2)), 8) * 0.07;
     const head = ((t * 0.11) % 1.25 - 0.12) * w;
     const base = `rgb(${mix(0.05)})`;
@@ -75,11 +104,15 @@ export function createWaveField(canvas, options = {}) {
       let m = 0;
       if (px > -900) { const d = x - px; m = Math.exp(-(d * d) / 9000); a += m * 0.28; }
       a = Math.min(1, Math.max(0.03, a));
+      // entrada: las barras suben desde el centro, de dentro hacia fuera
+      const k0 = Math.min(1, Math.max(0, (age - 0.35 - Math.abs(u - 0.5) * 1.4) / 0.9));
+      a = 0.03 + (a - 0.03) * (1 - Math.pow(1 - k0, 3));
 
       const hd = x - head;
       const lit = Math.min(1, Math.exp(-(hd * hd) / 26000) + m * 0.9);
       const n = Math.max(1, Math.round((a * maxH) / o.step));
       const y0 = mid - 2;
+      heights[i] = n;
 
       // halo (solo las barras encendidas, que son pocas)
       if (lit > 0.3) {
@@ -102,6 +135,22 @@ export function createWaveField(canvas, options = {}) {
       ctx.beginPath(); ctx.arc(x, py, 2, 0, 6.2832); ctx.fill();
     }
     ctx.globalAlpha = 1;
+
+    // etiqueta de la cabeza de reproducción: versión y tiempo
+    if (head > 40 && head < w - 60 && age > 1.6) {
+      ctx.setLineDash([]);
+      const label = `v5 · ${fmt(Math.min(1, head / w) * DUR)}`;
+      ctx.font = '600 12px "Plus Jakarta Sans", system-ui, sans-serif';
+      const tw = ctx.measureText(label).width + 20;
+      ctx.fillStyle = 'rgba(255,255,255,.92)';
+      ctx.beginPath(); ctx.roundRect(head - tw / 2, h - 34, tw, 22, 11); ctx.fill();
+      ctx.fillStyle = '#09090B';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, head, h - 22.5);
+      ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`;
+      ctx.fillRect(head - 1, h - 12, 2, 12);
+    }
+    updatePin(mid);
   }
 
   function loop(ms) {
@@ -115,6 +164,7 @@ export function createWaveField(canvas, options = {}) {
     draw(2);
   } else {
     addEventListener('pointermove', onMove, { passive: true });
+    document.documentElement.addEventListener('pointerleave', onLeave);
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
     raf = requestAnimationFrame(loop);
   }
