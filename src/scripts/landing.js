@@ -16,7 +16,8 @@ $$('[data-icon]').forEach((el) => {
 });
 
 /* ---------- 1 · hero: campo de vinilos ---------- */
-const heroOpt = new URLSearchParams(location.search).get('hero');
+// por defecto: ecualizador (d). Otras opciones: ?hero=a (vinilos), b (producto), c (cúpula)
+const heroOpt = new URLSearchParams(location.search).get('hero') || 'd';
 if (heroOpt === 'c' || heroOpt === 'd') {
   $('.hero').hidden = true;
   $('.heroC').hidden = false;
