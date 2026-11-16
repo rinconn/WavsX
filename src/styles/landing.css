@@ -61,7 +61,7 @@ main { overflow-x: clip; }
 
 
 /* ---------- hero C: pared de espuma acústica morada, desenfocada ---------- */
-.heroC, .nav { --led: 198, 255, 61; --accent: rgb(var(--led)); --accent-rgb: var(--led); --on-accent: #0B0D06; }
+.heroC, .nav, .ledline { --led: 198, 255, 61; --accent: rgb(var(--led)); --accent-rgb: var(--led); --on-accent: #0B0D06; }
 .heroC { background: #040503; }
 .heroC .heroC__content { z-index: 2; }
 .heroC .hero__title, .heroC .hero__sub { text-shadow: 0 2px 30px rgba(0, 0, 0, .8); }
@@ -316,3 +316,6 @@ main { overflow-x: clip; }
   .sign { font-size: 22px; padding: 12px 20px; }
 }
 .heroC .pin { color: #0A090D; }
+/* separador a juego con el hero: tira verde ácido con destello que la recorre */
+.ledline { background: linear-gradient(90deg, transparent, rgb(var(--led)) 15%, rgb(var(--led)) 85%, transparent); opacity: .7; box-shadow: 0 0 14px rgba(var(--led), .45); }
+.ledline::before, .ledline::after { display: none; }
