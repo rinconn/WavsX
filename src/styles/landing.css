@@ -168,23 +168,47 @@ main { overflow-x: clip; }
 .keeps { max-width: 1280px; margin: 0 auto; padding: 130px 48px 140px; }
 .keeps__head { max-width: 980px; margin-bottom: 56px; }
 .keeps h2 { margin: 0; font-size: clamp(36px, 4.4vw, 64px); line-height: 1; letter-spacing: -0.045em; font-weight: 700; }
-.keeps__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.keep {
-  position: relative; overflow: hidden; padding: 28px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line);
-  display: flex; flex-direction: column; gap: 10px; min-height: 250px; transition: border-color .3s, transform .3s var(--ease);
-}
-.keep::before { /* foco que sigue al ratón */
-  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
-  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--kc-rgb), .16), transparent 70%);
-}
-.keep::after { content: ''; position: absolute; left: 28px; right: 28px; top: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--kc), transparent); opacity: .6; }
-.keep:hover { border-color: rgba(var(--kc-rgb), .45); transform: translateY(-3px); }
-.keep:hover::before { opacity: 1; }
-.keep__ico { width: 56px; height: 56px; border-radius: 16px; color: var(--kc); background: rgba(var(--kc-rgb), .1); box-shadow: inset 0 0 0 1px rgba(var(--kc-rgb), .3), 0 0 24px rgba(var(--kc-rgb), .18); margin-bottom: 10px; transition: transform .4s var(--ease); }
-.keep:hover .keep__ico { transform: rotate(-8deg) scale(1.06); }
-.keep h3 { margin: 0; font-size: 22px; letter-spacing: -0.03em; font-weight: 700; }
-.keep p { margin: 0; color: var(--text-2); }
-.keep__tag { margin-top: auto; align-self: flex-start; font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; color: var(--kc); border: 1px solid rgba(var(--kc-rgb), .35); }
+/* sesión de estudio: cada cosa que guarda la canción es una pista con su clip */
+.session { --headw: 320px; position: relative; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+.session__ruler { display: grid; grid-template-columns: var(--headw) 1fr; height: 34px; font-size: 11px; color: var(--muted); background: var(--bg); }
+.session__ruler > span { display: flex; align-items: center; padding: 0 20px; border-right: 1px solid var(--line); letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+.session__ruler > div { display: flex; padding: 0 16px; }
+.session__ruler i { flex: 1; font-style: normal; padding: 8px 0 0 5px; border-left: 1px solid var(--line-2); font-variant-numeric: tabular-nums; }
+.lane { display: grid; grid-template-columns: var(--headw) 1fr; border-top: 1px solid var(--line); min-height: 92px; transition: background .25s; }
+.lane:hover { background: rgba(var(--kc-rgb), .03); }
+.lane__head { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-right: 1px solid var(--line); }
+.lane__n { font-size: 11px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lane__ico { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; color: var(--kc); background: rgba(var(--kc-rgb), .1); }
+.lane h3 { margin: 0; font-size: 17px; letter-spacing: -0.02em; font-weight: 700; }
+.lane p { margin: 2px 0 0; font-size: 13px; color: var(--text-2); }
+.lane__clip { position: relative; display: flex; align-items: center; gap: 16px; min-width: 0; margin: 12px 16px; padding: 10px 14px; border-radius: 10px; overflow: hidden;
+  background: rgba(var(--kc-rgb), .07); border: 1px solid rgba(var(--kc-rgb), .22); }
+.clip__tag { margin-left: auto; flex: none; font-size: 12px; font-weight: 600; color: var(--kc); white-space: nowrap; }
+.lane__clip .wave { flex: 1; min-width: 0; gap: 2px; }
+.lane__clip .wave span { background: rgba(var(--kc-rgb), .75); box-shadow: none; }
+.clip__stems { flex: 1; display: grid; gap: 4px; min-width: 0; }
+.clip__stems > div { display: grid; grid-template-columns: 58px 1fr; align-items: center; }
+.clip__stems small { font-size: 11px; color: var(--text-2); }
+.clip__covers { display: flex; gap: 8px; }
+.clip__covers i { width: 54px; height: 54px; border-radius: 6px; background: linear-gradient(135deg, var(--c1), var(--c4)); }
+.clip__covers i:nth-child(2) { background: radial-gradient(circle at 30% 30%, var(--c3), #1A1F10 70%); }
+.clip__covers i:nth-child(3) { background: linear-gradient(200deg, #0E1209, var(--c2)); }
+.clip__covers i:nth-child(4) { background: repeating-linear-gradient(45deg, #15180F 0 6px, var(--c1) 6px 8px); opacity: .7; }
+.clip__lyrics { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: 13px; color: var(--text-2); min-width: 0; }
+.clip__lyrics li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clip__lyrics li.on { color: var(--text); }
+.clip__lyrics time { display: inline-block; width: 40px; color: var(--kc); font-variant-numeric: tabular-nums; font-size: 11px; }
+.clip__split { flex: 1; display: flex; gap: 3px; height: 30px; font-size: 12px; font-weight: 600; }
+.clip__split span { display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: var(--c1); color: var(--on-accent); }
+.clip__split span + span { background: rgba(var(--c4-rgb), .25); color: var(--text); }
+.clip__vers { position: relative; flex: 1; height: 30px; margin: 0 14px 0 4px; background: linear-gradient(var(--line-2), var(--line-2)) 0 50% / 100% 1px no-repeat; }
+.clip__vers i { position: absolute; top: 50%; transform: translate(-50%, -50%); font-style: normal; font-size: 11px; font-weight: 600; padding: 3px 7px; border-radius: 999px; background: var(--raised); color: var(--text-2); border: 1px solid var(--line-2); }
+.clip__vers i:first-child { transform: translate(0, -50%); }
+.clip__vers i.on { background: var(--kc); color: var(--on-accent); border-color: transparent; transform: translate(-100%, -50%); }
+/* cabezal: avanza con el scroll por la sección */
+.session__head { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; pointer-events: none; background: var(--text);
+  left: calc(var(--headw) + 16px + (100% - var(--headw) - 32px) * var(--p, .1)); box-shadow: 0 0 10px rgba(255, 255, 255, .35); }
+.session__head::before { content: ''; position: absolute; top: 24px; left: 50%; width: 12px; height: 10px; margin-left: -6px; background: var(--text); clip-path: polygon(0 0, 100% 0, 50% 100%); }
 
 /* ---------- 3 · vida de una canción ---------- */
 .story { position: relative; height: 340vh; }
@@ -303,7 +327,11 @@ main { overflow-x: clip; }
   .hero__content { padding-top: 16vh; }
   .hero__sub { font-size: 17px; }
   .keeps { padding: 90px 20px; }
-  .keeps__grid { grid-template-columns: 1fr; }
+  .session { --headw: 0px; }
+  .session__ruler, .session__head { display: none; }
+  .lane { grid-template-columns: 1fr; }
+  .lane__head { border-right: 0; padding-bottom: 0; }
+  .clip__tag { display: none; }
   .ledline { margin: 0 20px; }
   .story { height: auto; }
   .story__sticky { position: static; height: auto; grid-template-columns: 1fr; gap: 32px; padding: 90px 20px; }

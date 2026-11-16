@@ -14,8 +14,7 @@ const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* iconos propios en todos los [data-icon] */
 $$('[data-icon]').forEach((el) => {
-  const big = el.classList.contains('keep__ico');
-  el.innerHTML = icon(el.dataset.icon, big ? 26 : 20);
+  el.innerHTML = icon(el.dataset.icon, 20);
 });
 
 /* ---------- 1 · hero: campo de vinilos ---------- */
@@ -53,14 +52,20 @@ if (mq) {
   mq.querySelectorAll('.marquee__item').forEach((el) => io2.observe(el));
 }
 
-/* ---------- 2 · foco que sigue al ratón en las tarjetas ---------- */
-$$('.keep').forEach((card) => {
-  card.addEventListener('pointermove', (e) => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-    card.style.setProperty('--my', `${e.clientY - r.top}px`);
-  });
-});
+/* ---------- 2 · sesión: ondas de los clips y cabezal que avanza con el scroll ---------- */
+$$('[data-wave]').forEach((el) => renderWave(el, waveHeights(+el.dataset.wave, 110, +el.dataset.h), 1));
+const session = $('.session');
+if (session) {
+  let ticking = false;
+  const move = () => {
+    const r = session.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
+    session.style.setProperty('--p', p.toFixed(4));
+    ticking = false;
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
+  move();
+}
 
 /* ---------- 3 · historia por pasos ---------- */
 const steps = $$('#steps li');
