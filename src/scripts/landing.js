@@ -151,8 +151,7 @@ document.querySelectorAll('.ledline').forEach((el, k) => {
   el.querySelectorAll('span').forEach((s, i) => s.style.setProperty('--i', i));
   const io = new IntersectionObserver(([e]) => {
     if (!e.isIntersecting) return;
-    const played = 0.3 + 0.25 * ((k * 0.37) % 1);
-    el.querySelectorAll('span').forEach((s, i) => s.classList.toggle('on', i / hs.length < played));
+    el.querySelectorAll('span').forEach((s) => s.classList.add('on'));
     io.disconnect();
   }, { threshold: 1 });
   io.observe(el);

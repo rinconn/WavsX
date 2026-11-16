@@ -316,9 +316,9 @@ main { overflow-x: clip; }
   .sign { font-size: 22px; padding: 12px 20px; }
 }
 .heroC .pin { color: #0A090D; }
-/* separador: la forma de onda de un tema, con lo ya escuchado en verde (como en la app) */
+/* separador: la forma de onda de un tema, que se enciende entera en verde al entrar en pantalla */
 .ledline.wave { height: 26px; max-width: 1280px; margin: 0 auto; padding: 0 24px; gap: 2px; background: none; box-shadow: none; opacity: 1; border-radius: 0;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 .ledline::before, .ledline::after { display: none; }
-.ledline.wave span { position: static; width: auto; top: auto; left: auto; filter: none; animation: none; border-radius: 1px; background: #25252C; transition: background .35s ease calc(var(--i) * 4ms); }
-.ledline.wave span.on { background: rgb(var(--led)); box-shadow: none; }
+.ledline.wave span { position: static; width: auto; top: auto; left: auto; filter: none; animation: none; border-radius: 1px; background: rgba(var(--led), .1); transition: background .35s ease calc(var(--i) * 4ms); }
+.ledline.wave span.on { background: rgba(var(--led), .75); box-shadow: none; }
