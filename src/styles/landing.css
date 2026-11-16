@@ -196,6 +196,15 @@ main { overflow-x: clip; }
 .axis { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; text-align: right; font-size: 10px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
 .spec { width: 100%; height: auto; border-radius: 10px; background: #0A0C06; display: block; }
 /* stems */
+.stemrow { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 14px; }
+.stemph { position: relative; margin: 0; border-radius: 14px; overflow: hidden; min-height: 280px; background: #0A0C06; }
+.stemph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stemph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,9,5,.88), rgba(8,9,5,0) 55%); }
+.stemph figcaption { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; display: grid; gap: 2px; }
+.stemph small { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--c1); }
+.stemph b { font-size: 22px; letter-spacing: -0.02em; }
+.stemph span { font-size: 12px; color: var(--text-2); font-family: ui-monospace, Menlo, monospace; }
+@media (max-width: 900px) { .stemrow { grid-template-columns: 1fr; } .stemph { min-height: 200px; } }
 .chan { list-style: none; margin: 0; padding: 22px 16px 16px; display: flex; gap: 10px; justify-content: space-around; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); }
 .chan li { display: grid; grid-template-columns: 14px 30px; grid-template-rows: auto auto auto auto; justify-items: center; column-gap: 8px; row-gap: 6px; transition: opacity .25s; }
 .chan li.off { opacity: .35; }
