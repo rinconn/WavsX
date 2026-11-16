@@ -84,8 +84,8 @@ main { overflow-x: clip; }
 .room__side--r { background-position: 0 0, 37px 0; }
 .room__side::before, .room__back::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: #FFE8FF; box-shadow: 0 0 6px 2px rgb(var(--led)), 0 0 26px 8px rgba(var(--led), .8), 0 0 80px 18px rgba(var(--led), .45); }
 /* ventana/pantalla fría: el contrapunto cian */
-.room__win { position: absolute; top: 30%; left: 42%; width: 20%; height: 30%; border-radius: 4px; background: linear-gradient(160deg, rgb(150, 240, 255), rgb(var(--cy)) 40%, rgb(20, 90, 140)); box-shadow: 0 0 0 6px #0A0810, 0 0 40px 10px rgba(var(--cy), .55), 0 0 140px 40px rgba(var(--cy), .25); }
-.room__side--r .room__win { left: auto; right: 48%; top: 36%; width: 12%; height: 18%; opacity: .55; }
+.room__win { position: absolute; top: 16%; left: 14%; width: 18%; height: 30%; border-radius: 4px; background: linear-gradient(160deg, rgb(150, 240, 255), rgb(var(--cy)) 40%, rgb(20, 90, 140)); box-shadow: 0 0 0 6px #0A0810, 0 0 40px 10px rgba(var(--cy), .55), 0 0 140px 40px rgba(var(--cy), .25); }
+.room__side--r .room__win { display: none; }
 /* fondo: paneles acústicos con el panel central enmarcado */
 .room__back {
   inset: 0; transform: translateZ(calc(var(--depth) * -1));
@@ -140,6 +140,42 @@ main { overflow-x: clip; }
 .heroC__canvas { z-index: 1; }
 /* la onda vive en la pantalla del panel central */
 .heroC #wavefield { left: 26%; width: 48%; top: 62%; bottom: auto; height: 15%; }
+/* equipo de estudio: monitores sobre la mesa y mesa de mezclas en primer plano */
+.heroC { --deskh: 21vh; }
+.mon::after { content: ''; position: absolute; left: 50%; top: 100%; width: 12px; margin-left: -6px; height: 30vh; background: linear-gradient(90deg, rgba(var(--led), .35), #15121B 30%, #07060A); }
+.mon--l { box-shadow: inset 2px 0 0 rgba(var(--led), .6), inset -1px 0 0 rgba(var(--cy), .35), 0 0 40px rgba(var(--led), .12), 0 40px 60px rgba(0, 0, 0, .8); }
+/* monitores: caja oscura con canto iluminado por las tiras; el cono late con la onda (--kick) */
+.mon {
+  position: absolute; z-index: 2; bottom: calc(var(--deskh) - 2vh); width: clamp(110px, 11vw, 176px); aspect-ratio: 1 / 1.48; pointer-events: none;
+  border-radius: 10px; background: linear-gradient(165deg, #1B1723, #09080C 62%);
+  box-shadow: inset 1px 0 0 rgba(var(--led), .45), inset -1px 0 0 rgba(var(--led), .45), inset 0 1px 0 rgba(255, 255, 255, .07), 0 0 40px rgba(var(--led), .10), 0 40px 60px rgba(0, 0, 0, .8);
+  animation: rise 1.2s var(--ease) .5s both;
+}
+.mon--l { left: 9%; }
+.mon--r { right: 9%; }
+.mon > i { position: absolute; left: 50%; border-radius: 50%; transform: translateX(-50%); }
+.mon__tw { top: 11%; width: 26%; aspect-ratio: 1; background: radial-gradient(circle, #3A3446 0 18%, #0B0A0E 22% 58%, #2A2533 62% 68%, #0B0A0E 72%); }
+.mon__wf {
+  bottom: 12%; width: 74%; aspect-ratio: 1;
+  background: radial-gradient(circle, #332E3D 0 13%, #0D0B11 15%, #17141D 52%, rgba(var(--led), .35) 57%, #2B2634 59% 63%, #08070A 67%);
+  transform: translateX(-50%) scale(calc(1 + var(--kick, 0) * .045));
+}
+.mon__led { bottom: 4.5%; width: 5px; height: 5px; background: rgb(var(--led)); box-shadow: 0 0 8px 2px rgba(var(--led), .8); }
+/* mesa de mezclas en perspectiva, en primer plano */
+.desk { position: absolute; z-index: 2; left: 0; right: 0; margin: 0 auto; bottom: 0; width: min(1240px, 92vw); height: var(--deskh); perspective: 700px; pointer-events: none; animation: rise 1.2s var(--ease) .35s both; }
+.desk__panel {
+  position: absolute; inset: 0; transform: rotateX(46deg); transform-origin: 50% 100%;
+  display: grid; grid-template-rows: 34% 1fr; gap: 6%; padding: 3.5% 3% 0;
+  border-radius: 16px 16px 0 0; background: linear-gradient(#18151E, #0A090D 80%);
+  border: 1px solid rgba(255, 255, 255, .05); border-top-color: rgba(var(--led), .6);
+  box-shadow: 0 -1px 0 rgba(var(--led), .7), 0 -20px 70px rgba(var(--led), .16);
+}
+.desk__knobs { background: radial-gradient(circle, #3A3446 0 2.5px, #121016 3.5px 5px, transparent 6px) 0 0 / calc(100% / 28) 50%; }
+.desk__faders { display: grid; grid-template-columns: repeat(28, 1fr); }
+.desk__faders i { position: relative; }
+.desk__faders i::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; border-radius: 2px; background: #050407; box-shadow: 0 1px 0 rgba(255, 255, 255, .04); }
+.desk__faders i::after { content: ''; position: absolute; left: 22%; right: 22%; bottom: var(--v); height: 9px; border-radius: 2px; background: linear-gradient(#D9D3E3, #8E879A); box-shadow: 0 3px 6px rgba(0, 0, 0, .7); }
+.desk__faders i:nth-child(5n + 2)::after { background: linear-gradient(rgb(var(--led)), rgba(var(--led), .6)); box-shadow: 0 0 10px rgba(var(--led), .7); }
 @media (prefers-reduced-motion: reduce) { .room::before, .room__grain { animation: none !important; } .room::before { opacity: 0; } }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
@@ -352,7 +388,8 @@ main { overflow-x: clip; }
   .heroC:has(#wavefield) { min-height: 0; }
   .heroC:has(#wavefield) .heroC__content { padding-top: 128px; }
   .heroC #wavefield { position: relative; left: 0; width: 100%; top: auto; height: 36vh; margin-top: 12px; }
-  .heroC { --depth: 420px; }
+  .heroC { --depth: 420px; --deskh: 14vh; }
+  .mon { display: none; }
   .room__tally { display: none; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }

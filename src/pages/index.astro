@@ -11,6 +11,7 @@ const keeps = [
   ['enlace', 'Enlaces privados', 'solo escuchar'],
   ['lanzar', 'Lanzamiento', 'checklist y paquete']
 ];
+const faders = Array.from({ length: 28 }, (_, i) => 18 + ((i * 37 + (i % 3) * 11) % 58));
 ---
 <Base title="WavsX — Tu música, antes de salir" description="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
 <header class="nav">
@@ -70,6 +71,15 @@ const keeps = [
     </div>
     <canvas id="dome" class="heroC__canvas" aria-hidden="true"></canvas>
     <canvas id="wavefield" class="heroC__canvas" aria-hidden="true"></canvas>
+    <!-- monitores de estudio y mesa de mezclas en silueta, iluminados por las tiras -->
+    <div class="mon mon--l" aria-hidden="true"><i class="mon__tw"></i><i class="mon__wf"></i><i class="mon__led"></i></div>
+    <div class="mon mon--r" aria-hidden="true"><i class="mon__tw"></i><i class="mon__wf"></i><i class="mon__led"></i></div>
+    <div class="desk" aria-hidden="true">
+      <div class="desk__panel">
+        <div class="desk__knobs"></div>
+        <div class="desk__faders">{faders.map((v) => <i style={`--v:${v}%`}></i>)}</div>
+      </div>
+    </div>
   </section>
 
   <!-- 1 · HERO B (opción alternativa: /?hero=b) -->
