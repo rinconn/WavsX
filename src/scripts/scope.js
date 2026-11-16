@@ -9,7 +9,7 @@ export function createScope(canvas) {
   let led = readLed();
   let w = 0, h = 0;
   function resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);   // líneas finas: con 1.5 basta y ahorra píxeles
     const b = canvas.getBoundingClientRect();
     w = b.width; h = b.height;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
