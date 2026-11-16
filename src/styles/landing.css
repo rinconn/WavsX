@@ -65,7 +65,7 @@ main { overflow-x: clip; }
 .heroC { background: #040503; }
 .heroC .heroC__content { z-index: 2; }
 .heroC .hero__title, .heroC .hero__sub { text-shadow: 0 2px 30px rgba(0, 0, 0, .8); }
-.heroC .title-dim { color: color-mix(in srgb, rgb(var(--led)) 35%, #8A8A8A); }
+.heroC .title-dim { color: rgb(var(--led)); text-shadow: 0 0 28px rgba(var(--led), .35), 0 2px 30px rgba(0, 0, 0, .6); }
 /* todo el color sale de --led: cambiarlo ahí recolorea pared, luz, onda y botones */
 .foam { position: absolute; inset: -60px; z-index: 0; pointer-events: none; transform: perspective(1100px) rotateY(-12deg) scale(1.15); contain: strict;
   background:
