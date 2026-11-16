@@ -101,19 +101,6 @@ const keeps = [
     </div>
   </section>
 
-  <!-- CARRUSEL · lo que guarda cada canción -->
-  <div class="marquee" aria-label="Lo que guarda cada canción">
-    <div class="marquee__track">
-      {[0, 1].map((n) => (
-        <ul class="marquee__group" aria-hidden={n === 1 ? 'true' : undefined}>
-          {keeps.map(([ic, label, tag], i) => (
-            <li class="marquee__item"><i class="marquee__n">{String(i + 1).padStart(2, '0')}</i><span class="marquee__ico" data-icon={ic}></span><b>{label}</b><small>{tag}</small></li>
-          ))}
-        </ul>
-      ))}
-    </div>
-  </div>
-
   <div class="ledline" aria-hidden="true"><span></span></div>
 
   <!-- 2 · LO QUE GUARDA CADA CANCIÓN -->
