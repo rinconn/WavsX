@@ -1,6 +1,6 @@
 import { createField } from './field.js';
 import { createDome } from './dome.js';
-import { createMeters } from './meters.js';
+import { createScope } from './scope.js';
 import { icon, sticker } from './icons.js';
 import { waveHeights, renderWave } from './data.js';
 
@@ -22,7 +22,7 @@ if (heroOpt === 'c' || heroOpt === 'd') {
   $('.hero').hidden = true;
   $('.heroC').hidden = false;
   if (heroOpt === 'c') { $('#wavefield').remove(); createDome($('#dome')); }
-  else { $('#dome').remove(); createMeters($('#wavefield')); }
+  else { $('#dome').remove(); createScope($('#wavefield')); }
 } else if (heroOpt === 'b') {
   $('.hero').hidden = true;
   $('.heroB').hidden = false;

@@ -62,41 +62,43 @@ main { overflow-x: clip; }
 
 
 /* ---------- estudio a oscuras (ambientación del hero) ----------
-   Sala negra; la única luz es una tira LED tras la mesa que barre la pared
-   acústica de abajo arriba, y el puente de medidores. Todo cuelga de --led. */
-.heroC, .nav { --led: 255, 170, 60; --accent: rgb(var(--led)); --accent-rgb: var(--led); }
-.heroC {
-  --floor: 7.4vh;                 /* línea de la mesa: 46vh × 0.16 */
-}
-.heroC:has(.room) { background: #030303; }
+   Sala negra con tiras LED moradas empotradas en la pared acústica entre panel y panel;
+   bañan los listones de alrededor y se reflejan en el suelo. Todo cuelga de --led. */
+.heroC, .nav { --led: 168, 112, 255; --accent: rgb(var(--led)); --accent-rgb: var(--led); --on-accent: #fff; }
+.heroC { --floor: 12vh; --strips: 12.5%; }
+.heroC:has(.room) { background: #040306; }
 .room { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .room > * { position: absolute; }
-.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 75% 85% at 50% 60%, transparent 45%, rgba(0, 0, 0, .9) 100%); }
-/* pared de listones iluminada en rasante desde la tira */
+.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 90% at 50% 45%, transparent 50%, rgba(0, 0, 0, .85) 100%); }
 .room__wall {
   left: 0; right: 0; top: 0; bottom: var(--floor);
   background:
-    linear-gradient(0deg, rgba(var(--led), .30), rgba(var(--led), .08) 35%, transparent 75%),
     repeating-linear-gradient(0deg, transparent 0 179px, rgba(0, 0, 0, .6) 179px 181px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, .16) 0 1px, rgba(255, 255, 255, .03) 1px 22px, rgba(0, 0, 0, .75) 22px 26px);
-  -webkit-mask: radial-gradient(ellipse 60% 100% at 50% 100%, #000 10%, transparent 80%);
-          mask: radial-gradient(ellipse 60% 100% at 50% 100%, #000 10%, transparent 80%);
-  animation: ledOn 1.4s var(--ease) .3s both;
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .06) 0 1px, rgba(255, 255, 255, .015) 1px 22px, rgba(0, 0, 0, .7) 22px 26px);
 }
-.room__wash { left: 0; right: 0; bottom: var(--floor); height: 60%; background: radial-gradient(ellipse 50% 70% at 50% 100%, rgba(var(--led), .22), transparent 70%); animation: ledOn 1.4s var(--ease) .3s both; }
-/* la tira: línea fina casi blanca con halo del color */
-.room__strip {
-  left: 6%; right: 6%; bottom: var(--floor); height: 2px; border-radius: 2px;
-  background: linear-gradient(90deg, transparent, rgb(var(--led)) 8%, #FFF4E0 50%, rgb(var(--led)) 92%, transparent);
-  box-shadow: 0 0 8px 1px rgba(var(--led), .9), 0 -6px 30px 4px rgba(var(--led), .45), 0 -20px 90px 20px rgba(var(--led), .18);
-  animation: ledOn 1.4s var(--ease) .1s both;
+/* tiras: núcleo blanco-lila, halo cercano y baño ancho sobre la pared */
+.room__leds {
+  left: 0; right: 0; top: 7%; bottom: var(--floor);
+  background: linear-gradient(90deg, transparent calc(50% - 1.5px), #F4ECFF calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1.5px));
+  background-size: var(--strips) 100%;
+  -webkit-mask: linear-gradient(transparent, #000 12%, #000 88%, transparent), radial-gradient(ellipse 34% 52% at 50% 36%, rgba(0, 0, 0, .08) 55%, #000 85%);
+          mask: linear-gradient(transparent, #000 12%, #000 88%, transparent), radial-gradient(ellipse 34% 52% at 50% 36%, rgba(0, 0, 0, .08) 55%, #000 85%);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+  animation: stripsOn 1.6s var(--ease) .15s both;
 }
-/* mesa / suelo: recoge el reflejo de la tira */
+.room__leds::before, .room__leds::after { content: ''; position: absolute; inset: 0; background-size: var(--strips) 100%; }
+.room__leds::after { background-image: linear-gradient(90deg, transparent 44%, rgba(var(--led), .95) 50%, transparent 56%); filter: blur(5px); }
+.room__leds::before { background-image: linear-gradient(90deg, transparent 18%, rgba(var(--led), .28) 50%, transparent 82%); filter: blur(18px); animation: breathe 6s ease-in-out 2s infinite; }
+@keyframes stripsOn { from { clip-path: inset(0 50% 0 50%); opacity: .3; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+@keyframes breathe { 50% { opacity: .7; } }
+.room__wash { left: 0; right: 0; bottom: var(--floor); height: 60%; background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(var(--led), .12), transparent 70%); }
+/* suelo: reflejo alargado y borroso de cada tira */
 .room__floor {
   left: 0; right: 0; bottom: 0; height: var(--floor);
-  background: radial-gradient(ellipse 45% 100% at 50% 0%, rgba(var(--led), .14), transparent 75%), linear-gradient(#0C0A08, #030303);
+  background: linear-gradient(#0B0812, #040306);
+  border-top: 1px solid rgba(var(--led), .18);
 }
-@keyframes ledOn { from { opacity: 0; } to { opacity: 1; } }
+.room__floor::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(90deg, transparent 40%, rgba(var(--led), .45) 50%, transparent 60%); background-size: var(--strips) 100%; filter: blur(6px); -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
 /* piloto "en el aire": se enciende al ir a entrar en el estudio */
 .room__tally {
   top: 108px; right: 48px; padding: 6px 12px 6px 22px; border-radius: 6px;
@@ -319,7 +321,7 @@ main { overflow-x: clip; }
   .heroC:has(#wavefield) { min-height: 0; }
   .heroC:has(#wavefield) .heroC__content { padding-top: 128px; }
   .heroC #wavefield { position: relative; height: 36vh; margin-top: 12px; }
-  .heroC { --floor: 5.8vh; }
+  .heroC { --floor: 8vh; --strips: 25%; }
   .room__tally { display: none; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }
