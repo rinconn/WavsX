@@ -62,86 +62,67 @@ main { overflow-x: clip; }
 
 
 /* ---------- estudio a oscuras (ambientación del hero) ----------
-   Una sola fuente de luz cálida (lámpara de techo) contra el LED frío del ecualizador.
-   Todo cuelga de estas variables para reutilizarlo en otras secciones. */
+   Sala negra iluminada solo por dos tubos LED de neón: pervinca a la izquierda, lila a la derecha.
+   Colores y posición en variables para reutilizarlo en otras secciones. */
 .heroC {
-  --lamp: 255, 222, 186;          /* tungsteno */
-  --lamp-power: 1;
-  --mx: 50%; --my: 28%;           /* luz de mano que sigue al cursor */
+  --neon-l: var(--c1-rgb);
+  --neon-r: var(--c3-rgb);
+  --neon-x: 9%;                   /* distancia de los tubos al borde */
   --floor: 18.4vh;                /* línea base del ecualizador: 46vh × 0.4 */
 }
+.heroC:has(.room) { background: #040405; }
 .room { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .room > * { position: absolute; }
+.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 50% 40%, transparent 40%, rgba(0, 0, 0, .85) 100%); }
+/* pared de listones: solo se ve donde llega la luz de los tubos */
 .room__wall {
   inset: 0;
   background:
-    repeating-linear-gradient(0deg, transparent 0 179px, rgba(0, 0, 0, .55) 179px 181px),
-    repeating-linear-gradient(90deg, rgba(var(--lamp), .22) 0 1px, rgba(var(--lamp), .06) 1px 20px, rgba(0, 0, 0, .7) 20px 24px);
-  -webkit-mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(380px circle at var(--mx) var(--my), #000, transparent 72%);
-          mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(380px circle at var(--mx) var(--my), #000, transparent 72%);
-  animation: lampOn 1.8s linear .2s both;
+    radial-gradient(ellipse 26% 62% at var(--neon-x) 40%, rgba(var(--neon-l), .26), transparent 70%),
+    radial-gradient(ellipse 26% 62% at calc(100% - var(--neon-x)) 40%, rgba(var(--neon-r), .26), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 179px, rgba(0, 0, 0, .6) 179px 181px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .20) 0 1px, rgba(255, 255, 255, .05) 1px 20px, rgba(0, 0, 0, .7) 20px 24px);
+  -webkit-mask: radial-gradient(ellipse 30% 66% at var(--neon-x) 40%, #000, transparent 72%), radial-gradient(ellipse 30% 66% at calc(100% - var(--neon-x)) 40%, #000, transparent 72%);
+          mask: radial-gradient(ellipse 30% 66% at var(--neon-x) 40%, #000, transparent 72%), radial-gradient(ellipse 30% 66% at calc(100% - var(--neon-x)) 40%, #000, transparent 72%);
+  animation: neonOn 1.6s linear .2s both;
 }
-.room__beam {
-  left: 50%; top: -6%; width: min(1200px, 160vw); height: 100%; transform: translateX(-50%);
-  background:
-    radial-gradient(ellipse 22% 9% at 50% 6%, rgba(var(--lamp), .85), transparent 70%),
-    conic-gradient(from 180deg at 50% 0%, transparent 157deg, rgba(var(--lamp), .16) 164deg, rgba(var(--lamp), .42) 180deg, rgba(var(--lamp), .16) 196deg, transparent 203deg);
-  -webkit-mask: linear-gradient(#000 20%, transparent 88%);
-          mask: linear-gradient(#000 35%, transparent 95%);
-  filter: blur(10px); opacity: var(--lamp-power);
-  transition: opacity .6s var(--ease);
-  animation: lampOn 1.8s linear .2s both;
+/* el tubo: núcleo casi blanco y halo de color en capas */
+.room__neon {
+  --c: var(--neon-l);
+  top: 14vh; height: 52vh; width: 6px; margin-left: -3px; border-radius: 6px;
+  background: linear-gradient(rgba(255, 255, 255, .85), #fff 50%, rgba(255, 255, 255, .85));
+  box-shadow: 0 0 4px 1px rgb(var(--c)), 0 0 18px 4px rgba(var(--c), .75), 0 0 60px 14px rgba(var(--c), .4), 0 0 160px 40px rgba(var(--c), .18);
+  animation: neonOn 1.6s linear .2s both, buzz 9s linear 3s infinite;
 }
-.room__dust {
-  left: 50%; top: 0; width: min(1200px, 160vw); height: 80%; transform: translateX(-50%);
-  background-image:
-    radial-gradient(1.5px 1.5px at 12% 18%, rgba(var(--lamp), .9), transparent),
-    radial-gradient(1px 1px at 33% 62%, rgba(var(--lamp), .7), transparent),
-    radial-gradient(1px 1px at 47% 8%, rgba(var(--lamp), .8), transparent),
-    radial-gradient(2px 2px at 58% 41%, rgba(var(--lamp), .5), transparent),
-    radial-gradient(1px 1px at 71% 77%, rgba(var(--lamp), .8), transparent),
-    radial-gradient(1.5px 1.5px at 86% 29%, rgba(var(--lamp), .6), transparent),
-    radial-gradient(1px 1px at 22% 88%, rgba(var(--lamp), .7), transparent);
-  background-size: 260px 300px;
-  -webkit-mask: conic-gradient(from 180deg at 50% 0%, transparent 160deg, #000 172deg 188deg, transparent 200deg), linear-gradient(#000 40%, transparent);
-          mask: conic-gradient(from 180deg at 50% 0%, transparent 160deg, #000 172deg 188deg, transparent 200deg), linear-gradient(#000 40%, transparent);
-  -webkit-mask-composite: source-in; mask-composite: intersect;
-  opacity: .9; animation: dust 40s linear infinite, lampOn 1.8s linear .2s both;
-}
-@keyframes dust { to { background-position: 60px -600px; } }
-/* suelo brillante: recoge la luz de la lámpara y el color del ecualizador */
+.room__neon--l { left: var(--neon-x); }
+.room__neon--r { --c: var(--neon-r); left: calc(100% - var(--neon-x)); animation-delay: .55s, 6s; }
+.room__wash { left: 0; right: 0; bottom: 0; height: 70%; background: radial-gradient(ellipse 55% 55% at 50% 78%, rgba(var(--c1-rgb), .14), transparent 70%); }
+/* suelo: reflejo alargado de cada tubo y del ecualizador */
 .room__floor {
   left: 0; right: 0; bottom: 0; height: var(--floor);
   background:
+    radial-gradient(ellipse 1.6% 90% at var(--neon-x) 0%, rgba(var(--neon-l), .55), transparent 80%),
+    radial-gradient(ellipse 1.6% 90% at calc(100% - var(--neon-x)) 0%, rgba(var(--neon-r), .55), transparent 80%),
+    radial-gradient(ellipse 14% 70% at var(--neon-x) 0%, rgba(var(--neon-l), .16), transparent 75%),
+    radial-gradient(ellipse 14% 70% at calc(100% - var(--neon-x)) 0%, rgba(var(--neon-r), .16), transparent 75%),
     radial-gradient(ellipse 46% 90% at 50% 0%, rgba(var(--c1-rgb), .10), transparent 70%),
-    radial-gradient(ellipse 22% 80% at 50% 0%, rgba(var(--lamp), .16), transparent 70%),
-    linear-gradient(#0E0E13, var(--bg) 90%);
+    linear-gradient(#0B0B10, var(--bg) 90%);
 }
-.room__torch { inset: 0; background: radial-gradient(380px circle at var(--mx) var(--my), rgba(var(--lamp), .09), transparent 70%); }
-.room__wash { left: 0; right: 0; bottom: 0; height: 70%; background: radial-gradient(ellipse 55% 55% at 50% 78%, rgba(var(--c1-rgb), .16), transparent 70%); }
-.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 62% 75% at 50% 28%, transparent 35%, rgba(0, 0, 0, .9) 100%); }
-.heroC:has(.room) { background: #040405; }
-.room__floor::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--lamp), .18) 35%, rgba(var(--lamp), .28) 50%, rgba(var(--lamp), .18) 65%, transparent); }
+.room__floor::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--neon-l), .35) 9%, rgba(255, 255, 255, .08) 50%, rgba(var(--neon-r), .35) 91%, transparent); }
 /* piloto "en el aire": se enciende al ir a entrar en el estudio */
 .room__tally {
-  top: 108px; right: 48px; padding: 6px 12px 6px 22px; border-radius: 6px;
+  top: 108px; right: calc(var(--neon-x) + 32px); padding: 6px 12px 6px 22px; border-radius: 6px;
   font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
   color: #4A2226; background: #140B0D; border: 1px solid #2A1417;
   transition: color .25s, background .25s, box-shadow .25s, border-color .25s;
 }
 .room__tally::before { content: ''; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: currentColor; }
 .heroC.is-air .room__tally { color: #FF5A5F; background: #2A0F12; border-color: #5C1D22; box-shadow: 0 0 24px rgba(255, 70, 80, .35), inset 0 0 12px rgba(255, 70, 80, .15); }
-.heroC.is-air { --lamp-power: 1.35; }
-/* encendido: la lámpara titubea antes de quedarse fija */
-@keyframes lampOn {
-  0% { opacity: 0; } 6% { opacity: .7; } 10% { opacity: .1; } 16% { opacity: .9; } 20% { opacity: .35; } 34%, 100% { opacity: 1; }
-}
-.room__beam { animation-name: beamOn; }
-@keyframes beamOn {
-  0% { opacity: 0; } 6% { opacity: calc(var(--lamp-power) * .7); } 10% { opacity: .1; } 16% { opacity: calc(var(--lamp-power) * .9); } 20% { opacity: .35; } 34%, 100% { opacity: var(--lamp-power); }
-}
+/* encendido de fluorescente y algún parpadeo ocasional */
+@keyframes neonOn { 0% { opacity: 0; } 5% { opacity: .8; } 9% { opacity: .05; } 14% { opacity: 1; } 18% { opacity: .3; } 30%, 100% { opacity: 1; } }
+@keyframes buzz { 0%, 95% { opacity: 1; } 95.6% { opacity: .35; } 96.2% { opacity: 1; } 96.8% { opacity: .55; } 97.4%, 100% { opacity: 1; } }
 .heroC__canvas { z-index: 1; }
-.heroC .hero__title { text-shadow: 0 -1px 0 rgba(var(--lamp), .6), 0 -20px 70px rgba(var(--lamp), .18); }
+.heroC .hero__title { text-shadow: -1px 0 0 rgba(var(--neon-l), .5), 1px 0 0 rgba(var(--neon-r), .5), 0 0 60px rgba(255, 255, 255, .06); }
 @media (prefers-reduced-motion: reduce) { .room > * { animation: none !important; } }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
@@ -180,9 +161,6 @@ main { overflow-x: clip; }
 .heroC .btn--ghost { border-color: rgba(255, 255, 255, .1); background: rgba(255, 255, 255, .03); color: var(--text); }
 .heroC .btn--ghost:hover { background: rgba(255, 255, 255, .08); border-color: rgba(255, 255, 255, .22); transform: translateY(-2px); }
 .heroC .btn--ghost:active { transform: translateY(0) scale(.98); }
-.wf-pin { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; opacity: 0; font-size: 12px; font-weight: 700; white-space: nowrap; padding: 5px 11px; border-radius: 999px; background: var(--text); color: var(--on-accent); transition: opacity .15s; will-change: transform; }
-.wf-pin.on { opacity: 1; }
-.wf-pin::after { content: ''; position: absolute; left: 50%; top: 100%; margin-left: -4px; border: 4px solid transparent; border-top-color: var(--text); }
 @media (max-width: 700px) { .heroC__canvas { height: 48vh; } #wavefield { height: 40vh; } }
 
 /* ---------- 1 · hero B (producto a la vista) ---------- */
@@ -359,6 +337,8 @@ main { overflow-x: clip; }
   .heroC #wavefield { position: relative; height: 36vh; margin-top: 12px; }
   .heroC { --floor: 14.4vh; }
   .room__tally { display: none; }
+  .heroC { --neon-x: 5%; }
+  .room__neon { top: 110px; height: 40vh; width: 4px; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }
   .hero__content { padding-top: 16vh; }

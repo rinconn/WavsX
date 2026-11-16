@@ -44,26 +44,7 @@ export function createWaveField(canvas, options = {}) {
   };
   const onLeave = () => { px = -999; inside = false; };
 
-  // comentario flotante al pasar por una barra (la función de comentarios en el segundo exacto)
-  const NOTES = ['sube la voz', 'más reverb aquí', 'entra el bajo', 'recorta el final', 'coro más fuerte', 'bájale el hi-hat', 'aquí va el drop'];
-  const DUR = 222;                                                         // 3:42
-  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-  const pin = document.createElement('div');
-  pin.className = 'wf-pin';
-  pin.setAttribute('aria-hidden', 'true');
-  canvas.parentElement.appendChild(pin);
-  let pinFor = -1, heights = [];
-  function updatePin(mid) {
-    const i = Math.round(px / o._gap - 0.5);
-    if (!inside || i < 0 || i >= bars) { pin.classList.remove('on'); pinFor = -1; return; }
-    if (i !== pinFor) {
-      pinFor = i;
-      pin.textContent = `${fmt(((i + 0.5) / bars) * DUR)} · ${NOTES[(i * 7) % NOTES.length]}`;
-    }
-    const y = mid - 2 - (heights[i] || 1) * o.step - 22;
-    pin.style.transform = `translate(${canvas.offsetLeft + (i + 0.5) * o._gap}px, ${canvas.offsetTop + y}px) translate(-50%, -100%)`;
-    pin.classList.add('on');
-  }
+  let heights = [];
   let t0 = -1;
 
   const mix = (k) => `${Math.round(c[0] + (255 - c[0]) * k)},${Math.round(c[1] + (255 - c[1]) * k)},${Math.round(c[2] + (255 - c[2]) * k)}`;
@@ -136,7 +117,6 @@ export function createWaveField(canvas, options = {}) {
     }
     ctx.globalAlpha = 1;
 
-    updatePin(mid);
   }
 
   function loop(ms) {
