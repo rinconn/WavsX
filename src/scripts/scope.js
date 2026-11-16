@@ -7,6 +7,7 @@ export function createScope(canvas) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const readLed = () => (getComputedStyle(canvas).getPropertyValue('--led').trim() || '168, 112, 255').split(',').map(Number);
   let led = readLed();
+  const host = canvas.parentElement;
   let w = 0, h = 0;
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -32,6 +33,7 @@ export function createScope(canvas) {
     ctx.clearRect(0, 0, w, h);
     const mid = h * 0.55, amp = h * 0.32;
     const kick = Math.pow(Math.max(0, Math.sin(t * Math.PI * 2 * 1.02)), 10);
+    host.style.setProperty('--kick', kick.toFixed(3));
     const reveal = Math.min(1, age / 1.8) * w;
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineJoin = ctx.lineCap = 'round';

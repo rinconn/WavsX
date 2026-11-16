@@ -109,6 +109,39 @@ main { overflow-x: clip; }
 .room__tally::before { content: ''; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: currentColor; }
 .heroC.is-air .room__tally { color: #FF5A5F; background: #2A0F12; border-color: #5C1D22; box-shadow: 0 0 24px rgba(255, 70, 80, .35), inset 0 0 12px rgba(255, 70, 80, .15); }
 .heroC__canvas { z-index: 1; }
+
+/* monitores: caja oscura con canto iluminado por las tiras; el cono late con la onda (--kick) */
+.mon {
+  position: absolute; z-index: 2; bottom: calc(var(--floor) - 1px); width: clamp(110px, 11vw, 176px); aspect-ratio: 1 / 1.48; pointer-events: none;
+  border-radius: 10px; background: linear-gradient(165deg, #1B1723, #09080C 62%);
+  box-shadow: inset 1px 0 0 rgba(var(--led), .45), inset -1px 0 0 rgba(var(--led), .45), inset 0 1px 0 rgba(255, 255, 255, .07), 0 0 40px rgba(var(--led), .10), 0 40px 60px rgba(0, 0, 0, .8);
+  animation: rise 1.2s var(--ease) .5s both;
+}
+.mon--l { left: 5%; }
+.mon--r { right: 5%; }
+.mon > i { position: absolute; left: 50%; border-radius: 50%; transform: translateX(-50%); }
+.mon__tw { top: 11%; width: 26%; aspect-ratio: 1; background: radial-gradient(circle, #3A3446 0 18%, #0B0A0E 22% 58%, #2A2533 62% 68%, #0B0A0E 72%); }
+.mon__wf {
+  bottom: 12%; width: 74%; aspect-ratio: 1;
+  background: radial-gradient(circle, #332E3D 0 13%, #0D0B11 15%, #17141D 52%, rgba(var(--led), .35) 57%, #2B2634 59% 63%, #08070A 67%);
+  transform: translateX(-50%) scale(calc(1 + var(--kick, 0) * .045));
+}
+.mon__led { bottom: 4.5%; width: 5px; height: 5px; background: rgb(var(--led)); box-shadow: 0 0 8px 2px rgba(var(--led), .8); }
+/* mesa de mezclas en perspectiva, en primer plano */
+.desk { position: absolute; z-index: 2; left: 0; right: 0; margin: 0 auto; bottom: 0; width: min(1000px, 80vw); height: calc(var(--floor) + 10vh); perspective: 700px; pointer-events: none; animation: rise 1.2s var(--ease) .35s both; }
+.desk__panel {
+  position: absolute; inset: 0; transform: rotateX(46deg); transform-origin: 50% 100%;
+  display: grid; grid-template-rows: 34% 1fr; gap: 6%; padding: 3.5% 3% 0;
+  border-radius: 16px 16px 0 0; background: linear-gradient(#18151E, #0A090D 80%);
+  border: 1px solid rgba(255, 255, 255, .05); border-top-color: rgba(var(--led), .6);
+  box-shadow: 0 -1px 0 rgba(var(--led), .7), 0 -20px 70px rgba(var(--led), .16);
+}
+.desk__knobs { background: radial-gradient(circle, #3A3446 0 2.5px, #121016 3.5px 5px, transparent 6px) 0 0 / calc(100% / 28) 50%; }
+.desk__faders { display: grid; grid-template-columns: repeat(28, 1fr); }
+.desk__faders i { position: relative; }
+.desk__faders i::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; border-radius: 2px; background: #050407; box-shadow: 0 1px 0 rgba(255, 255, 255, .04); }
+.desk__faders i::after { content: ''; position: absolute; left: 22%; right: 22%; bottom: var(--v); height: 9px; border-radius: 2px; background: linear-gradient(#D9D3E3, #8E879A); box-shadow: 0 3px 6px rgba(0, 0, 0, .7); }
+.desk__faders i:nth-child(5n + 2)::after { background: linear-gradient(rgb(var(--led)), rgba(var(--led), .6)); box-shadow: 0 0 10px rgba(var(--led), .7); }
 @media (prefers-reduced-motion: reduce) { .room > * { animation: none !important; } }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
@@ -323,6 +356,8 @@ main { overflow-x: clip; }
   .heroC #wavefield { position: relative; height: 36vh; margin-top: 12px; }
   .heroC { --floor: 8vh; --strips: 25%; }
   .room__tally { display: none; }
+  .mon { display: none; }
+  .desk { width: 110vw; height: calc(var(--floor) + 6vh); }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }
   .hero__content { padding-top: 16vh; }
