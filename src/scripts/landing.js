@@ -136,12 +136,14 @@ const setV = (i) => {
 $$('.tn').forEach((b) => b.addEventListener('click', () => { setV(+b.dataset.i); lt0 = performance.now() + 5000; }));
 setV(4);
 
+const gf = $$('.gfill'), gv = $$('.g').map((x) => +x.dataset.v);
 let covAuto = 0;
 const frame = (t) => {
   if (cur === 0 && off) {
     const g = spec.getContext('2d'), x = still ? 0 : ((t / 1000) * 46) % spec.width;
     g.clearRect(0, 0, spec.width, spec.height);
     g.drawImage(off, x, 0, spec.width, spec.height, 0, 0, spec.width, spec.height);
+    gf.forEach((el, k) => el.style.setProperty('--w', gv[k] + (still ? 0 : Math.sin(t / 700 + k * 2) * 1.6 + Math.sin(t / 230 + k) * 0.8)));
     $('#tc').textContent = fmt(48 + (t / 1000) % 256);
   } else if (cur === 1 && !still) {
     const beat = Math.pow(Math.abs(Math.sin(t / 1000 * 3.2)), 4);
