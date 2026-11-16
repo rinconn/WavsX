@@ -131,3 +131,26 @@ function onScroll() {
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll);
 onScroll();
+
+/* ---------- estudio a oscuras: luz de mano y piloto "en el aire" ---------- */
+{
+  const room = $('.heroC');
+  if (room && matchMedia('(hover: hover)').matches) {
+    let raf = 0, x = 0, y = 0;
+    room.addEventListener('pointermove', (e) => {
+      x = e.clientX; y = e.clientY;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const b = room.getBoundingClientRect();
+        room.style.setProperty('--mx', `${x - b.left}px`);
+        room.style.setProperty('--my', `${y - b.top}px`);
+      });
+    });
+  }
+  room?.querySelectorAll('[data-air]').forEach((a) => {
+    const on = () => room.classList.add('is-air'), off = () => room.classList.remove('is-air');
+    a.addEventListener('pointerenter', on); a.addEventListener('focus', on);
+    a.addEventListener('pointerleave', off); a.addEventListener('blur', off);
+  });
+}

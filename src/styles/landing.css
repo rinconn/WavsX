@@ -1,5 +1,6 @@
 /* ===== Landing ===== */
 html { scroll-behavior: smooth; }
+main { overflow-x: clip; }
 .kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 18px; }
 .kicker::before { content: ''; width: 22px; height: 2px; border-radius: 2px; background: var(--grad); box-shadow: 0 0 10px rgba(var(--c2-rgb), .6); }
 
@@ -58,6 +59,86 @@ html { scroll-behavior: smooth; }
 .heroC .hero__title { font-size: clamp(44px, 6.2vw, 96px); }
 /* hero C/D: deja asomar el carrusel en la parte baja de la pantalla */
 .heroC:has(#wavefield) { min-height: calc(100vh - 88px); }
+
+
+/* ---------- estudio a oscuras (ambientación del hero) ----------
+   Una sola fuente de luz cálida (lámpara de techo) contra el LED frío del ecualizador.
+   Todo cuelga de estas variables para reutilizarlo en otras secciones. */
+.heroC {
+  --lamp: 255, 222, 186;          /* tungsteno */
+  --lamp-power: 1;
+  --mx: 50%; --my: 28%;           /* luz de mano que sigue al cursor */
+  --floor: 18.4vh;                /* línea base del ecualizador: 46vh × 0.4 */
+}
+.room { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.room > * { position: absolute; }
+.room__wall {
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 179px, rgba(0, 0, 0, .55) 179px 181px),
+    repeating-linear-gradient(90deg, rgba(var(--lamp), .09) 0 1px, rgba(var(--lamp), .025) 1px 20px, rgba(0, 0, 0, .6) 20px 24px);
+  -webkit-mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(260px circle at var(--mx) var(--my), rgba(0, 0, 0, .9), transparent 72%);
+          mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(260px circle at var(--mx) var(--my), rgba(0, 0, 0, .9), transparent 72%);
+  animation: lampOn 1.8s linear .2s both;
+}
+.room__beam {
+  left: 50%; top: -6%; width: min(1200px, 160vw); height: 100%; transform: translateX(-50%);
+  background:
+    radial-gradient(ellipse 22% 9% at 50% 6%, rgba(var(--lamp), .55), transparent 70%),
+    conic-gradient(from 180deg at 50% 0%, transparent 157deg, rgba(var(--lamp), .10) 165deg, rgba(var(--lamp), .24) 180deg, rgba(var(--lamp), .10) 195deg, transparent 203deg);
+  -webkit-mask: linear-gradient(#000 20%, transparent 88%);
+          mask: linear-gradient(#000 20%, transparent 88%);
+  filter: blur(6px); opacity: var(--lamp-power);
+  transition: opacity .6s var(--ease);
+  animation: lampOn 1.8s linear .2s both;
+}
+.room__dust {
+  left: 50%; top: 0; width: min(1200px, 160vw); height: 80%; transform: translateX(-50%);
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(var(--lamp), .9), transparent),
+    radial-gradient(1px 1px at 33% 62%, rgba(var(--lamp), .7), transparent),
+    radial-gradient(1px 1px at 47% 8%, rgba(var(--lamp), .8), transparent),
+    radial-gradient(2px 2px at 58% 41%, rgba(var(--lamp), .5), transparent),
+    radial-gradient(1px 1px at 71% 77%, rgba(var(--lamp), .8), transparent),
+    radial-gradient(1.5px 1.5px at 86% 29%, rgba(var(--lamp), .6), transparent),
+    radial-gradient(1px 1px at 22% 88%, rgba(var(--lamp), .7), transparent);
+  background-size: 260px 300px;
+  -webkit-mask: conic-gradient(from 180deg at 50% 0%, transparent 160deg, #000 172deg 188deg, transparent 200deg), linear-gradient(#000 40%, transparent);
+          mask: conic-gradient(from 180deg at 50% 0%, transparent 160deg, #000 172deg 188deg, transparent 200deg), linear-gradient(#000 40%, transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect;
+  opacity: .55; animation: dust 40s linear infinite, lampOn 1.8s linear .2s both;
+}
+@keyframes dust { to { background-position: 60px -600px; } }
+/* suelo brillante: recoge la luz de la lámpara y el color del ecualizador */
+.room__floor {
+  left: 0; right: 0; bottom: 0; height: var(--floor);
+  background:
+    radial-gradient(ellipse 46% 90% at 50% 0%, rgba(var(--c1-rgb), .10), transparent 70%),
+    radial-gradient(ellipse 16% 60% at 50% 0%, rgba(var(--lamp), .06), transparent 70%),
+    linear-gradient(#0E0E13, var(--bg) 90%);
+}
+.room__floor::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--lamp), .18) 35%, rgba(var(--lamp), .28) 50%, rgba(var(--lamp), .18) 65%, transparent); }
+/* piloto "en el aire": se enciende al ir a entrar en el estudio */
+.room__tally {
+  top: 108px; right: 48px; padding: 6px 12px 6px 22px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: #4A2226; background: #140B0D; border: 1px solid #2A1417;
+  transition: color .25s, background .25s, box-shadow .25s, border-color .25s;
+}
+.room__tally::before { content: ''; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: currentColor; }
+.heroC.is-air .room__tally { color: #FF5A5F; background: #2A0F12; border-color: #5C1D22; box-shadow: 0 0 24px rgba(255, 70, 80, .35), inset 0 0 12px rgba(255, 70, 80, .15); }
+.heroC.is-air { --lamp-power: 1.35; }
+/* encendido: la lámpara titubea antes de quedarse fija */
+@keyframes lampOn {
+  0% { opacity: 0; } 6% { opacity: .7; } 10% { opacity: .1; } 16% { opacity: .9; } 20% { opacity: .35; } 34%, 100% { opacity: 1; }
+}
+.room__beam { animation-name: beamOn; }
+@keyframes beamOn {
+  0% { opacity: 0; } 6% { opacity: calc(var(--lamp-power) * .7); } 10% { opacity: .1; } 16% { opacity: calc(var(--lamp-power) * .9); } 20% { opacity: .35; } 34%, 100% { opacity: var(--lamp-power); }
+}
+.heroC__canvas { z-index: 1; }
+.heroC .hero__title { text-shadow: 0 -1px 0 rgba(var(--lamp), .35), 0 -18px 60px rgba(var(--lamp), .08); }
+@media (prefers-reduced-motion: reduce) { .room > * { animation: none !important; } }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
 .marquee { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); padding: 0 0 18px;
@@ -269,6 +350,11 @@ html { scroll-behavior: smooth; }
   .floats { display: none; }
 }
 @media (max-width: 900px) {
+  .heroC:has(#wavefield) { min-height: 0; }
+  .heroC:has(#wavefield) .heroC__content { padding-top: 128px; }
+  .heroC #wavefield { position: relative; height: 36vh; margin-top: 12px; }
+  .heroC { --floor: 14.4vh; }
+  .room__tally { display: none; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }
   .hero__content { padding-top: 16vh; }
