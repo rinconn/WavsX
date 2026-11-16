@@ -76,19 +76,19 @@ main { overflow-x: clip; }
   inset: 0;
   background:
     repeating-linear-gradient(0deg, transparent 0 179px, rgba(0, 0, 0, .55) 179px 181px),
-    repeating-linear-gradient(90deg, rgba(var(--lamp), .09) 0 1px, rgba(var(--lamp), .025) 1px 20px, rgba(0, 0, 0, .6) 20px 24px);
-  -webkit-mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(260px circle at var(--mx) var(--my), rgba(0, 0, 0, .9), transparent 72%);
-          mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(260px circle at var(--mx) var(--my), rgba(0, 0, 0, .9), transparent 72%);
+    repeating-linear-gradient(90deg, rgba(var(--lamp), .22) 0 1px, rgba(var(--lamp), .06) 1px 20px, rgba(0, 0, 0, .7) 20px 24px);
+  -webkit-mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(380px circle at var(--mx) var(--my), #000, transparent 72%);
+          mask: radial-gradient(ellipse 36% 70% at 50% 0%, #000, transparent 78%), radial-gradient(380px circle at var(--mx) var(--my), #000, transparent 72%);
   animation: lampOn 1.8s linear .2s both;
 }
 .room__beam {
   left: 50%; top: -6%; width: min(1200px, 160vw); height: 100%; transform: translateX(-50%);
   background:
-    radial-gradient(ellipse 22% 9% at 50% 6%, rgba(var(--lamp), .55), transparent 70%),
-    conic-gradient(from 180deg at 50% 0%, transparent 157deg, rgba(var(--lamp), .10) 165deg, rgba(var(--lamp), .24) 180deg, rgba(var(--lamp), .10) 195deg, transparent 203deg);
+    radial-gradient(ellipse 22% 9% at 50% 6%, rgba(var(--lamp), .85), transparent 70%),
+    conic-gradient(from 180deg at 50% 0%, transparent 157deg, rgba(var(--lamp), .16) 164deg, rgba(var(--lamp), .42) 180deg, rgba(var(--lamp), .16) 196deg, transparent 203deg);
   -webkit-mask: linear-gradient(#000 20%, transparent 88%);
-          mask: linear-gradient(#000 20%, transparent 88%);
-  filter: blur(6px); opacity: var(--lamp-power);
+          mask: linear-gradient(#000 35%, transparent 95%);
+  filter: blur(10px); opacity: var(--lamp-power);
   transition: opacity .6s var(--ease);
   animation: lampOn 1.8s linear .2s both;
 }
@@ -106,7 +106,7 @@ main { overflow-x: clip; }
   -webkit-mask: conic-gradient(from 180deg at 50% 0%, transparent 160deg, #000 172deg 188deg, transparent 200deg), linear-gradient(#000 40%, transparent);
           mask: conic-gradient(from 180deg at 50% 0%, transparent 160deg, #000 172deg 188deg, transparent 200deg), linear-gradient(#000 40%, transparent);
   -webkit-mask-composite: source-in; mask-composite: intersect;
-  opacity: .55; animation: dust 40s linear infinite, lampOn 1.8s linear .2s both;
+  opacity: .9; animation: dust 40s linear infinite, lampOn 1.8s linear .2s both;
 }
 @keyframes dust { to { background-position: 60px -600px; } }
 /* suelo brillante: recoge la luz de la lámpara y el color del ecualizador */
@@ -114,9 +114,13 @@ main { overflow-x: clip; }
   left: 0; right: 0; bottom: 0; height: var(--floor);
   background:
     radial-gradient(ellipse 46% 90% at 50% 0%, rgba(var(--c1-rgb), .10), transparent 70%),
-    radial-gradient(ellipse 16% 60% at 50% 0%, rgba(var(--lamp), .06), transparent 70%),
+    radial-gradient(ellipse 22% 80% at 50% 0%, rgba(var(--lamp), .16), transparent 70%),
     linear-gradient(#0E0E13, var(--bg) 90%);
 }
+.room__torch { inset: 0; background: radial-gradient(380px circle at var(--mx) var(--my), rgba(var(--lamp), .09), transparent 70%); }
+.room__wash { left: 0; right: 0; bottom: 0; height: 70%; background: radial-gradient(ellipse 55% 55% at 50% 78%, rgba(var(--c1-rgb), .16), transparent 70%); }
+.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 62% 75% at 50% 28%, transparent 35%, rgba(0, 0, 0, .9) 100%); }
+.heroC:has(.room) { background: #040405; }
 .room__floor::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--lamp), .18) 35%, rgba(var(--lamp), .28) 50%, rgba(var(--lamp), .18) 65%, transparent); }
 /* piloto "en el aire": se enciende al ir a entrar en el estudio */
 .room__tally {
@@ -137,7 +141,7 @@ main { overflow-x: clip; }
   0% { opacity: 0; } 6% { opacity: calc(var(--lamp-power) * .7); } 10% { opacity: .1; } 16% { opacity: calc(var(--lamp-power) * .9); } 20% { opacity: .35; } 34%, 100% { opacity: var(--lamp-power); }
 }
 .heroC__canvas { z-index: 1; }
-.heroC .hero__title { text-shadow: 0 -1px 0 rgba(var(--lamp), .35), 0 -18px 60px rgba(var(--lamp), .08); }
+.heroC .hero__title { text-shadow: 0 -1px 0 rgba(var(--lamp), .6), 0 -20px 70px rgba(var(--lamp), .18); }
 @media (prefers-reduced-motion: reduce) { .room > * { animation: none !important; } }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
