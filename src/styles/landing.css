@@ -588,3 +588,11 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .cov__cap b { font-size: 14px; color: #fff; }
 .cov__cap span { font-size: 13px; color: var(--text-2); }
 @media (max-width: 900px) { .cov { grid-template-columns: 1fr; } }
+
+.pane[data-i="2"] { position: relative; margin: -28px -32px; padding: 28px 32px; overflow: hidden; }
+.pane[data-i="2"] > :not(.amb) { position: relative; z-index: 1; }
+.amb { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.amb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to right, rgba(10, 12, 8, .55), rgba(10, 12, 8, .15) 60%, rgba(10, 12, 8, .5)), linear-gradient(to top, rgba(10, 12, 8, .8), transparent 40%); }
+.amb__m { position: absolute; left: -15%; top: -15%; width: 130%; height: 130%; object-fit: cover; background-size: cover; background-position: center; filter: blur(55px) saturate(1.6) brightness(.6); opacity: 0; visibility: hidden; transition: opacity .9s, visibility 0s .9s; }
+.amb__m.on { opacity: 1; visibility: visible; transition: opacity .9s; }
+@media (max-width: 900px) { .pane[data-i="2"] { margin: -20px; padding: 20px; } }
