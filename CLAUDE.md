@@ -30,12 +30,5 @@ Las fotos de iStock que mandó son de pago: solo sirven de referencia.
 Ver `TODO` en la sección "Lo que guarda cada canción" más abajo.
 
 ### TODO · sección "Lo que guarda cada canción" (`.session` en index.astro)
-Ahora es una sesión tipo programa de música: 6 pistas con clip y un cabezal que avanza con el scroll. Al dueño le gusta la idea, pero hay que rehacer cada pista:
-1. **Colores**: que use bien la paleta Ácido. Ahora cada pista mezcla lima, verde y menta y queda raro.
-2. **Audio (WAV)**: no repetir la onda de barras que ya sale en el hero y en los separadores. Busca otra forma de enseñar un WAV.
-3. **Stems**: igual, sin onda de barras.
-4. **Portadas**: fotos reales libres de derechos en vez de degradados. Unsplash está bloqueado en la red del entorno Default; usa el entorno "wavsx", que sí lo permite.
-5. **Letra**: otra forma de enseñarla.
-6. **Créditos / firmas**: otra forma.
-7. **Versiones**: otra forma.
-8. **Cabezal** (la línea vertical blanca): cambiarlo por otra cosa.
+Hecho: colores (todo lima, menta solo en el sello), WAV como fichas de archivo, stems como canales M/S, letra con frase cantada, créditos como ficha con puntos, versiones como historial, y el cabezal sustituido por la pista iluminada según el scroll.
+Falta: **portadas** (`.clip__covers i`) con fotos reales de Unsplash (entorno "wavsx"). Guardarlas en `public/covers/` y usarlas como `background-image`.

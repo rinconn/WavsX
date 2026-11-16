@@ -52,19 +52,19 @@ if (mq) {
   mq.querySelectorAll('.marquee__item').forEach((el) => io2.observe(el));
 }
 
-/* ---------- 2 · sesión: ondas de los clips y cabezal que avanza con el scroll ---------- */
-$$('[data-wave]').forEach((el) => renderWave(el, waveHeights(+el.dataset.wave, 110, +el.dataset.h), 1));
-const session = $('.session');
-if (session) {
+/* ---------- 2 · sesión: la pista más cercana al centro de la pantalla se ilumina ---------- */
+const lanes = $$('.lane');
+if (lanes.length) {
   let ticking = false;
-  const move = () => {
-    const r = session.getBoundingClientRect();
-    const p = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
-    session.style.setProperty('--p', p.toFixed(4));
+  const mark = () => {
+    const mid = innerHeight / 2;
+    let best = null, d = Infinity;
+    lanes.forEach((l) => { const r = l.getBoundingClientRect(); const k = Math.abs(r.top + r.height / 2 - mid); if (k < d) { d = k; best = l; } });
+    lanes.forEach((l) => l.classList.toggle('on', l === best));
     ticking = false;
   };
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
-  move();
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(mark); } }, { passive: true });
+  mark();
 }
 
 /* ---------- 3 · historia por pasos ---------- */
