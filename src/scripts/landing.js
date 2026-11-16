@@ -180,33 +180,10 @@ $$('.lstyle button').forEach((b) => b.addEventListener('click', () => {
   lyMode = b.dataset.m; lstage.dataset.m = lyMode; lyN = -1; lyI = -1;
   $$('.lstyle button').forEach((x) => x.classList.toggle('on', x === b));
 }));
-/* reparto: barra que se arrastra y firmas que se dibujan */
-const rstage = $('.rstage'), rbar = $('#rbar'), rh = $('#rh');
-let rSplit = 60, rShown = 50;
-const rdraw = (v) => {
-  rbar.style.setProperty('--rs', v + '%'); rh.setAttribute('aria-valuenow', Math.round(v));
-  $('#ra').textContent = Math.round(v) + '%'; $('#rb').textContent = (100 - Math.round(v)) + '%';
-};
-function rsign() {
-  rstage.classList.remove('signed'); void rstage.offsetWidth;
-  const from = rShown, to = rSplit, t0 = performance.now();
-  const tick = (n) => { const k = Math.min(1, (n - t0) / 700), e = 1 - Math.pow(1 - k, 3); rShown = from + (to - from) * e; rdraw(rShown); if (k < 1) requestAnimationFrame(tick); };
-  requestAnimationFrame(tick);
-  setTimeout(() => { rstage.classList.add('signed'); $('#rbadge').textContent = 'acuerdo firmado · hoy'; $('#rsign').classList.remove('go'); }, 300);
-}
-const rset = (v) => {
-  rSplit = Math.max(10, Math.min(90, Math.round(v))); rShown = rSplit; rdraw(rSplit);
-  rstage.classList.remove('signed'); $('#rbadge').textContent = 'cambios sin firmar'; $('#rsign').classList.add('go');
-};
-let rDrag = false;
-const rpos = (e) => { const r = rbar.getBoundingClientRect(); rset(((e.clientX - r.left) / r.width) * 100); };
-rbar.addEventListener('pointerdown', (e) => { rDrag = true; rbar.setPointerCapture(e.pointerId); rpos(e); });
-rbar.addEventListener('pointermove', (e) => { if (rDrag) rpos(e); });
-rbar.addEventListener('pointerup', () => { rDrag = false; });
-rbar.addEventListener('pointercancel', () => { rDrag = false; });
-rh.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') rset(rSplit + 1); if (e.key === 'ArrowLeft') rset(rSplit - 1); });
+/* reparto: tarjetas con firma */
+const rcards = $('.rcards');
+function rsign() { rcards.classList.remove('signed'); void rcards.offsetWidth; setTimeout(() => rcards.classList.add('signed'), 100); }
 $('#rsign').addEventListener('click', rsign);
-rdraw(50);
 
 /* versiones */
 const V = [
