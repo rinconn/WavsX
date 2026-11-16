@@ -61,7 +61,7 @@ const select = (i) => {
   cur = i;
   tabs.forEach((x, k) => x.classList.toggle('on', k === i));
   panes.forEach((p, k) => p.classList.toggle('on', k === i));
-  lt0 = 0; tlI = -1;
+  lt0 = 0; tlI = -1; lyI = -1;
 };
 tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));
 
@@ -152,7 +152,9 @@ $('#pprev').addEventListener('click', () => { if (pos > 3) seek(0); else setTrac
 drawPl();
 
 /* letra */
-const ls = $$('.l');
+const ls = $$('.lyr .l'), roll = $('#roll'), note = $('#note');
+let lyI = -1;
+$$('.secs button').forEach((b) => b.addEventListener('click', () => { lt0 = performance.now() - +b.dataset.s * 3000; lyI = -1; }));
 let lt0 = 0;
 /* versiones */
 const V = [
@@ -197,9 +199,17 @@ const frame = (t) => {
     if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 3); }
   } else if (cur === 3) {
     if (!lt0) lt0 = t;
-    const e = (t - lt0) / 1000, i = Math.min(2, Math.floor(e / 3.4) % 3), f = Math.min(1, (e % 3.4) / 2.4);
-    ls.forEach((el, k) => { el.classList.toggle('now', k === i); el.classList.toggle('done', k < i); el.style.setProperty('--f', k === i ? f * 100 + '%' : '0%'); });
-    if (e > 10.2) lt0 = t;
+    const e = still ? 4.5 : (t - lt0) / 1000, i = Math.floor(e / 3) % ls.length, f = Math.min(1, (e % 3) / 2.2);
+    if (i !== lyI) {
+      lyI = i;
+      ls.forEach((el, k) => { el.classList.toggle('now', k === i); el.classList.toggle('done', k < i); });
+      roll.style.transform = `translateY(${roll.parentElement.clientHeight / 2 - (ls[i].offsetTop + ls[i].offsetHeight / 2)}px)`;
+      const nt = (ls[i].dataset.note || '').split('|');
+      note.classList.toggle('show', nt.length > 1);
+      if (nt.length > 1) { note.querySelector('i').textContent = nt[0]; note.querySelector('b').textContent = nt[0] === 'MR' ? 'Marcos R.' : 'Tú'; note.querySelector('span').textContent = nt[1]; }
+      $$('.secs button').forEach((b, k) => { const s0 = +b.dataset.s, s1 = k < 2 ? +$$('.secs button')[k + 1].dataset.s : 99; b.classList.toggle('on', i >= s0 && i < s1); });
+    }
+    ls[i].style.setProperty('--f', f * 100 + '%');
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
     if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
