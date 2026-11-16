@@ -32,20 +32,7 @@ export function createScope(canvas) {
     const age = reduce ? 9 : t - t0;
     ctx.clearRect(0, 0, w, h);
     const mid = h * 0.55, amp = h * 0.32;
-    // la onda va "tocando" una canción que nunca se repite igual:
-    // energía por secciones (estrofa tranquila / subidón), frecuencias que derivan,
-    // corcheas en las partes fuertes y un silencio antes del golpe cada 16 tiempos
-    const beat = t * 1.02, bi = Math.floor(beat), bf = beat - bi;
-    const energy = Math.min(1, Math.max(0.15, 0.6 + 0.4 * Math.sin(t * 0.19) * Math.sin(t * 0.071 + 1.3) + 0.25 * Math.sin(t * 0.43)));
-    const pulse = (f) => Math.exp(-f * 9);
-    const gap = bi % 16 === 15;                                     // se corta antes del golpe
-    const drop = bi % 16 === 0 ? 1.6 : 1;                           // y vuelve con más fuerza
-    let kick = gap ? 0 : pulse(bf) * drop;
-    if (energy > 0.7 && !gap) kick = Math.max(kick, pulse((bf + 0.5) % 1) * 0.6);   // corcheas
-    if (bi % 8 === 6 && bf > 0.75) kick = Math.max(kick, pulse(bf - 0.75) * 0.8);  // contratiempo
-    const lvl = (gap ? 0.25 + 0.75 * (1 - bf) * 0.3 : 1) * (0.45 + energy * 0.75);
-    const f1 = 9 + 4 * Math.sin(t * 0.13), f2 = 23 + 9 * Math.sin(t * 0.09 + 2), f3 = 51 + 22 * Math.sin(t * 0.053);
-    const center = 0.5 + 0.22 * Math.sin(t * 0.11);
+    const kick = Math.pow(Math.max(0, Math.sin(t * Math.PI * 2 * 1.02)), 10);
     const reveal = Math.min(1, age / 1.8) * w;
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineJoin = ctx.lineCap = 'round';
@@ -55,17 +42,17 @@ export function createScope(canvas) {
       ctx.beginPath();
       for (let i = 0; i < n; i++) {
         const x = i * STEP, u = x / w;
-        const env = Math.pow(Math.sin(Math.PI * u), 1.4) * (0.55 + 0.45 * Math.exp(-((u - center) ** 2) * 9));   // bordes apagados, el pico se pasea
-        const y = mid + amp * a * env * lvl * (0.7 + kick * 0.6) * (
-          0.55 * Math.sin(u * f1 + t * 1.3 * sp + ph) +
-          0.3 * Math.sin(u * f2 - t * 2.1 * sp + ph * 2) +
-          0.15 * energy * Math.sin(u * f3 + t * 3.4 * sp) +
+        const env = Math.pow(Math.sin(Math.PI * u), 1.4);           // se apaga en los bordes
+        const y = mid + amp * a * env * (0.7 + kick * 0.6) * (
+          0.55 * Math.sin(u * 9 + t * 1.3 * sp + ph) +
+          0.3 * Math.sin(u * 23 - t * 2.1 * sp + ph * 2) +
+          0.15 * Math.sin(u * 51 + t * 3.4 * sp) +
           kick * 0.12 * Math.sin(u * 160 + t * 47 + ph));          // chisporroteo eléctrico en cada golpe
         if (ys) ys[i] = y;
         i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
       }
       const col = mix(wk);
-      ctx.strokeStyle = `rgba(${led.join(',')},${(0.12 + Math.min(kick, 1.2) * 0.22) * op})`; ctx.lineWidth = lw * (7 + Math.min(kick, 1.2) * 6); ctx.stroke();   // halo que se abre con el golpe
+      ctx.strokeStyle = `rgba(${led.join(',')},${(0.12 + kick * 0.22) * op})`; ctx.lineWidth = lw * (7 + kick * 6); ctx.stroke();   // halo que se abre con el golpe
       ctx.strokeStyle = `rgba(${col},${0.95 * op})`; ctx.lineWidth = lw; ctx.stroke();                                        // núcleo
     });
     // destellos que viajan por la línea principal, como señal que pasa
