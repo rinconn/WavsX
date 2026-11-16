@@ -105,6 +105,8 @@ function mixState() {
 }
 mixState();
 
+$$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.closest('.st'); $$('.st').forEach((x) => x.classList.toggle('on', x === r && !r.classList.contains('on'))); }));
+
 /* portadas: cambian dentro de la app */
 const cv = $('#cv');
 $$('.v').forEach((b) => b.addEventListener('click', () => {

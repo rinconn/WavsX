@@ -440,3 +440,24 @@ main { overflow-x: clip; }
 .ledline::before, .ledline::after { display: none; }
 .ledline.wave span { position: static; width: auto; top: auto; left: auto; filter: none; animation: none; border-radius: 1px; background: rgba(var(--led), .1); transition: background .35s ease calc(var(--i) * 4ms); }
 .ledline.wave span.on { background: rgba(var(--led), .75); box-shadow: none; }
+
+.stl { list-style: none; margin: 0; padding: 6px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); display: grid; align-content: start; }
+.st { position: relative; display: grid; grid-template-columns: 34px 1fr auto auto 18px; align-items: center; gap: 16px; padding: 13px 14px; border-radius: 10px; overflow: hidden; }
+.st + .st { border-top: 1px solid var(--line); }
+.st b { display: block; font-size: 15px; letter-spacing: -0.01em; }
+.st small { font-size: 12px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
+.st > span { font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.st__play { all: unset; box-sizing: border-box; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; cursor: pointer; transition: background .2s, border-color .2s; }
+.st__play::before { content: ""; border-left: 9px solid var(--text-2); border-top: 6px solid transparent; border-bottom: 6px solid transparent; margin-left: 3px; }
+.st__play:hover { border-color: var(--c1); }
+.st__play:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px; }
+.st__dl { width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translate(-2px, -2px); justify-self: center; }
+.st.on { background: var(--surface); }
+.st.on .st__play { background: var(--c1); border-color: var(--c1); }
+.st.on .st__play::before { border: 0; width: 10px; height: 12px; margin: 0; background: linear-gradient(90deg, var(--on-accent) 0 35%, transparent 35% 65%, var(--on-accent) 65%); }
+.st.on b { color: var(--c1); }
+.st__bar { position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--c1); text-decoration: none; }
+.st.on .st__bar { animation: stp 7s linear infinite; }
+@keyframes stp { to { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .st.on .st__bar { animation: none; width: 40%; } }
+@media (max-width: 560px) { .st { grid-template-columns: 34px 1fr auto; } .st > span:nth-of-type(1), .st__dl { display: none; } }
