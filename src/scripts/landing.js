@@ -23,6 +23,7 @@ if (heroOpt === 'c' || heroOpt === 'd') {
   $('.heroC').hidden = false;
   if (heroOpt === 'c') { $('#wavefield').remove(); createDome($('#dome')); }
   else { $('#dome').remove(); createScope($('#wavefield')); }
+  if ($('#heroC-wave')) renderWave($('#heroC-wave'), waveHeights(2.4, 90, 64), 0.42);
 } else if (heroOpt === 'b') {
   $('.hero').hidden = true;
   $('.heroB').hidden = false;

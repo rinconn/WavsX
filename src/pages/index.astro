@@ -11,7 +11,6 @@ const keeps = [
   ['enlace', 'Enlaces privados', 'solo escuchar'],
   ['lanzar', 'Lanzamiento', 'checklist y paquete']
 ];
-const faders = Array.from({ length: 28 }, (_, i) => 18 + ((i * 37 + (i % 3) * 11) % 58));
 ---
 <Base title="WavsX — Tu música, antes de salir" description="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
 <header class="nav">
@@ -46,18 +45,6 @@ const faders = Array.from({ length: 28 }, (_, i) => 18 + ((i * 37 + (i % 3) * 11
 
   <!-- 1 · HERO C (opción alternativa: /?hero=c) · cúpula de partículas -->
   <section class="heroC" hidden>
-    <!-- estudio a oscuras en perspectiva: techo con focos, paredes de ladrillo, panel central y suelo de madera -->
-    <div class="room" aria-hidden="true">
-      <div class="room__box">
-        <div class="room__ceil"></div>
-        <div class="room__side room__side--l"><i class="room__win"></i></div>
-        <div class="room__side room__side--r"><i class="room__win"></i></div>
-        <div class="room__back"><i class="room__panel"></i></div>
-        <div class="room__floor"></div>
-      </div>
-      <i class="room__haze"></i>
-      <i class="room__grain"></i>
-    </div>
     <div class="heroC__content">
       <h1 class="hero__title">
         <span class="line"><span>Tus canciones,</span></span>
@@ -69,17 +56,30 @@ const faders = Array.from({ length: 28 }, (_, i) => 18 + ((i * 37 + (i % 3) * 11
         <a href="#como" class="btn btn--lg btn--ghost">Ver cómo funciona <span aria-hidden="true">→</span></a>
       </div>
     </div>
-    <canvas id="dome" class="heroC__canvas" aria-hidden="true"></canvas>
-    <canvas id="wavefield" class="heroC__canvas" aria-hidden="true"></canvas>
-    <!-- monitores de estudio y mesa de mezclas en silueta, iluminados por las tiras -->
-    <div class="mon mon--l" aria-hidden="true"><i class="mon__tw"></i><i class="mon__wf"></i><i class="mon__led"></i></div>
-    <div class="mon mon--r" aria-hidden="true"><i class="mon__tw"></i><i class="mon__wf"></i><i class="mon__led"></i></div>
-    <div class="desk" aria-hidden="true">
-      <div class="desk__panel">
-        <div class="desk__knobs"></div>
-        <div class="desk__faders">{faders.map((v) => <i style={`--v:${v}%`}></i>)}</div>
+    <!-- el producto como protagonista: la ficha de una canción -->
+    <div class="heroB__win heroC__card" aria-hidden="true">
+      <div class="heroB__bar"><i></i><i></i><i></i><span>wavsx.app / neon-en-la-m-30</span></div>
+      <div class="heroB__body">
+        <div class="heroB__top">
+          <div class="songcard__cover"></div>
+          <div><b>Neón en la M-30</b><span class="songcard__status">Mezcla · v5 · 3:42</span></div>
+          <span class="heroB__pill">Lista para salir</span>
+        </div>
+        <div class="vers"><span>v1</span><span>v2</span><span>v3</span><span>v4</span><span class="on">v5</span></div>
+        <div class="bigwave">
+          <span class="pin" style="left: 28%">0:48 · sube la voz</span>
+          <div class="wave" id="heroC-wave" style="height: 64px"></div>
+        </div>
+        <div class="heroB__stats">
+          <div><small>Audio</small><b class="num">WAV 24-bit</b></div>
+          <div><small>Stems</small><b class="num">12 pistas</b></div>
+          <div><small>Créditos</small><b class="num">60 / 40</b></div>
+          <div><small>Enlace</small><b class="num">3 escuchas</b></div>
+        </div>
       </div>
     </div>
+    <canvas id="dome" class="heroC__canvas" aria-hidden="true"></canvas>
+    <canvas id="wavefield" class="heroC__canvas" aria-hidden="true"></canvas>
   </section>
 
   <!-- 1 · HERO B (opción alternativa: /?hero=b) -->
