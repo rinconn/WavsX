@@ -574,3 +574,4 @@ main { overflow-x: clip; }
 @keyframes spinr { to { transform: rotate(360deg); } }
 .stage.paused .disc::before, .stage.paused .disc b { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .disc::before, .disc b { animation: none; } }
+.pl__ctl { gap: 14px; }

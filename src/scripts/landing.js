@@ -127,7 +127,8 @@ $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c)
 
 /* reproductor de la maqueta */
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
-const TOT = 304;
+const TRK = [['Neón en la M-30', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
+let TOT = 304, ti = 0;
 let pos = 72, playing = true, fT = 0;
 const drawPl = () => { plb.style.setProperty('--pr', (pos / TOT) * 100 + '%'); pt.textContent = fmt(pos); };
 const seek = (v) => { pos = Math.max(0, Math.min(TOT - 1, v)); drawPl(); };
@@ -136,6 +137,13 @@ plb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') seek(pos + 
 $('#pback').addEventListener('click', () => seek(pos - 15));
 $('#pfwd').addEventListener('click', () => seek(pos + 15));
 pp.addEventListener('click', () => { playing = !playing; pp.classList.toggle('paused', !playing); pp.setAttribute('aria-label', playing ? 'Pausa' : 'Reproducir'); plst.classList.toggle('paused', !playing); });
+const setTrack = (i) => {
+  ti = (i + TRK.length) % TRK.length; TOT = TRK[ti][1]; pos = 0;
+  $('.stage__t b').textContent = TRK[ti][0]; $('.sz b').textContent = TRK[ti][0]; $('.pl__t span:last-child').textContent = fmt(TOT);
+  drawPl();
+};
+$('#pnext').addEventListener('click', () => setTrack(ti + 1));
+$('#pprev').addEventListener('click', () => { if (pos > 3) seek(0); else setTrack(ti - 1); });
 drawPl();
 
 /* letra */
@@ -180,7 +188,7 @@ const frame = (t) => {
       seg[k].forEach((el, i) => { el.classList.toggle('on', i < lit); el.classList.toggle('hot', i >= SEG - 3); });
     });
   } else if (cur === 2 && !still) {
-    if (playing && !still) { pos = (pos + Math.min(0.1, (t - fT) / 1000)) % TOT; drawPl(); }
+    if (playing && !still) { pos += Math.min(0.1, (t - fT) / 1000); if (pos >= TOT) setTrack(ti + 1); else drawPl(); }
     if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 4); }
   } else if (cur === 3) {
     if (!lt0) lt0 = t;
