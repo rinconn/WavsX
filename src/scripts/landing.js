@@ -52,20 +52,28 @@ if (mq) {
   mq.querySelectorAll('.marquee__item').forEach((el) => io2.observe(el));
 }
 
-/* ---------- 2 · sesión: la pista más cercana al centro de la pantalla se ilumina ---------- */
-const lanes = $$('.lane');
-if (lanes.length) {
-  let ticking = false;
-  const mark = () => {
-    const mid = innerHeight / 2;
-    let best = null, d = Infinity;
-    lanes.forEach((l) => { const r = l.getBoundingClientRect(); const k = Math.abs(r.top + r.height / 2 - mid); if (k < d) { d = k; best = l; } });
-    lanes.forEach((l) => l.classList.toggle('on', l === best));
-    ticking = false;
-  };
-  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(mark); } }, { passive: true });
-  mark();
+/* ---------- 2 · mesa: pestañas y espectrograma ---------- */
+const spec = $('.spec');
+if (spec) {
+  const g = spec.getContext('2d'), W = spec.width, H = spec.height, cw = 3, rh = 4;
+  const n = (x, y) => { const v = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return v - Math.floor(v); };
+  for (let x = 0; x < W; x += cw) {
+    const t = x / W, beat = Math.pow(Math.abs(Math.sin(t * 38)), 6);
+    for (let y = 0; y < H; y += rh) {
+      const f = 1 - y / H;
+      let e = Math.exp(-f * 3.4) * (0.55 + 0.45 * beat) + n(x, y) * 0.12 * Math.exp(-f * 2);
+      e += Math.exp(-Math.pow((f - (0.18 + 0.1 * Math.sin(t * 9))) * 14, 2)) * 0.45;
+      e *= t > 0.97 ? 0.3 : 1;
+      g.fillStyle = `rgba(198,255,61,${Math.min(1, Math.max(0, e - 0.08)).toFixed(2)})`;
+      g.fillRect(x, y, cw, rh);
+    }
+  }
 }
+const tabs = $$('.desk__tab'), panes = $$('.pane');
+tabs.forEach((t, i) => t.addEventListener('click', () => {
+  tabs.forEach((x, k) => x.classList.toggle('on', k === i));
+  panes.forEach((p, k) => p.classList.toggle('on', k === i));
+}));
 
 /* ---------- 3 · historia por pasos ---------- */
 const steps = $$('#steps li');

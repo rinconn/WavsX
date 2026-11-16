@@ -109,19 +109,16 @@ const keeps = [
       <span class="kicker">Lo que guarda cada canción</span>
       <h2>Seis cosas que siempre andan perdidas.<br><span class="muted">Ahora, juntas.</span></h2>
     </header>
-    <div class="session reveal" aria-label="Lo que guarda cada canción">
-      <div class="lane"><div class="lane__head"><span class="lane__n">01</span><div><h3>Audio</h3><p>Mezclas y master en WAV, sin comprimir.</p></div></div>
-        <div class="lane__clip"><ul class="wavs"><li><b>cruzo-la-m30_master.wav</b><span>24-bit · 48 kHz</span><em>71 MB</em></li><li><b>cruzo-la-m30_mezcla-v8.wav</b><span>24-bit · 48 kHz</span><em>69 MB</em></li></ul></div></div>
-      <div class="lane"><div class="lane__head"><span class="lane__n">02</span><div><h3>Stems</h3><p>Las pistas sueltas, listas para el ingeniero.</p></div></div>
-        <div class="lane__clip"><ul class="strips"><li>Voz<i>M</i><i class="s">S</i></li><li>Bajo<i>M</i><i>S</i></li><li>Batería<i>M</i><i>S</i></li><li>Guitarras<i>M</i><i>S</i></li><li>Sintes<i>M</i><i>S</i></li><li class="more">+7</li></ul></div></div>
-      <div class="lane"><div class="lane__head"><span class="lane__n">03</span><div><h3>Portadas</h3><p>La final, las alternativas y las fotos.</p></div></div>
-        <div class="lane__clip"><div class="clip__covers"><i></i><i></i><i></i><i></i></div><span class="clip__tag">3000 × 3000</span></div></div>
-      <div class="lane"><div class="lane__head"><span class="lane__n">04</span><div><h3>Letra</h3><p>La buena, no la de las notas del móvil.</p></div></div>
-        <div class="lane__clip"><p class="sing"><time>0:18</time><span class="sung">y el neón me cuenta</span> lo que no dices</p></div></div>
-      <div class="lane"><div class="lane__head"><span class="lane__n">05</span><div><h3>Créditos y reparto</h3><p>Quién hizo qué y cuánto le toca a cada uno.</p></div></div>
-        <div class="lane__clip"><dl class="liner"><div><dt>Letra y música</dt><dd>Tú · 60%</dd></div><div><dt>Producción</dt><dd>Marcos R. · 40%</dd></div></dl><span class="stamp">Firmado</span></div></div>
-      <div class="lane"><div class="lane__head"><span class="lane__n">06</span><div><h3>Versiones</h3><p>De la demo del móvil al master, sin borrar nada.</p></div></div>
-        <div class="lane__clip"><ol class="hist"><li><b>v1</b>demo del móvil<em>12 mar</em></li><li><b>v5</b>mezcla con voz nueva<em>2 jun</em></li><li class="on"><b>v9</b>master<em>hoy</em></li></ol></div></div>
+    <div class="desk reveal" aria-label="Lo que guarda cada canción">
+      <ol class="desk__tabs"><li><button type="button" class="desk__tab on" data-i="0"><span>01</span><b>Audio</b><small>Mezclas y master en WAV, sin comprimir.</small></button></li><li><button type="button" class="desk__tab" data-i="1"><span>02</span><b>Stems</b><small>Las pistas sueltas, listas para el ingeniero.</small></button></li><li><button type="button" class="desk__tab" data-i="2"><span>03</span><b>Portadas</b><small>La final, las alternativas y las fotos.</small></button></li><li><button type="button" class="desk__tab" data-i="3"><span>04</span><b>Letra</b><small>La buena, no la de las notas del móvil.</small></button></li><li><button type="button" class="desk__tab" data-i="4"><span>05</span><b>Créditos y reparto</b><small>Quién hizo qué y cuánto le toca a cada uno.</small></button></li><li><button type="button" class="desk__tab" data-i="5"><span>06</span><b>Versiones</b><small>De la demo del móvil al master, sin borrar nada.</small></button></li></ol>
+      <div class="desk__view">
+        <div class="pane on" data-i="0"><canvas class="spec" width="720" height="260" aria-label="Espectrograma del master"></canvas><p class="pane__meta"><b>cruzo-la-m30_master.wav</b><span>24-bit · 48 kHz · 5:04 · 87 MB</span></p><p class="pane__meta"><b>cruzo-la-m30_mezcla-v8.wav</b><span>24-bit · 48 kHz · 5:04 · 87 MB</span></p></div>
+        <div class="pane" data-i="1"><ul class="chan"><li><div class="fader"><i style="--v:72%"></i></div><b>Voz</b><span>S</span></li><li><div class="fader"><i style="--v:58%"></i></div><b>Bajo</b><span></span></li><li><div class="fader"><i style="--v:64%"></i></div><b>Batería</b><span></span></li><li><div class="fader"><i style="--v:45%"></i></div><b>Guitarras</b><span></span></li><li><div class="fader"><i style="--v:38%"></i></div><b>Sintes</b><span>M</span></li></ul><p class="pane__meta"><b>12 stems</b><span>Una carpeta .zip lista para mandar al mezclador</span></p></div>
+        <div class="pane" data-i="2"><div class="covers"><i></i><i></i><i></i><i></i></div><p class="pane__meta"><b>Final · 3000 × 3000</b><span>y tres alternativas descartadas</span></p></div>
+        <div class="pane" data-i="3"><p class="verse"><small>0:12</small>Cruzo la M-30 con la ventanilla abajo<br><small>0:18</small><em>y el neón me cuenta</em> lo que no dices<br><small>0:24</small>suena otra vez la maqueta del verano</p></div>
+        <div class="pane" data-i="4"><dl class="liner"><div><dt>Letra y música</dt><dd>Tú · 60%</dd></div><div><dt>Producción</dt><dd>Marcos R. · 40%</dd></div><div><dt>Mezcla</dt><dd>Estudio Sur</dd></div></dl><span class="stamp">Firmado</span></div>
+        <div class="pane" data-i="5"><ol class="hist"><li><b>v1</b>demo del móvil<em>12 mar</em></li><li><b>v5</b>mezcla con voz nueva<em>2 jun</em></li><li class="on"><b>v9</b>master<em>hoy</em></li></ol></div>
+      </div>
     </div>
   </section>
 
