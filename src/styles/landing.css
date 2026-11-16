@@ -653,3 +653,4 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .lstage__r { display: flex; align-items: center; gap: 16px; }
 .lstage__top { align-items: center; }
 .lstage > .lnote { position: absolute; left: 22px; bottom: 54px; }
+.lbig .r { color: #E6FF94; }

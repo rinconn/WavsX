@@ -246,7 +246,7 @@ const frame = (t) => {
       const n = st.filter((x) => x <= g).length;
       if (n !== lyN) { lyN = n; $$('#lbig .w').forEach((w, k) => { w.classList.toggle('on', k < n - 1); w.classList.toggle('cur', k === n - 1); }); }
     }
-    else { const n = Math.ceil(g * LY[i][1].length); if (n !== lyN) { lyN = n; lbig.innerHTML = `${LY[i][1].slice(0, n)}<span class="car"></span><span class="h">${LY[i][1].slice(n)}</span>`; } }
+    else { const n = Math.ceil(g * LY[i][1].length); if (n !== lyN) { lyN = n; lbig.innerHTML = `<span class="r">${LY[i][1].slice(0, n)}</span><span class="car"></span><span class="h">${LY[i][1].slice(n)}</span>`; } }
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
     if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
