@@ -528,3 +528,16 @@ main { overflow-x: clip; }
 .app__cover { transform-style: preserve-3d; transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out, box-shadow .3s; }
 .app__cover:hover { box-shadow: 0 28px 50px rgba(0, 0, 0, .65); }
 @media (prefers-reduced-motion: reduce) { .cov .v[data-c="2"]:hover i, .cov .v[data-c="3"]:hover i { animation: none; } }
+
+.stage { display: grid; justify-items: center; gap: 16px; padding: 30px 24px 22px; }
+.stage .app__cover { width: min(250px, 70%); }
+.stage__t { text-align: center; display: grid; gap: 2px; }
+.stage__t b { font-size: 20px; letter-spacing: -0.02em; color: #fff; }
+.stage__t span { font-size: 13px; color: var(--muted); }
+.sizes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: 100%; padding-top: 16px; border-top: 1px solid var(--line); }
+.sz { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--surface); }
+.sz b { display: block; font-size: 13px; color: var(--text); }
+.sz small { font-size: 11px; color: var(--muted); }
+.mini { flex: none; width: 40px; height: 40px; border-radius: 6px; background-size: cover; background-position: center; background-color: #0B0D06; transition: background-image .3s; }
+.mini.r { border-radius: 50%; }
+.mini.s { width: 22px; height: 22px; border-radius: 4px; }
