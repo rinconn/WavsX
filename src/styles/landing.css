@@ -75,6 +75,9 @@ main { overflow-x: clip; }
   filter: blur(3px) saturate(1.1); animation: foamIn 1.6s var(--ease) both; }
 .foam::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 48% 42%, rgba(0, 0, 0, .25), rgba(0, 0, 0, .88) 95%); }
 @keyframes foamIn { from { opacity: 0; filter: blur(14px); } }
+.mic { position: absolute; z-index: 1; right: 5vw; bottom: -2vh; height: 80vh; width: auto; pointer-events: none; filter: drop-shadow(-18px 0 40px rgba(var(--led), .25)) drop-shadow(0 30px 40px rgba(0, 0, 0, .9)); opacity: 0; animation: rise 1.2s var(--ease) .4s both; }
+@media (max-width: 1100px) { .mic { right: -60px; height: 62vh; opacity: .55 !important; } }
+@media (max-width: 700px) { .mic { display: none; } }
 .heroC #wavefield { z-index: 1; left: 0; width: 100%; top: auto; bottom: 2vh; height: 36vh; margin-top: 0; }
 .heroC__canvas { z-index: 1; }
 
