@@ -108,11 +108,15 @@ mixState();
 $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.closest('.st'); $$('.st').forEach((x) => x.classList.toggle('on', x === r && !r.classList.contains('on'))); }));
 
 /* portadas: cambian dentro de la app */
-const cv = $('#cv');
-$$('.v').forEach((b) => b.addEventListener('click', () => {
-  $$('.v').forEach((x) => x.classList.toggle('on', x === b));
-  cv.className = 'app__cover c' + b.dataset.c + (b.dataset.c === '2' ? ' is-anim' : '');
-}));
+const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
+const CT = ['Foto', 'Foto', 'GIF · bucle', 'Vídeo · 0:08'];
+let covI = 0, covLast = 0, covLock = 0;
+const setCov = (n) => {
+  covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
+  cms.forEach((m, k) => m.classList.toggle('on', k === n));
+  $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
+};
+$$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
 /* letra */
 const ls = $$('.l');
@@ -157,6 +161,7 @@ const frame = (t) => {
     });
   } else if (cur === 2 && !still) {
     $('.app').style.setProperty('--pr', (24 + ((t / 1000) * 1.2) % 70) + '%');
+    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 4); }
   } else if (cur === 3) {
     if (!lt0) lt0 = t;
     const e = (t - lt0) / 1000, i = Math.min(2, Math.floor(e / 3.4) % 3), f = Math.min(1, (e % 3.4) / 2.4);
