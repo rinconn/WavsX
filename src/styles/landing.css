@@ -461,3 +461,18 @@ main { overflow-x: clip; }
 @keyframes stp { to { width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .st.on .st__bar { animation: none; width: 40%; } }
 @media (max-width: 560px) { .st { grid-template-columns: 34px 1fr auto; } .st > span:nth-of-type(1), .st__dl { display: none; } }
+
+.stemrow { grid-template-columns: 1fr; gap: 12px; }
+.stemph { min-height: 330px; }
+.stemph img { object-position: 50% 45%; }
+.stemph::after { background: linear-gradient(to right, rgba(8,9,5,.92) 0%, rgba(8,9,5,.6) 38%, rgba(8,9,5,0) 70%); }
+.stemph figcaption { top: 0; bottom: 0; left: 32px; right: auto; max-width: 400px; align-content: center; gap: 10px; }
+.stemph b { font-size: clamp(26px, 3vw, 36px); line-height: 1.1; }
+.stemph span { font-family: inherit; font-size: 14px; line-height: 1.5; }
+.stl { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px; }
+.st { grid-template-columns: 34px 1fr auto; padding: 11px 12px; gap: 12px; }
+.st + .st { border-top: 0; }
+.st > span:nth-of-type(1), .st__dl { display: none; }
+@media (max-width: 900px) { .stl { grid-template-columns: 1fr 1fr; } .stemph::after { background: linear-gradient(to top, rgba(8,9,5,.9), rgba(8,9,5,.2)); } .stemph figcaption { top: auto; left: 18px; right: 18px; max-width: none; } }
+@media (max-width: 560px) { .stl { grid-template-columns: 1fr; } }
+.stemph b { color: #fff; }
