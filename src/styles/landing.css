@@ -60,17 +60,23 @@ main { overflow-x: clip; }
 .heroC:has(#wavefield) { min-height: calc(100vh - 88px); }
 
 
-/* ---------- hero C: el producto delante, la onda cruzando por detrás ---------- */
+/* ---------- hero C: pared de espuma acústica morada, desenfocada ---------- */
 .heroC, .nav { --led: 232, 70, 255; --accent: rgb(var(--led)); --accent-rgb: var(--led); --on-accent: #fff; }
-.heroC { background: #060508; flex-direction: row; justify-content: center; align-items: center; gap: clamp(32px, 5vw, 80px); padding: 96px 6vw 40px; }
-.heroC .heroC__content { flex: 0 1 600px; z-index: 2; padding: 0; text-align: left; align-items: flex-start; }
-.heroC .hero__cta { justify-content: flex-start; }
-.heroC__card { position: relative; z-index: 3 !important; flex: 0 1 560px; margin-top: 0; opacity: 0; animation: rise 1s var(--ease) .45s both; }
-.heroC .heroB__pill { color: rgb(var(--led)); background: rgba(var(--led), .1); box-shadow: inset 0 0 0 1px rgba(var(--led), .25); }
-.heroC .vers span.on { background: rgb(var(--led)); border-color: rgb(var(--led)); box-shadow: none; }
-.heroC .bigwave .wave span.on { background: rgb(var(--led)); box-shadow: none; }
+.heroC { background: #050206; }
+.heroC .heroC__content { z-index: 2; }
+.heroC .hero__title, .heroC .hero__sub { text-shadow: 0 2px 30px rgba(0, 0, 0, .8); }
+.heroC .title-dim { color: #C9B3CF; }
+.foam { position: absolute; inset: -60px; z-index: 0; pointer-events: none; transform: perspective(1100px) rotateY(-12deg) scale(1.15);
+  background:
+    radial-gradient(ellipse 55% 65% at 38% 38%, rgb(255, 130, 235), rgb(170, 45, 160) 40%, rgb(60, 10, 60) 78%, #0A030A),
+    radial-gradient(circle at 50% 50%, #3A3A3A 0, #8C8C8C 28%, #fff 58%) 23px 23px / 46px 46px,
+    radial-gradient(circle at 36% 32%, #fff 0, #D9D9D9 16%, #8E8E8E 40%, #3A3A3A 66%, #1A1A1A 100%) 0 0 / 46px 46px;
+  background-blend-mode: multiply, multiply, normal;
+  filter: blur(3px) saturate(1.1); animation: foamIn 1.6s var(--ease) both; }
+.foam::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 48% 42%, rgba(0, 0, 0, .25), rgba(0, 0, 0, .88) 95%); }
+@keyframes foamIn { from { opacity: 0; filter: blur(14px); } }
+.heroC #wavefield { z-index: 1; left: 0; width: 100%; top: auto; bottom: 2vh; height: 36vh; margin-top: 0; }
 .heroC__canvas { z-index: 1; }
-.heroC #wavefield { z-index: 0 !important; left: 0; width: 100%; top: 50%; bottom: auto; height: 46vh; margin-top: -23vh; }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
 .marquee { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); padding: 0 0 18px;
@@ -280,9 +286,7 @@ main { overflow-x: clip; }
 }
 @media (max-width: 900px) {
   .heroC:has(#wavefield) { min-height: 0; }
-  .heroC #wavefield { top: 30%; height: 30vh; margin-top: 0; }
-  .heroC { flex-direction: column; padding: 112px 20px 32px; }
-  .heroC__card { width: 100%; }
+  .heroC #wavefield { height: 30vh; }
   .room__tally { display: none; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }
