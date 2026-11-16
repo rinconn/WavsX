@@ -77,10 +77,10 @@ if (spec) {
     const t = x / (W * 2), beat = Math.pow(Math.abs(Math.sin(t * Math.PI * 2 * 20)), 6);
     for (let y = 0; y < H; y += rh) {
       const f = 1 - y / H;
-      let e = Math.exp(-f * 3.4) * (0.5 + 0.5 * beat) + n(x, y) * 0.12 * Math.exp(-f * 2);
-      e += Math.exp(-Math.pow((f - (0.2 + 0.1 * Math.sin(t * Math.PI * 2 * 4))) * 14, 2)) * 0.45;
+      let e = Math.exp(-f * 3.4) * (0.22 + 0.3 * beat) + n(x, y) * 0.2 * Math.exp(-f * 1.6);
+      e += Math.exp(-Math.pow((f - (0.2 + 0.1 * Math.sin(t * Math.PI * 2 * 4))) * 14, 2)) * 0.3;
       e += Math.exp(-Math.pow((f - 0.62) * 22, 2)) * 0.25 * Math.abs(Math.sin(t * Math.PI * 2 * 10));
-      g.fillStyle = `rgba(198,255,61,${Math.min(1, Math.max(0, e - 0.08)).toFixed(2)})`;
+      g.fillStyle = `rgba(198,255,61,${Math.min(1, Math.max(0, (e - 0.14) * 1.15)).toFixed(2)})`;
       g.fillRect(x, y, cw, rh);
     }
   }
@@ -140,6 +140,7 @@ let covAuto = 0;
 const frame = (t) => {
   if (cur === 0 && off) {
     const g = spec.getContext('2d'), x = still ? 0 : ((t / 1000) * 46) % spec.width;
+    g.clearRect(0, 0, spec.width, spec.height);
     g.drawImage(off, x, 0, spec.width, spec.height, 0, 0, spec.width, spec.height);
     $('#tc').textContent = fmt(48 + (t / 1000) % 256);
   } else if (cur === 1 && !still) {
