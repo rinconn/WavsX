@@ -66,18 +66,25 @@ main { overflow-x: clip; }
 .heroC .heroC__content { z-index: 2; }
 .heroC .hero__title, .heroC .hero__sub { text-shadow: 0 2px 30px rgba(0, 0, 0, .8); }
 .heroC .title-dim { color: #C9B3CF; }
-.foam { position: absolute; inset: -60px; z-index: 0; pointer-events: none; transform: perspective(1100px) rotateY(-12deg) scale(1.15);
+/* todo el color sale de --led: cambiarlo ahí recolorea pared, luz, onda y botones */
+.foam { position: absolute; inset: -60px; z-index: 0; pointer-events: none; transform: perspective(1100px) rotateY(-12deg) scale(1.15); contain: strict;
   background:
-    radial-gradient(ellipse 55% 65% at 38% 38%, rgb(255, 130, 235), rgb(170, 45, 160) 40%, rgb(60, 10, 60) 78%, #0A030A),
+    radial-gradient(ellipse 55% 65% at 38% 38%, color-mix(in srgb, rgb(var(--led)) 55%, #fff), rgb(var(--led)) 40%, color-mix(in srgb, rgb(var(--led)) 30%, #000) 78%, #0A030A),
     radial-gradient(circle at 50% 50%, #3A3A3A 0, #8C8C8C 28%, #fff 58%) 23px 23px / 46px 46px,
     radial-gradient(circle at 36% 32%, #fff 0, #D9D9D9 16%, #8E8E8E 40%, #3A3A3A 66%, #1A1A1A 100%) 0 0 / 46px 46px;
   background-blend-mode: multiply, multiply, normal;
-  filter: blur(3px) saturate(1.1); animation: foamIn 1.6s var(--ease) both; }
+  filter: blur(3px); animation: fadeIn 1.4s ease both; }
 .foam::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 48% 42%, rgba(0, 0, 0, .25), rgba(0, 0, 0, .88) 95%); }
-@keyframes foamIn { from { opacity: 0; filter: blur(14px); } }
-.mic { position: absolute; z-index: 1; right: 5vw; bottom: -2vh; height: 80vh; width: auto; pointer-events: none; filter: drop-shadow(-18px 0 40px rgba(var(--led), .25)) drop-shadow(0 30px 40px rgba(0, 0, 0, .9)); opacity: 0; animation: rise 1.2s var(--ease) .4s both; }
-@media (max-width: 1100px) { .mic { right: -60px; height: 62vh; opacity: .55 !important; } }
-@media (max-width: 700px) { .mic { display: none; } }
+/* foco que barre la pared muy despacio (solo transform: barato) */
+.foam__light { position: absolute; z-index: 0; top: -20%; left: -30%; width: 60%; height: 120%; pointer-events: none; mix-blend-mode: screen; will-change: transform;
+  background: radial-gradient(closest-side, rgba(var(--led), .22), transparent); animation: sweepLight 14s ease-in-out infinite alternate; }
+@keyframes sweepLight { to { transform: translateX(150%); } }
+/* resplandor de la onda sobre la pared, latiendo con el pulso de la onda */
+.heroC::after { content: ''; position: absolute; z-index: 0; left: 10%; right: 10%; bottom: 0; height: 40vh; pointer-events: none;
+  background: radial-gradient(ellipse 50% 60% at 50% 70%, rgba(var(--led), .28), transparent 70%); animation: beat .98s ease-out infinite; }
+@keyframes beat { 0% { opacity: 1; } 100% { opacity: .55; } }
+@keyframes fadeIn { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .foam__light, .heroC::after { animation: none; } }
 .heroC #wavefield { z-index: 1; left: 0; width: 100%; top: auto; bottom: 2vh; height: 36vh; margin-top: 0; }
 .heroC__canvas { z-index: 1; }
 
@@ -288,7 +295,7 @@ main { overflow-x: clip; }
   .floats { display: none; }
 }
 @media (max-width: 900px) {
-  .heroC:has(#wavefield) { min-height: 0; }
+  .heroC:has(#wavefield) { min-height: calc(100svh - 70px); }
   .heroC #wavefield { height: 30vh; }
   .room__tally { display: none; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }

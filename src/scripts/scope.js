@@ -7,7 +7,6 @@ export function createScope(canvas) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const readLed = () => (getComputedStyle(canvas).getPropertyValue('--led').trim() || '168, 112, 255').split(',').map(Number);
   let led = readLed();
-  const host = canvas.parentElement;
   let w = 0, h = 0;
   function resize() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -33,13 +32,12 @@ export function createScope(canvas) {
     ctx.clearRect(0, 0, w, h);
     const mid = h * 0.55, amp = h * 0.32;
     const kick = Math.pow(Math.max(0, Math.sin(t * Math.PI * 2 * 1.02)), 10);
-    host.style.setProperty('--kick', kick.toFixed(3));
     const reveal = Math.min(1, age / 1.8) * w;
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineJoin = ctx.lineCap = 'round';
     for (const [ph, sp, a, lw, op, wk] of LINES) {
       ctx.beginPath();
-      for (let x = 0; x <= reveal; x += 3) {
+      for (let x = 0; x <= reveal; x += 4) {
         const u = x / w;
         const env = Math.pow(Math.sin(Math.PI * u), 1.4);           // se apaga en los bordes
         const y = mid + amp * a * env * (0.75 + kick * 0.35) * (
@@ -54,12 +52,12 @@ export function createScope(canvas) {
     }
     ctx.globalCompositeOperation = 'source-over';
   }
-  function loop(ms) { if (visible) draw(ms / 1000); raf = requestAnimationFrame(loop); }
+  function loop(ms) { draw(ms / 1000); raf = visible ? requestAnimationFrame(loop) : 0; }
   resize();
   addEventListener('resize', () => { resize(); if (reduce) draw(9); });
   if (reduce) draw(9);
   else {
-    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(canvas);
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(loop); }).observe(canvas);
     raf = requestAnimationFrame(loop);
   }
   return () => cancelAnimationFrame(raf);
