@@ -148,9 +148,20 @@ const keeps = [
           </div>
         </div>
         <div class="pane" data-i="4">
-          <div class="pane__top"><b>Reparto</b><span class="badge">acuerdo firmado el 12 mar</span></div>
-          <div class="split"><div class="donut"><svg viewBox="0 0 120 120"><circle class="d0" cx="60" cy="60" r="48"/><circle class="d1" cx="60" cy="60" r="48"/><circle class="d2" cx="60" cy="60" r="48"/></svg><div><b>100%</b><small>repartido</small></div></div>
-          <ul class="people"><li><span class="pe">TÚ</span><div><b>Tú</b><small>Letra y música</small></div><em>60%</em><i class="ok">Firmado</i></li><li><span class="pe a2">MR</span><div><b>Marcos R.</b><small>Producción</small></div><em>40%</em><i class="ok">Firmado</i></li><li><span class="pe a3">ES</span><div><b>Estudio Sur</b><small>Mezcla y master</small></div><em>pago único</em><i class="ok">Firmado</i></li></ul></div>
+          <div class="pane__top"><b>reparto_cruzo-la-m30.pdf</b><span class="badge" id="rbadge">acuerdo firmado · 12 mar</span></div>
+          <div class="lhead">
+            <div class="ltop__txt"><small>¿Y los créditos?</small><h3>Quién hizo qué y cuánto le toca.</h3></div>
+            <button type="button" class="rbtn" id="rsign">Firmar de nuevo</button>
+          </div>
+          <div class="rstage">
+            <div class="rsplit">
+              <div class="rp"><span class="rav">TÚ</span><div><b>Tú</b><small>Letra y música</small></div><em id="ra">60%</em></div>
+              <div class="rp r"><em id="rb">40%</em><div><b>Marcos R.</b><small>Producción</small></div><span class="rav b">MR</span></div>
+            </div>
+            <div class="rbar" id="rbar"><i class="ra"></i><i class="rb"></i><button type="button" class="rh" id="rh" role="slider" aria-label="Reparto entre tú y Marcos" aria-valuemin="10" aria-valuemax="90" aria-valuenow="60"></button></div>
+            <p class="rhint">Arrastra la barra para cambiar el reparto</p>
+            <div class="rsigs"><div class="sig"><svg viewBox="0 0 160 56" aria-hidden="true"><path d="M6 38 C16 8 26 8 24 30 C22 48 34 14 46 22 C56 28 50 44 62 36 C74 28 82 14 92 30 C100 42 112 24 126 30 C136 34 144 32 154 24" pathLength="1"/></svg><b>Tú</b><small>Firmado 12 mar</small></div><div class="sig"><svg viewBox="0 0 160 56" aria-hidden="true"><path d="M8 30 C20 40 24 10 34 12 C44 14 30 44 46 40 C58 36 62 14 74 16 C84 18 78 40 94 38 C106 36 112 22 124 26 C134 30 138 38 152 20" pathLength="1"/></svg><b>Marcos R.</b><small>Firmado 12 mar</small></div><div class="sig"><svg viewBox="0 0 160 56" aria-hidden="true"><path d="M6 34 L20 12 L32 40 L46 12 L58 40 C70 40 76 20 88 26 C98 31 92 44 106 40 C120 36 130 18 154 22" pathLength="1"/></svg><b>Estudio Sur</b><small>Mezcla y master · pago único</small></div></div>
+          </div>
         </div>
         <div class="pane" data-i="5">
           <div class="pane__top"><b>Historial</b><span class="badge">nada se borra</span></div>
