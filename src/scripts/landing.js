@@ -109,7 +109,7 @@ $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.c
 
 /* portadas: cambian dentro de la app */
 const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
-const CT = ['Portada · 1:1', 'Story · 9:16', 'Arte animado · GIF', 'Canvas · 0:08'];
+const CT = ['Foto', 'Diseño', 'GIF · bucle', 'Vídeo · 0:08'];
 let covI = 0, covLast = 0, covLock = 0;
 const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
