@@ -633,3 +633,11 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .lseg button.done::after { width: 100%; opacity: .55; }
 .lseg button:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px; }
 @media (max-width: 700px) { .lstage { min-height: 280px; } }
+
+.lt { display: flex; align-items: center; gap: 8px; }
+.bt { width: 8px; height: 8px; border-radius: 50%; background: var(--c1); opacity: .3; }
+.lbig { will-change: transform; }
+.lbig .w { display: inline-block; transition: color .2s, transform .35s cubic-bezier(.3, 1.6, .5, 1); color: #4a4f5a; }
+.lbig .w.on { color: #E6FF94; }
+.lbig .w.cur { color: var(--c1); transform: translateY(-6px) scale(1.06); }
+.lbig .w { margin: 0 .05em; } .lbig .w.cur { transform: translateY(-6px) scale(1.04); }

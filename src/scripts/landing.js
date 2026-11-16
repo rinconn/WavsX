@@ -237,9 +237,15 @@ const frame = (t) => {
       if (LY[i][2]) { nt.querySelector('i').textContent = LY[i][2]; nt.querySelector('b').textContent = LY[i][2] === 'MR' ? 'Marcos R.' : 'Tú'; nt.querySelector('span').textContent = LY[i][3]; }
     }
     lsegs[i].style.setProperty('--f', f * 100 + '%');
+    if (!still) { const bt = Math.pow(Math.abs(Math.sin((t / 1000) * Math.PI * 1.6)), 6); lbig.style.transform = `scale(${1 + 0.016 * bt})`; $('#lbt').style.opacity = 0.25 + 0.75 * bt; }
     const g = Math.min(1, f / 0.8);
     if (lyMode === 'fill') lbig.style.setProperty('--f', g * 100 + '%');
-    else if (lyMode === 'words') { const n = Math.ceil(g * words.length); if (n !== lyN) { lyN = n; $$('#lbig .w').forEach((w, k) => w.classList.toggle('on', k < n)); } }
+    else if (lyMode === 'words') {
+      const wl = words.map((w) => w.length + 2), tot = wl.reduce((x, y) => x + y, 0);
+      let acc = 0; const st = wl.map((x) => { const r = acc / tot; acc += x; return r; });
+      const n = st.filter((x) => x <= g).length;
+      if (n !== lyN) { lyN = n; $$('#lbig .w').forEach((w, k) => { w.classList.toggle('on', k < n - 1); w.classList.toggle('cur', k === n - 1); }); }
+    }
     else { const n = Math.ceil(g * LY[i][1].length); if (n !== lyN) { lyN = n; lbig.innerHTML = `${LY[i][1].slice(0, n)}<span class="car"></span><span class="h">${LY[i][1].slice(n)}</span>`; } }
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
