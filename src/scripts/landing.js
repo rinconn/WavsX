@@ -152,10 +152,48 @@ $('#pprev').addEventListener('click', () => { if (pos > 3) seek(0); else setTrac
 drawPl();
 
 /* letra */
-const ls = $$('.lyr .l'), roll = $('#roll'), note = $('#note');
-let lyI = -1;
-$$('.secs button').forEach((b) => b.addEventListener('click', () => { lt0 = performance.now() - +b.dataset.s * 3000; lyI = -1; }));
+/* letra: pista en la línea de tiempo, con frases que se arrastran */
+const LY = [
+  [12, 'Cruzo la M-30 con la ventanilla abajo', 'MR', '¿Y si ponemos «cristal» en vez de «ventanilla»?'],
+  [18, 'y el neón me cuenta lo que no dices', '', ''],
+  [24, 'suena otra vez la maqueta del verano', '', ''],
+  [30, 'y yo sin saber si volver o seguir', '', ''],
+  [36, 'Dame una luz verde, dame una razón', 'TÚ', 'Aquí entra el coro a dos voces.'],
+  [42, 'que la noche es corta y no hay marcha atrás', '', ''],
+  [50, 'Aparco en la acera donde me dejaste', '', ''],
+  [56, 'con el motor encendido y la radio sin voz', 'MR', 'Esta me encanta. No la toques.'],
+];
+const LEND = 62, LPX = 46;
+const SECS = [['Verso 1', 0, 3], ['Estribillo', 4, 5], ['Verso 2', 6, 7]];
+const lane = $('#lane'), ltrack = $('#ltrack'), lclips = $('#lclips');
+let LT = 12, lyI = -1, lyDrag = false;
 let lt0 = 0;
+const lS = LY.map((l) => l[0]);
+const lend = (i) => (i + 1 < lS.length ? lS[i + 1] : LEND);
+const lcs = LY.map((l, i) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'lc'; b.dataset.i = i;
+  b.innerHTML = `<small></small><span>${l[1]}</span>${l[2] ? `<i class="pin">${l[2]}</i>` : ''}`;
+  lclips.appendChild(b); return b;
+});
+const lay = () => {
+  lcs.forEach((b, i) => { b.style.left = (lS[i] - 12) * LPX + 'px'; b.style.width = (lend(i) - lS[i]) * LPX - 6 + 'px'; b.querySelector('small').textContent = fmt(lS[i]); });
+  $('#lsec').innerHTML = SECS.map((s, k) => `<b class="s${k}" style="left:${(lS[s[1]] - 12) * LPX}px;width:${(lend(s[2]) - lS[s[1]]) * LPX - 6}px">${s[0]}</b>`).join('');
+};
+$('#lrule').innerHTML = Array.from({ length: 10 }, (_, k) => `<span style="left:${k * 6 * LPX}px">${fmt(12 + k * 6)}</span>`).join('');
+lay();
+lcs.forEach((b, i) => {
+  let x0 = 0, s0 = 0;
+  b.addEventListener('pointerdown', (e) => { lyDrag = true; x0 = e.clientX; s0 = lS[i]; b.setPointerCapture(e.pointerId); });
+  b.addEventListener('pointermove', (e) => {
+    if (!lyDrag || !b.hasPointerCapture(e.pointerId)) return;
+    const lo = i ? lS[i - 1] + 1 : 6, hi = (i + 1 < lS.length ? lS[i + 1] : LEND) - 1;
+    lS[i] = Math.max(lo, Math.min(hi, Math.round((s0 + (e.clientX - x0) / LPX) * 10) / 10)); lay(); lyI = -1;
+  });
+  const up = () => { lyDrag = false; };
+  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
+  b.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const hi = (i + 1 < lS.length ? lS[i + 1] : LEND) - 1, lo = i ? lS[i - 1] + 1 : 6; lS[i] = Math.max(lo, Math.min(hi, lS[i] + (e.key === 'ArrowRight' ? 0.5 : -0.5))); lay(); lyI = -1; } });
+});
 /* versiones */
 const V = [
   ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB'],
@@ -198,19 +236,25 @@ const frame = (t) => {
     if (playing && !still) { pos += Math.min(0.1, (t - fT) / 1000); if (pos >= TOT) setTrack(ti + 1); else drawPl(); }
     if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 3); }
   } else if (cur === 3) {
-    if (!lt0) lt0 = t;
-    const e = still ? 4.5 : (t - lt0) / 1000, i = Math.floor(e / 3) % ls.length, f = Math.min(1, (e % 3) / 2.2);
+    const dt = Math.min(0.1, (t - fT) / 1000);
+    if (!still && !lyDrag) { LT += dt * 3; if (LT >= LEND) LT = 12; }
+    if (still) LT = 38;
+    const x0 = lane.clientWidth * 0.28;
+    ltrack.style.transform = `translateX(${x0 - (LT - 12) * LPX}px)`;
+    $$('#lsec b').forEach((b) => { b.style.paddingLeft = Math.max(10, Math.min(b.offsetWidth - 90, (LT - 12) * LPX - x0 - parseFloat(b.style.left) + 14)) + 'px'; });
+    let i = 0; while (i + 1 < lS.length && lS[i + 1] <= LT) i++;
     if (i !== lyI) {
       lyI = i;
-      $('#lyt').textContent = ls[i].querySelector('small').textContent;
-      ls.forEach((el, k) => { el.classList.toggle('now', k === i); el.classList.toggle('done', k < i); });
-      roll.style.transform = `translateY(${roll.parentElement.clientHeight / 2 - (ls[i].offsetTop + ls[i].offsetHeight / 2)}px)`;
-      const nt = (ls[i].dataset.note || '').split('|');
-      note.classList.toggle('show', nt.length > 1);
-      if (nt.length > 1) { note.querySelector('i').textContent = nt[0]; note.querySelector('b').textContent = nt[0] === 'MR' ? 'Marcos R.' : 'Tú'; note.querySelector('span').textContent = nt[1]; }
-      $$('.secs button').forEach((b, k) => { const s0 = +b.dataset.s, s1 = k < 2 ? +$$('.secs button')[k + 1].dataset.s : 99; b.classList.toggle('on', i >= s0 && i < s1); });
+      lcs.forEach((b, k) => { b.classList.toggle('now', k === i); b.classList.toggle('done', k < i); });
+      $('#lct').textContent = fmt(lS[i]);
+      $('#lcl span').textContent = LY[i][1];
+      $('#lcn').textContent = i + 1 < LY.length ? 'después: ' + LY[i + 1][1] : 'fin de la letra';
+      const nt = $('#lnote'); nt.classList.toggle('show', !!LY[i][2]);
+      if (LY[i][2]) { nt.querySelector('i').textContent = LY[i][2]; nt.querySelector('b').textContent = LY[i][2] === 'MR' ? 'Marcos R.' : 'Tú'; nt.querySelector('span').textContent = LY[i][3]; }
     }
-    ls[i].style.setProperty('--f', f * 100 + '%');
+    const f = Math.max(0, Math.min(1, (LT - lS[i]) / (lend(i) - lS[i])));
+    lcs[i].style.setProperty('--f', f * 100 + '%');
+    $('#lcl').style.setProperty('--f', f * 100 + '%');
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
     if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
