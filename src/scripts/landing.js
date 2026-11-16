@@ -3,6 +3,9 @@ import { createDome } from './dome.js';
 import { createScope } from './scope.js';
 import { icon, sticker } from './icons.js';
 import { waveHeights, renderWave } from './data.js';
+import { smoothScroll } from './smooth.js';
+
+const smooth = smoothScroll();
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -93,7 +96,7 @@ steps.forEach((li, n) => li.addEventListener('click', () => {
   if (!wide) return;
   const story = $('.story');
   const top = story.offsetTop + (story.offsetHeight - innerHeight) * ((n + 0.5) / 4);
-  window.scrollTo({ top, behavior: 'smooth' });
+  smooth.to(top);
 }));
 
 /* ---------- 4 · cartel ON AIR ---------- */
@@ -155,4 +158,14 @@ document.querySelectorAll('.ledline').forEach((el, k) => {
     io.disconnect();
   }, { threshold: 1 });
   io.observe(el);
+});
+
+/* enlaces internos (#como, #producto…) con el mismo deslizamiento */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a || a.getAttribute('href').length < 2) return;
+  const t = document.querySelector(a.getAttribute('href'));
+  if (!t) return;
+  e.preventDefault();
+  smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });

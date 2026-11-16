@@ -9,12 +9,12 @@
   var SHOW_PICKER = false;
   var PALETTES = [
     {
-      id: 'iris', name: 'Iris',
-      c: ['#8FA6FF', '#C7A6FF', '#FFA8D2', '#FFD1A1'],
+      id: 'acido', name: 'Ácido',
+      c: ['#C6FF3D', '#8EF05A', '#E6FF94', '#5BE6B4'],
       bg: ['#09090B', '#121215', '#19191D', '#202025', '#25252B', '#323239']
     }
   ];
-  var KEY = 'wavsx-palette-v2';
+  var KEY = 'wavsx-palette-v3';
   var BG_VARS = ['--bg', '--surface', '--surface-2', '--raised', '--line', '--line-2'];
 
   function rgb(hex) {
