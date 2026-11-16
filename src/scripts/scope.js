@@ -15,6 +15,7 @@ export function createScope(canvas) {
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     led = readLed();
+    main = new Float32Array(Math.ceil(w / 4) + 2);
   }
   // cada línea: fase, velocidad, amplitud relativa, grosor, opacidad, mezcla con blanco
   const LINES = [
@@ -25,7 +26,7 @@ export function createScope(canvas) {
   ];
   const mix = (k) => `${Math.round(led[0] + (255 - led[0]) * k)},${Math.round(led[1] + (255 - led[1]) * k)},${Math.round(led[2] + (255 - led[2]) * k)}`;
 
-  let raf = 0, visible = true, t0 = -1;
+  let raf = 0, visible = true, t0 = -1, main = new Float32Array(1);
   function draw(t) {
     if (t0 < 0) t0 = t;
     const age = reduce ? 9 : t - t0;
@@ -35,20 +36,36 @@ export function createScope(canvas) {
     const reveal = Math.min(1, age / 1.8) * w;
     ctx.globalCompositeOperation = 'lighter';
     ctx.lineJoin = ctx.lineCap = 'round';
-    for (const [ph, sp, a, lw, op, wk] of LINES) {
+    const STEP = 4, n = Math.floor(reveal / STEP) + 1;
+    LINES.forEach(([ph, sp, a, lw, op, wk], li) => {
+      const ys = li === 0 ? main : null;
       ctx.beginPath();
-      for (let x = 0; x <= reveal; x += 4) {
-        const u = x / w;
+      for (let i = 0; i < n; i++) {
+        const x = i * STEP, u = x / w;
         const env = Math.pow(Math.sin(Math.PI * u), 1.4);           // se apaga en los bordes
-        const y = mid + amp * a * env * (0.75 + kick * 0.35) * (
+        const y = mid + amp * a * env * (0.7 + kick * 0.6) * (
           0.55 * Math.sin(u * 9 + t * 1.3 * sp + ph) +
           0.3 * Math.sin(u * 23 - t * 2.1 * sp + ph * 2) +
-          0.15 * Math.sin(u * 51 + t * 3.4 * sp));
-        x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          0.15 * Math.sin(u * 51 + t * 3.4 * sp) +
+          kick * 0.12 * Math.sin(u * 160 + t * 47 + ph));          // chisporroteo eléctrico en cada golpe
+        if (ys) ys[i] = y;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
       }
       const col = mix(wk);
-      ctx.strokeStyle = `rgba(${led.join(',')},${0.12 * op})`; ctx.lineWidth = lw * 7; ctx.stroke();   // halo
-      ctx.strokeStyle = `rgba(${col},${0.95 * op})`; ctx.lineWidth = lw; ctx.stroke();             // núcleo
+      ctx.strokeStyle = `rgba(${led.join(',')},${(0.12 + kick * 0.22) * op})`; ctx.lineWidth = lw * (7 + kick * 6); ctx.stroke();   // halo que se abre con el golpe
+      ctx.strokeStyle = `rgba(${col},${0.95 * op})`; ctx.lineWidth = lw; ctx.stroke();                                        // núcleo
+    });
+    // destellos que viajan por la línea principal, como señal que pasa
+    if (age > 1.8) for (let k = 0; k < 3; k++) {
+      const c = ((t * (0.18 + k * 0.05) + k / 3) % 1) * w, len = 90;
+      const i0 = Math.max(1, Math.floor((c - len) / STEP)), i1 = Math.min(n - 1, Math.ceil((c + len) / STEP));
+      if (i1 <= i0) continue;
+      const g = ctx.createLinearGradient(c - len, 0, c + len, 0);
+      g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,.95)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.moveTo(i0 * STEP, main[i0]);
+      for (let i = i0 + 1; i <= i1; i++) ctx.lineTo(i * STEP, main[i]);
+      ctx.strokeStyle = `rgba(${led.join(',')},.35)`; ctx.lineWidth = 10; ctx.stroke();
+      ctx.strokeStyle = g; ctx.lineWidth = 2.6; ctx.stroke();
     }
     ctx.globalCompositeOperation = 'source-over';
   }
