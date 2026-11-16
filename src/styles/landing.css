@@ -511,3 +511,20 @@ main { overflow-x: clip; }
 .app__cover[data-k="3"] .vid u { animation: stp 8s linear infinite; }
 .app__cover .tag { opacity: 1; z-index: 2; }
 @media (max-width: 900px) { .cov { grid-template-columns: 1fr; } .win .app { grid-template-columns: 1fr; } .app__cover { max-width: 240px; } }
+
+.cov .v { position: relative; transition: transform .3s; }
+.cov .v i { position: relative; overflow: hidden; transition: translate .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s, outline-color .2s; }
+.cov .v:hover i { transform: none; translate: 0 -6px; box-shadow: 0 14px 24px -8px rgba(0, 0, 0, .7); }
+.cov .v.on i { translate: 0 -3px; }
+.cov .v i::after { content: attr(data-t); position: absolute; right: 6px; top: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(0, 0, 0, .7); color: var(--c1); font-size: 9px; font-weight: 700; letter-spacing: .1em; opacity: 0; transform: translateY(-4px); transition: opacity .25s, transform .25s; }
+.cov .v:hover i::after, .cov .v.on i::after { opacity: 1; transform: none; }
+.cov .v[data-c="2"] i::before, .cov .v[data-c="3"] i::before { content: ""; position: absolute; left: 10px; bottom: 9px; border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .8)); opacity: 0; transition: opacity .25s; z-index: 1; }
+.cov .v[data-c="2"]:hover i::before, .cov .v[data-c="3"]:hover i::before { opacity: 1; }
+.cov .v[data-c="2"]:hover i { animation: gifj 1s steps(1) infinite; }
+.cov .v[data-c="3"]:hover i { animation: kb 4s ease-in-out infinite alternate; }
+.cov .v span { position: relative; width: max-content; }
+.cov .v span::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: var(--c1); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.cov .v:hover span::after, .cov .v.on span::after { transform: scaleX(1); }
+.app__cover { transform-style: preserve-3d; transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out, box-shadow .3s; }
+.app__cover:hover { box-shadow: 0 28px 50px rgba(0, 0, 0, .65); }
+@media (prefers-reduced-motion: reduce) { .cov .v[data-c="2"]:hover i, .cov .v[data-c="3"]:hover i { animation: none; } }

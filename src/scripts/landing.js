@@ -115,7 +115,12 @@ const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
+  if (cv.animate && !still) cms[n].animate([{ opacity: 0, scale: '1.08' }, { opacity: 1, scale: '1' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' });
 };
+if (!still) {
+  cv.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); cv.style.setProperty('--ry', ((e.clientX - r.left) / r.width - .5) * 14 + 'deg'); cv.style.setProperty('--rx', (.5 - (e.clientY - r.top) / r.height) * 14 + 'deg'); });
+  cv.addEventListener('pointerleave', () => { cv.style.setProperty('--rx', '0deg'); cv.style.setProperty('--ry', '0deg'); });
+}
 $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
 /* letra */
