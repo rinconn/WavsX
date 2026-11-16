@@ -110,11 +110,12 @@ $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.c
 /* portadas: cambian dentro de la app */
 const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
 const CT = ['Foto', 'GIF · bucle', 'Vídeo · 0:08'];
-let covI = 0, covLast = 0, covLock = 0;
+let covI = 0, covLast = 0, covLock = 0, playing = true;
 const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
-  const bg = getComputedStyle(cms[n]).backgroundImage; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
+  cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
+  const bg = cms[n].tagName === 'VIDEO' ? 'url(/covers/mesa.jpg)' : getComputedStyle(cms[n]).backgroundImage; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
   if (cv.animate && !still) cms[n].animate([{ opacity: 0, scale: '1.08' }, { opacity: 1, scale: '1' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' });
 };
@@ -129,14 +130,14 @@ $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c)
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
 const TRK = [['Neón en la M-30', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
 let TOT = 304, ti = 0;
-let pos = 72, playing = true, fT = 0;
+let pos = 72, fT = 0;
 const drawPl = () => { plb.style.setProperty('--pr', (pos / TOT) * 100 + '%'); pt.textContent = fmt(pos); };
 const seek = (v) => { pos = Math.max(0, Math.min(TOT - 1, v)); drawPl(); };
 plb.addEventListener('click', (e) => { const r = plb.getBoundingClientRect(); seek(((e.clientX - r.left) / r.width) * TOT); });
 plb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') seek(pos + 5); if (e.key === 'ArrowLeft') seek(pos - 5); });
 $('#pback').addEventListener('click', () => seek(pos - 15));
 $('#pfwd').addEventListener('click', () => seek(pos + 15));
-pp.addEventListener('click', () => { playing = !playing; pp.classList.toggle('paused', !playing); pp.setAttribute('aria-label', playing ? 'Pausa' : 'Reproducir'); plst.classList.toggle('paused', !playing); });
+pp.addEventListener('click', () => { playing = !playing; pp.classList.toggle('paused', !playing); pp.setAttribute('aria-label', playing ? 'Pausa' : 'Reproducir'); plst.classList.toggle('paused', !playing); const vd = $('video.m'); if (vd && cv.dataset.k === '2') { if (playing) vd.play().catch(() => {}); else vd.pause(); } });
 const setTrack = (i) => {
   ti = (i + TRK.length) % TRK.length; TOT = TRK[ti][1]; pos = 0;
   $('.stage__t b').textContent = TRK[ti][0]; $('.sz b').textContent = TRK[ti][0]; $('.pl__t span:last-child').textContent = fmt(TOT);

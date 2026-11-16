@@ -500,7 +500,6 @@ main { overflow-x: clip; }
 .app__cover .m { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .5s; }
 .app__cover .m.on { opacity: 1; }
 @keyframes gifj { 0% { transform: scale(1.02); filter: contrast(1.05); } 25% { transform: scale(1.06) translate(-1%, 0); filter: contrast(1.2) saturate(1.2); } 50% { transform: scale(1.03) translate(1%, 1%); filter: contrast(1.05); } 75% { transform: scale(1.08); filter: contrast(1.25) saturate(1.3); } }
-.m2 { animation: kb 8s ease-in-out infinite alternate; }
 @keyframes kb { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.18) translate(-4%, -3%); } }
 .vid { position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none; }
 .app__cover[data-k="2"] .vid { opacity: 1; }
@@ -574,3 +573,4 @@ main { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) { .disc::before, .disc b { animation: none; } }
 .pl__ctl { gap: 14px; }
 .cov .variants { grid-template-columns: repeat(3, 1fr); }
+video.m { width: 100%; height: 100%; object-fit: cover; }
