@@ -125,6 +125,19 @@ if (!still) {
 setCov(0);
 $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
+/* reproductor de la maqueta */
+const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
+const TOT = 304;
+let pos = 72, playing = true, fT = 0;
+const drawPl = () => { plb.style.setProperty('--pr', (pos / TOT) * 100 + '%'); pt.textContent = fmt(pos); };
+const seek = (v) => { pos = Math.max(0, Math.min(TOT - 1, v)); drawPl(); };
+plb.addEventListener('click', (e) => { const r = plb.getBoundingClientRect(); seek(((e.clientX - r.left) / r.width) * TOT); });
+plb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') seek(pos + 5); if (e.key === 'ArrowLeft') seek(pos - 5); });
+$('#pback').addEventListener('click', () => seek(pos - 15));
+$('#pfwd').addEventListener('click', () => seek(pos + 15));
+pp.addEventListener('click', () => { playing = !playing; pp.classList.toggle('paused', !playing); pp.setAttribute('aria-label', playing ? 'Pausa' : 'Reproducir'); plst.classList.toggle('paused', !playing); });
+drawPl();
+
 /* letra */
 const ls = $$('.l');
 let lt0 = 0;
@@ -167,6 +180,7 @@ const frame = (t) => {
       seg[k].forEach((el, i) => { el.classList.toggle('on', i < lit); el.classList.toggle('hot', i >= SEG - 3); });
     });
   } else if (cur === 2 && !still) {
+    if (playing && !still) { pos = (pos + Math.min(0.1, (t - fT) / 1000)) % TOT; drawPl(); }
     if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 4); }
   } else if (cur === 3) {
     if (!lt0) lt0 = t;
@@ -177,6 +191,7 @@ const frame = (t) => {
     if (!lt0) lt0 = t;
     if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
   }
+  fT = t;
   requestAnimationFrame(frame);
 };
 if (spec) requestAnimationFrame(frame);
