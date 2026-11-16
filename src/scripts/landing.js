@@ -142,3 +142,18 @@ onScroll();
     a.addEventListener('pointerleave', off); a.addEventListener('blur', off);
   });
 }
+
+/* ---------- separadores: forma de onda que se "reproduce" al entrar en pantalla ---------- */
+document.querySelectorAll('.ledline').forEach((el, k) => {
+  const hs = waveHeights(1.3 + k * 2.1, 180, 24);
+  el.classList.add('wave');
+  renderWave(el, hs, 0);
+  el.querySelectorAll('span').forEach((s, i) => s.style.setProperty('--i', i));
+  const io = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    const played = 0.3 + 0.25 * ((k * 0.37) % 1);
+    el.querySelectorAll('span').forEach((s, i) => s.classList.toggle('on', i / hs.length < played));
+    io.disconnect();
+  }, { threshold: 1 });
+  io.observe(el);
+});
