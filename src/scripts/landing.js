@@ -115,7 +115,7 @@ const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
   cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
-  const bg = cms[n].tagName === 'VIDEO' ? 'url(/covers/mesa.jpg)' : getComputedStyle(cms[n]).backgroundImage; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
+  const bg = cms[n].tagName === 'VIDEO' ? 'url(/covers/video.jpg)' : getComputedStyle(cms[n]).backgroundImage; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
   if (cv.animate && !still) cms[n].animate([{ opacity: 0, scale: '1.08' }, { opacity: 1, scale: '1' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' });
 };
