@@ -52,28 +52,120 @@ if (mq) {
   mq.querySelectorAll('.marquee__item').forEach((el) => io2.observe(el));
 }
 
-/* ---------- 2 · mesa: pestañas y espectrograma ---------- */
+/* ---------- 2 · mesa: pestañas y paneles con vida (solo se anima el panel visible) ---------- */
+const tabs = $$('.desk__tab'), panes = $$('.pane');
+let cur = 0;
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const select = (i) => {
+  cur = i;
+  tabs.forEach((x, k) => x.classList.toggle('on', k === i));
+  panes.forEach((p, k) => p.classList.toggle('on', k === i));
+  lt0 = 0; tlI = -1;
+};
+tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));
+
+/* audio: espectrograma que desfila */
 const spec = $('.spec');
+let off = null;
 if (spec) {
-  const g = spec.getContext('2d'), W = spec.width, H = spec.height, cw = 3, rh = 4;
+  const W = spec.width, H = spec.height, cw = 3, rh = 4;
+  off = document.createElement('canvas'); off.width = W * 2; off.height = H;
+  const g = off.getContext('2d');
   const n = (x, y) => { const v = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return v - Math.floor(v); };
-  for (let x = 0; x < W; x += cw) {
-    const t = x / W, beat = Math.pow(Math.abs(Math.sin(t * 38)), 6);
+  for (let x = 0; x < W * 2; x += cw) {
+    const t = x / (W * 2), beat = Math.pow(Math.abs(Math.sin(t * Math.PI * 2 * 20)), 6);
     for (let y = 0; y < H; y += rh) {
       const f = 1 - y / H;
-      let e = Math.exp(-f * 3.4) * (0.55 + 0.45 * beat) + n(x, y) * 0.12 * Math.exp(-f * 2);
-      e += Math.exp(-Math.pow((f - (0.18 + 0.1 * Math.sin(t * 9))) * 14, 2)) * 0.45;
-      e *= t > 0.97 ? 0.3 : 1;
+      let e = Math.exp(-f * 3.4) * (0.5 + 0.5 * beat) + n(x, y) * 0.12 * Math.exp(-f * 2);
+      e += Math.exp(-Math.pow((f - (0.2 + 0.1 * Math.sin(t * Math.PI * 2 * 4))) * 14, 2)) * 0.45;
+      e += Math.exp(-Math.pow((f - 0.62) * 22, 2)) * 0.25 * Math.abs(Math.sin(t * Math.PI * 2 * 10));
       g.fillStyle = `rgba(198,255,61,${Math.min(1, Math.max(0, e - 0.08)).toFixed(2)})`;
       g.fillRect(x, y, cw, rh);
     }
   }
 }
-const tabs = $$('.desk__tab'), panes = $$('.pane');
-tabs.forEach((t, i) => t.addEventListener('click', () => {
-  tabs.forEach((x, k) => x.classList.toggle('on', k === i));
-  panes.forEach((p, k) => p.classList.toggle('on', k === i));
+
+/* stems: vúmetros de segmentos, M/S que funcionan */
+const strips = $$('.chan li');
+const SEG = 18, lv = strips.map(() => 0), seg = [];
+strips.forEach((li, k) => {
+  const m = li.querySelector('.meter');
+  m.innerHTML = '<i></i>'.repeat(SEG);
+  seg.push([...m.children]);
+  li.querySelector('.m').addEventListener('click', (e) => { e.currentTarget.classList.toggle('on'); mixState(); });
+  li.querySelector('.s').addEventListener('click', (e) => { e.currentTarget.classList.toggle('on'); mixState(); });
+});
+function mixState() {
+  const solo = strips.some((li) => li.querySelector('.s').classList.contains('on'));
+  strips.forEach((li) => {
+    const m = li.querySelector('.m').classList.contains('on'), s = li.querySelector('.s').classList.contains('on');
+    li.classList.toggle('off', m || (solo && !s));
+  });
+}
+mixState();
+
+/* portadas: cambian dentro de la app */
+const cv = $('#cv');
+$$('.v').forEach((b) => b.addEventListener('click', () => {
+  $$('.v').forEach((x) => x.classList.toggle('on', x === b));
+  cv.className = 'app__cover c' + b.dataset.c + (b.dataset.c === '2' ? ' is-anim' : '');
 }));
+
+/* letra */
+const ls = $$('.l');
+let lt0 = 0;
+/* versiones */
+const V = [
+  ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB'],
+  ['v3', 'maqueta con bajo', '28 mar', 'Entra el bajo y se cierra la estructura · 4:41 · 48 MB'],
+  ['v5', 'mezcla con voz nueva', '2 jun', 'Voz regrabada en estudio · comentario de Marcos en 0:48'],
+  ['v7', 'mezcla final', '19 sep', 'Aprobada por todos · 24-bit / 48 kHz · 5:04'],
+  ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB'],
+];
+const nodes = $('.tl__nodes');
+if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}"><b>${v[0]}</b><small>${v[2]}</small></button>`).join('');
+let tlI = -1;
+const setV = (i) => {
+  tlI = i;
+  $$('.tn').forEach((b, k) => { b.classList.toggle('on', k === i); b.classList.toggle('past', k < i); });
+  $('.tl').style.setProperty('--w', (i / (V.length - 1)) * 100 + '%');
+  const c = $('.tl__card');
+  c.children[0].textContent = `${V[i][0]} · ${V[i][1]}`; c.children[1].textContent = V[i][3]; c.children[2].textContent = V[i][2];
+};
+$$('.tn').forEach((b) => b.addEventListener('click', () => { setV(+b.dataset.i); lt0 = performance.now() + 5000; }));
+setV(4);
+
+let covAuto = 0;
+const frame = (t) => {
+  if (cur === 0 && off) {
+    const g = spec.getContext('2d'), x = still ? 0 : ((t / 1000) * 46) % spec.width;
+    g.drawImage(off, x, 0, spec.width, spec.height, 0, 0, spec.width, spec.height);
+    $('#tc').textContent = fmt(48 + (t / 1000) % 256);
+  } else if (cur === 1 && !still) {
+    const beat = Math.pow(Math.abs(Math.sin(t / 1000 * 3.2)), 4);
+    const base = [0.7, 0.55, 0.62, 0.5, 0.42], amp = [0.3, 0.15, 0.35, 0.25, 0.2];
+    strips.forEach((li, k) => {
+      const on = !li.classList.contains('off');
+      const tgt = on ? base[k] + amp[k] * (k === 2 ? beat : Math.sin(t / 1000 * (2 + k) + k) * 0.5 + 0.5) * (0.6 + Math.random() * 0.4) : 0;
+      lv[k] += (tgt - lv[k]) * 0.35;
+      const lit = Math.round(lv[k] * SEG);
+      seg[k].forEach((el, i) => { el.classList.toggle('on', i < lit); el.classList.toggle('hot', i >= SEG - 3); });
+    });
+  } else if (cur === 2 && !still) {
+    $('.app').style.setProperty('--pr', (24 + ((t / 1000) * 1.2) % 70) + '%');
+  } else if (cur === 3) {
+    if (!lt0) lt0 = t;
+    const e = (t - lt0) / 1000, i = Math.min(2, Math.floor(e / 3.4) % 3), f = Math.min(1, (e % 3.4) / 2.4);
+    ls.forEach((el, k) => { el.classList.toggle('now', k === i); el.classList.toggle('done', k < i); el.style.setProperty('--f', k === i ? f * 100 + '%' : '0%'); });
+    if (e > 10.2) lt0 = t;
+  } else if (cur === 5 && !still) {
+    if (!lt0) lt0 = t;
+    if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
+  }
+  requestAnimationFrame(frame);
+};
+if (spec) requestAnimationFrame(frame);
 
 /* ---------- 3 · historia por pasos ---------- */
 const steps = $$('#steps li');

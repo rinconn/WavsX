@@ -29,6 +29,6 @@ Las fotos de iStock que mandó son de pago: solo sirven de referencia.
 ## Pendiente
 Ver `TODO` en la sección "Lo que guarda cada canción" más abajo.
 
-### TODO · sección "Lo que guarda cada canción" (`.session` en index.astro)
-Hecho: colores (todo lima, menta solo en el sello), WAV como fichas de archivo, stems como canales M/S, letra con frase cantada, créditos como ficha con puntos, versiones como historial, y el cabezal sustituido por la pista iluminada según el scroll.
-Falta: **portadas** (`.clip__covers i`) con fotos reales de Unsplash (entorno "wavsx"). Guardarlas en `public/covers/` y usarlas como `background-image`.
+### Sección "Lo que guarda cada canción" (`.desk` en index.astro)
+Lista a la izquierda + panel a la derecha, con animación solo en el panel visible (bucle en `landing.js`): espectrograma que desfila (WAV), vúmetros y M/S (stems), reproductor con 4 portadas (cambian al pulsar), letra karaoke, reparto con donut y firmas, línea de versiones que avanza.
+Falta: las portadas son procedurales (`.c0`-`.c3`); sustituir por fotos reales de Unsplash (entorno "wavsx") en `public/covers/` y un vídeo/gif corto para la animada.

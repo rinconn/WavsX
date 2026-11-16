@@ -112,12 +112,35 @@ const keeps = [
     <div class="desk reveal" aria-label="Lo que guarda cada canción">
       <ol class="desk__tabs"><li><button type="button" class="desk__tab on" data-i="0"><span>01</span><b>Audio</b><small>Mezclas y master en WAV, sin comprimir.</small></button></li><li><button type="button" class="desk__tab" data-i="1"><span>02</span><b>Stems</b><small>Las pistas sueltas, listas para el ingeniero.</small></button></li><li><button type="button" class="desk__tab" data-i="2"><span>03</span><b>Portadas</b><small>La final, las alternativas y las fotos.</small></button></li><li><button type="button" class="desk__tab" data-i="3"><span>04</span><b>Letra</b><small>La buena, no la de las notas del móvil.</small></button></li><li><button type="button" class="desk__tab" data-i="4"><span>05</span><b>Créditos y reparto</b><small>Quién hizo qué y cuánto le toca a cada uno.</small></button></li><li><button type="button" class="desk__tab" data-i="5"><span>06</span><b>Versiones</b><small>De la demo del móvil al master, sin borrar nada.</small></button></li></ol>
       <div class="desk__view">
-        <div class="pane on" data-i="0"><canvas class="spec" width="720" height="260" aria-label="Espectrograma del master"></canvas><p class="pane__meta"><b>cruzo-la-m30_master.wav</b><span>24-bit · 48 kHz · 5:04 · 87 MB</span></p><p class="pane__meta"><b>cruzo-la-m30_mezcla-v8.wav</b><span>24-bit · 48 kHz · 5:04 · 87 MB</span></p></div>
-        <div class="pane" data-i="1"><ul class="chan"><li><div class="fader"><i style="--v:72%"></i></div><b>Voz</b><span>S</span></li><li><div class="fader"><i style="--v:58%"></i></div><b>Bajo</b><span></span></li><li><div class="fader"><i style="--v:64%"></i></div><b>Batería</b><span></span></li><li><div class="fader"><i style="--v:45%"></i></div><b>Guitarras</b><span></span></li><li><div class="fader"><i style="--v:38%"></i></div><b>Sintes</b><span>M</span></li></ul><p class="pane__meta"><b>12 stems</b><span>Una carpeta .zip lista para mandar al mezclador</span></p></div>
-        <div class="pane" data-i="2"><div class="covers"><i></i><i></i><i></i><i></i></div><p class="pane__meta"><b>Final · 3000 × 3000</b><span>y tres alternativas descartadas</span></p></div>
-        <div class="pane" data-i="3"><p class="verse"><small>0:12</small>Cruzo la M-30 con la ventanilla abajo<br><small>0:18</small><em>y el neón me cuenta</em> lo que no dices<br><small>0:24</small>suena otra vez la maqueta del verano</p></div>
-        <div class="pane" data-i="4"><dl class="liner"><div><dt>Letra y música</dt><dd>Tú · 60%</dd></div><div><dt>Producción</dt><dd>Marcos R. · 40%</dd></div><div><dt>Mezcla</dt><dd>Estudio Sur</dd></div></dl><span class="stamp">Firmado</span></div>
-        <div class="pane" data-i="5"><ol class="hist"><li><b>v1</b>demo del móvil<em>12 mar</em></li><li><b>v5</b>mezcla con voz nueva<em>2 jun</em></li><li class="on"><b>v9</b>master<em>hoy</em></li></ol></div>
+        <div class="pane on" data-i="0">
+          <div class="pane__top"><b>cruzo-la-m30_master.wav</b><span class="badge">WAV · 24-bit · 48 kHz</span><span class="live"><i></i><time id="tc">0:48</time> / 5:04</span></div>
+          <div class="specwrap"><ul class="axis"><li>20k</li><li>10k</li><li>5k</li><li>1k</li><li>100</li></ul><canvas class="spec" width="720" height="260" aria-label="Espectrograma del master"></canvas></div>
+          <ul class="stats"><li><small>Pico real</small><b>-0,3 dBTP</b></li><li><small>Volumen</small><b>-9,4 LUFS</b></li><li><small>Rango</small><b>7,2 LU</b></li><li><small>Peso</small><b>87 MB</b></li><li><small>Versiones</small><b>master + 8 mezclas</b></li></ul>
+        </div>
+        <div class="pane" data-i="1">
+          <div class="pane__top"><b>12 stems · 5 grupos</b><span class="badge">WAV · 24-bit · 48 kHz</span><span class="live"><i></i>sincronizados</span></div>
+          <ul class="chan"><li data-k="0"><div class="meter"></div><div class="fader"><i style="--v:72%"></i></div><button type="button" class="ms m">M</button><button type="button" class="ms s">S</button><b>Voz</b></li><li data-k="1"><div class="meter"></div><div class="fader"><i style="--v:58%"></i></div><button type="button" class="ms m">M</button><button type="button" class="ms s">S</button><b>Bajo</b></li><li data-k="2"><div class="meter"></div><div class="fader"><i style="--v:64%"></i></div><button type="button" class="ms m">M</button><button type="button" class="ms s">S</button><b>Batería</b></li><li data-k="3"><div class="meter"></div><div class="fader"><i style="--v:45%"></i></div><button type="button" class="ms m">M</button><button type="button" class="ms s">S</button><b>Guitarras</b></li><li data-k="4"><div class="meter"></div><div class="fader"><i style="--v:38%"></i></div><button type="button" class="ms m">M</button><button type="button" class="ms s">S</button><b>Sintes</b></li></ul>
+          <ul class="stats"><li><small>Carpeta</small><b>cruzo-la-m30_stems.zip</b></li><li><small>Peso</small><b>412 MB</b></li><li><small>Para</small><b>Estudio Sur</b></li></ul>
+        </div>
+        <div class="pane" data-i="2">
+          <div class="app"><div class="app__cover c0" id="cv"><em class="tag">GIF · bucle</em></div>
+            <div class="app__info"><small>Single · 2026</small><b>Neón en la M-30</b><span>Tu nombre</span><div class="app__bar"><i></i></div><div class="app__t"><span>1:12</span><span>5:04</span></div><div class="app__ctl"><i></i><i class="play"></i><i></i></div></div></div>
+          <div class="variants"><button type="button" class="v on" data-c="0"><i class="c0"></i><span>Final</span></button><button type="button" class="v" data-c="1"><i class="c1"></i><span>Alternativa</span></button><button type="button" class="v" data-c="2"><i class="c2"></i><span>Animada</span></button><button type="button" class="v" data-c="3"><i class="c3"></i><span>Foto de prensa</span></button></div>
+        </div>
+        <div class="pane" data-i="3">
+          <div class="pane__top"><b>Letra sincronizada</b><span class="badge">tiempo por línea</span></div>
+          <div class="lyrics"><p class="l"><small>0:12</small><span>Cruzo la M-30 con la ventanilla abajo</span></p><p class="l"><small>0:18</small><span>y el neón me cuenta lo que no dices</span></p><p class="l"><small>0:24</small><span>suena otra vez la maqueta del verano</span></p></div>
+        </div>
+        <div class="pane" data-i="4">
+          <div class="pane__top"><b>Reparto</b><span class="badge">acuerdo firmado el 12 mar</span></div>
+          <div class="split"><div class="donut"><svg viewBox="0 0 120 120"><circle class="d0" cx="60" cy="60" r="48"/><circle class="d1" cx="60" cy="60" r="48"/><circle class="d2" cx="60" cy="60" r="48"/></svg><div><b>100%</b><small>repartido</small></div></div>
+          <ul class="people"><li><span class="pe">TÚ</span><div><b>Tú</b><small>Letra y música</small></div><em>60%</em><i class="ok">Firmado</i></li><li><span class="pe a2">MR</span><div><b>Marcos R.</b><small>Producción</small></div><em>40%</em><i class="ok">Firmado</i></li><li><span class="pe a3">ES</span><div><b>Estudio Sur</b><small>Mezcla y master</small></div><em>pago único</em><i class="ok">Firmado</i></li></ul></div>
+        </div>
+        <div class="pane" data-i="5">
+          <div class="pane__top"><b>Historial</b><span class="badge">nada se borra</span></div>
+          <div class="tl"><div class="tl__track"><i class="tl__fill"></i></div><div class="tl__nodes"></div></div>
+          <div class="tl__card"><b></b><span></span><small></small></div>
+        </div>
       </div>
     </div>
   </section>
