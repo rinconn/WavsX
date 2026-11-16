@@ -499,7 +499,6 @@ main { overflow-x: clip; }
 .win .app { border: 0; border-radius: 0; grid-template-columns: 220px minmax(0, 1fr); padding: 28px; }
 .app__cover .m { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .5s; }
 .app__cover .m.on { opacity: 1; }
-.m2 { animation: gifj 1s steps(1) infinite; }
 @keyframes gifj { 0% { transform: scale(1.02); filter: contrast(1.05); } 25% { transform: scale(1.06) translate(-1%, 0); filter: contrast(1.2) saturate(1.2); } 50% { transform: scale(1.03) translate(1%, 1%); filter: contrast(1.05); } 75% { transform: scale(1.08); filter: contrast(1.25) saturate(1.3); } }
 .m3 { animation: kb 8s ease-in-out infinite alternate; }
 @keyframes kb { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.18) translate(-4%, -3%); } }
@@ -520,7 +519,6 @@ main { overflow-x: clip; }
 .cov .v:hover i::after, .cov .v.on i::after { opacity: 1; transform: none; }
 .cov .v[data-c="2"] i::before, .cov .v[data-c="3"] i::before { content: ""; position: absolute; left: 10px; bottom: 9px; border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .8)); opacity: 0; transition: opacity .25s; z-index: 1; }
 .cov .v[data-c="2"]:hover i::before, .cov .v[data-c="3"]:hover i::before { opacity: 1; }
-.cov .v[data-c="2"]:hover i { animation: gifj 1s steps(1) infinite; }
 .cov .v[data-c="3"]:hover i { animation: kb 4s ease-in-out infinite alternate; }
 .cov .v span { position: relative; width: max-content; }
 .cov .v span::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: var(--c1); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
