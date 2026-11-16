@@ -238,7 +238,7 @@ const frame = (t) => {
     }
     lsegs[i].style.setProperty('--f', f * 100 + '%');
     if (!still) { const bt = Math.pow(Math.abs(Math.sin((t / 1000) * Math.PI * 1.6)), 6); lbig.style.transform = `scale(${1 + 0.016 * bt})`; $('#lbt').style.opacity = 0.25 + 0.75 * bt; }
-    const g = Math.min(1, f / 0.8);
+    const g = Math.min(1, f / 0.97);
     if (lyMode === 'fill') lbig.style.setProperty('--f', g * 100 + '%');
     else if (lyMode === 'words') {
       const wl = words.map((w) => w.length + 2), tot = wl.reduce((x, y) => x + y, 0);
