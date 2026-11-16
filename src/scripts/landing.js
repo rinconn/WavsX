@@ -116,7 +116,7 @@ const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
   cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
-  $$('.amb__m').forEach((m, k) => { m.classList.toggle('on', k === n); if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
+  $$('.pane[data-i="2"] .amb__m').forEach((m, k) => { m.classList.toggle('on', k === n); if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
   const bg = cms[n].tagName === 'VIDEO' ? `url(${cms[n].poster})` : getComputedStyle(cms[n]).backgroundImage;
   const cp = $('#cap'); if (cp) cp.innerHTML = `<b>${CAP[n][0]}</b><span>${CAP[n][1]}</span>`; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
@@ -202,6 +202,7 @@ const frame = (t) => {
     const e = still ? 4.5 : (t - lt0) / 1000, i = Math.floor(e / 3) % ls.length, f = Math.min(1, (e % 3) / 2.2);
     if (i !== lyI) {
       lyI = i;
+      $('#lyt').textContent = ls[i].querySelector('small').textContent;
       ls.forEach((el, k) => { el.classList.toggle('now', k === i); el.classList.toggle('done', k < i); });
       roll.style.transform = `translateY(${roll.parentElement.clientHeight / 2 - (ls[i].offsetTop + ls[i].offsetHeight / 2)}px)`;
       const nt = (ls[i].dataset.note || '').split('|');
