@@ -110,12 +110,14 @@ $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.c
 /* portadas: cambian dentro de la app */
 const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
 const CT = ['Foto', 'GIF · bucle', 'Vídeo · 0:08'];
+const CAP = [['Foto · JPG o PNG', 'Hasta 3000 × 3000 px. Se ve igual de nítida en grande que en la lista.'], ['GIF · en bucle', 'Hasta 15 MB. Se mueve en la ficha de la canción y en las miniaturas.'], ['Vídeo · MP4', 'De 5 a 8 s, sin sonido y en bucle. Pensado para quien quiere algo más que una imagen.']];
 let covI = 0, covLast = 0, covLock = 0, playing = true;
 const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
   cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
-  const bg = cms[n].tagName === 'VIDEO' ? 'url(/covers/video.jpg)' : getComputedStyle(cms[n]).backgroundImage; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
+  const bg = cms[n].tagName === 'VIDEO' ? `url(${cms[n].poster})` : getComputedStyle(cms[n]).backgroundImage;
+  const cp = $('#cap'); if (cp) cp.innerHTML = `<b>${CAP[n][0]}</b><span>${CAP[n][1]}</span>`; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
   if (cv.animate && !still) cms[n].animate([{ opacity: 0, scale: '1.08' }, { opacity: 1, scale: '1' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' });
 };

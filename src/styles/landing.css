@@ -574,3 +574,17 @@ main { overflow-x: clip; }
 .pl__ctl { gap: 14px; }
 .cov .variants { grid-template-columns: repeat(3, 1fr); }
 video.m { width: 100%; height: 100%; object-fit: cover; }
+
+.cov { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 36px; }
+.cov__side { gap: 16px; }
+.cov__side small { font-size: 12px; }
+.cov__side h3 { font-size: clamp(32px, 3.6vw, 48px); }
+.cov__side p { font-size: 15px; }
+.cov .variants { gap: 14px; margin-top: 12px; }
+.cov .v { gap: 6px; font-size: 14px; }
+.cov .v i { border-radius: 12px; }
+.cov .v em { font-size: 11px; }
+.cov__cap { display: grid; gap: 2px; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.cov__cap b { font-size: 14px; color: #fff; }
+.cov__cap span { font-size: 13px; color: var(--text-2); }
+@media (max-width: 900px) { .cov { grid-template-columns: 1fr; } }
