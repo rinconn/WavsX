@@ -152,7 +152,7 @@ $('#pprev').addEventListener('click', () => { if (pos > 3) seek(0); else setTrac
 drawPl();
 
 /* letra */
-/* letra: pista en la línea de tiempo, con frases que se arrastran */
+/* letra: una frase gigante cada vez, con tres estilos */
 const LY = [
   [12, 'Cruzo la M-30 con la ventanilla abajo', 'MR', '¿Y si ponemos «cristal» en vez de «ventanilla»?'],
   [18, 'y el neón me cuenta lo que no dices', '', ''],
@@ -163,37 +163,22 @@ const LY = [
   [50, 'Aparco en la acera donde me dejaste', '', ''],
   [56, 'con el motor encendido y la radio sin voz', 'MR', 'Esta me encanta. No la toques.'],
 ];
-const LEND = 62, LPX = 46;
-const SECS = [['Verso 1', 0, 3], ['Estribillo', 4, 5], ['Verso 2', 6, 7]];
-const lane = $('#lane'), ltrack = $('#ltrack'), lclips = $('#lclips');
-let LT = 12, lyI = -1, lyDrag = false;
-let lt0 = 0;
+const LEND = 62, SECN = ['Verso 1', 'Verso 1', 'Verso 1', 'Verso 1', 'Estribillo', 'Estribillo', 'Verso 2', 'Verso 2'];
+const lstage = $('#lstage'), lbig = $('#lbig');
 const lS = LY.map((l) => l[0]);
 const lend = (i) => (i + 1 < lS.length ? lS[i + 1] : LEND);
-const lcs = LY.map((l, i) => {
+let LT = 12, lyI = -1, lyMode = 'fill', lyN = -1;
+let lt0 = 0;
+const lsegs = LY.map((l, i) => {
   const b = document.createElement('button');
-  b.type = 'button'; b.className = 'lc'; b.dataset.i = i;
-  b.innerHTML = `<small></small><span>${l[1]}</span>${l[2] ? `<i class="pin">${l[2]}</i>` : ''}`;
-  lclips.appendChild(b); return b;
+  b.type = 'button'; b.setAttribute('aria-label', 'Ir a la frase ' + (i + 1));
+  b.addEventListener('click', () => { LT = lS[i]; });
+  $('#lseg').appendChild(b); return b;
 });
-const lay = () => {
-  lcs.forEach((b, i) => { b.style.left = (lS[i] - 12) * LPX + 'px'; b.style.width = (lend(i) - lS[i]) * LPX - 6 + 'px'; b.querySelector('small').textContent = fmt(lS[i]); });
-  $('#lsec').innerHTML = SECS.map((s, k) => `<b class="s${k}" style="left:${(lS[s[1]] - 12) * LPX}px;width:${(lend(s[2]) - lS[s[1]]) * LPX - 6}px">${s[0]}</b>`).join('');
-};
-$('#lrule').innerHTML = Array.from({ length: 10 }, (_, k) => `<span style="left:${k * 6 * LPX}px">${fmt(12 + k * 6)}</span>`).join('');
-lay();
-lcs.forEach((b, i) => {
-  let x0 = 0, s0 = 0;
-  b.addEventListener('pointerdown', (e) => { lyDrag = true; x0 = e.clientX; s0 = lS[i]; b.setPointerCapture(e.pointerId); });
-  b.addEventListener('pointermove', (e) => {
-    if (!lyDrag || !b.hasPointerCapture(e.pointerId)) return;
-    const lo = i ? lS[i - 1] + 1 : 6, hi = (i + 1 < lS.length ? lS[i + 1] : LEND) - 1;
-    lS[i] = Math.max(lo, Math.min(hi, Math.round((s0 + (e.clientX - x0) / LPX) * 10) / 10)); lay(); lyI = -1;
-  });
-  const up = () => { lyDrag = false; };
-  b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up);
-  b.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const hi = (i + 1 < lS.length ? lS[i + 1] : LEND) - 1, lo = i ? lS[i - 1] + 1 : 6; lS[i] = Math.max(lo, Math.min(hi, lS[i] + (e.key === 'ArrowRight' ? 0.5 : -0.5))); lay(); lyI = -1; } });
-});
+$$('.lstyle button').forEach((b) => b.addEventListener('click', () => {
+  lyMode = b.dataset.m; lstage.dataset.m = lyMode; lyN = -1; lyI = -1;
+  $$('.lstyle button').forEach((x) => x.classList.toggle('on', x === b));
+}));
 /* versiones */
 const V = [
   ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB'],
@@ -237,24 +222,25 @@ const frame = (t) => {
     if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 3); }
   } else if (cur === 3) {
     const dt = Math.min(0.1, (t - fT) / 1000);
-    if (!still && !lyDrag) { LT += dt * 3; if (LT >= LEND) LT = 12; }
-    if (still) LT = 38;
-    const x0 = lane.clientWidth * 0.28;
-    ltrack.style.transform = `translateX(${x0 - (LT - 12) * LPX}px)`;
-    $$('#lsec b').forEach((b) => { b.style.paddingLeft = Math.max(10, Math.min(b.offsetWidth - 90, (LT - 12) * LPX - x0 - parseFloat(b.style.left) + 14)) + 'px'; });
+    if (!still) { LT += dt * 1.6; if (LT >= LEND) LT = 12; } else LT = 38.5;
     let i = 0; while (i + 1 < lS.length && lS[i + 1] <= LT) i++;
+    const f = Math.max(0, Math.min(1, (LT - lS[i]) / (lend(i) - lS[i])));
+    const words = LY[i][1].split(' ');
     if (i !== lyI) {
-      lyI = i;
-      lcs.forEach((b, k) => { b.classList.toggle('now', k === i); b.classList.toggle('done', k < i); });
-      $('#lct').textContent = fmt(lS[i]);
-      $('#lcl span').textContent = LY[i][1];
-      $('#lcn').textContent = i + 1 < LY.length ? 'después: ' + LY[i + 1][1] : 'fin de la letra';
+      lyI = i; lyN = -1;
+      lsegs.forEach((b, k) => b.classList.toggle('done', k < i));
+      $('#lct').textContent = fmt(lS[i]); $('#lsecn').textContent = SECN[i];
+      lbig.classList.remove('in'); void lbig.offsetWidth; lbig.classList.add('in');
+      if (lyMode === 'fill') lbig.textContent = LY[i][1];
+      if (lyMode === 'words') lbig.innerHTML = words.map((w) => `<span class="w">${w}</span>`).join(' ');
       const nt = $('#lnote'); nt.classList.toggle('show', !!LY[i][2]);
       if (LY[i][2]) { nt.querySelector('i').textContent = LY[i][2]; nt.querySelector('b').textContent = LY[i][2] === 'MR' ? 'Marcos R.' : 'Tú'; nt.querySelector('span').textContent = LY[i][3]; }
     }
-    const f = Math.max(0, Math.min(1, (LT - lS[i]) / (lend(i) - lS[i])));
-    lcs[i].style.setProperty('--f', f * 100 + '%');
-    $('#lcl').style.setProperty('--f', f * 100 + '%');
+    lsegs[i].style.setProperty('--f', f * 100 + '%');
+    const g = Math.min(1, f / 0.8);
+    if (lyMode === 'fill') lbig.style.setProperty('--f', g * 100 + '%');
+    else if (lyMode === 'words') { const n = Math.ceil(g * words.length); if (n !== lyN) { lyN = n; $$('#lbig .w').forEach((w, k) => w.classList.toggle('on', k < n)); } }
+    else { const n = Math.ceil(g * LY[i][1].length); if (n !== lyN) { lyN = n; lbig.innerHTML = `${LY[i][1].slice(0, n)}<span class="car"></span><span class="h">${LY[i][1].slice(n)}</span>`; } }
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
     if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }

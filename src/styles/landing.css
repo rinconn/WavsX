@@ -598,55 +598,38 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 
 
 
-.ltop { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 28px; align-items: center; }
-.ltop__txt { display: grid; gap: 12px; }
-.ltop__txt small, .lcur time { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--c1); }
-.ltop__txt h3 { margin: 0; font-size: clamp(26px, 3vw, 40px); line-height: 1.08; letter-spacing: -0.03em; color: #fff; }
-.ltop__txt p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text-2); }
-.lcur { position: relative; display: grid; align-content: center; gap: 8px; min-height: 190px; padding: 22px 24px; border-radius: 16px; background: var(--bg); border: 1px solid var(--line); }
-.lcur time { font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
-.lcl { margin: 0; font-size: clamp(26px, 2.9vw, 40px); line-height: 1.12; font-weight: 700; letter-spacing: -0.03em; }
-.lcl span { background: linear-gradient(90deg, var(--c1) var(--f, 0%), var(--text-2) var(--f, 0%)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.lcn { margin: 0; font-size: 13px; color: var(--muted); min-height: 18px; }
 .lnote { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--raised); opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s; width: max-content; max-width: 100%; }
 .lnote.show { opacity: 1; transform: none; }
 .lnote i { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--c1); color: var(--on-accent); display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 700; }
 .lnote b { display: block; font-size: 11px; color: #fff; }
 .lnote span { font-size: 12px; color: var(--text-2); }
-.lane { position: relative; height: 176px; overflow: hidden; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); touch-action: pan-y; }
-.lane::before, .lane::after { content: ""; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
-.lane::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
-.lane::after { right: 0; background: linear-gradient(270deg, var(--bg), transparent); }
-.lane__track { position: absolute; left: 0; top: 14px; height: 150px; width: max-content; will-change: transform; }
-.lsec, .lrule, .lclips { position: relative; }
-.lsec { height: 26px; }
-.lsec b { position: absolute; top: 0; height: 26px; display: flex; align-items: center; padding: 0 10px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #0B0D06; white-space: nowrap; overflow: hidden; }
-.lsec .s0 { background: var(--c1); } .lsec .s1 { background: var(--c4, #5BE6B4); } .lsec .s2 { background: #E6FF94; }
-.lrule { height: 26px; margin-top: 4px; }
-.lrule span { position: absolute; top: 0; padding-left: 6px; border-left: 1px solid var(--line-2); height: 16px; font-size: 10px; line-height: 16px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
-.lclips { height: 70px; margin-top: 2px; }
-.lc { all: unset; box-sizing: border-box; position: absolute; top: 0; height: 70px; padding: 10px 12px; border-radius: 10px; background: var(--raised); border: 1px solid var(--line-2); display: grid; align-content: space-between; cursor: grab; overflow: hidden; touch-action: none; transition: border-color .2s, opacity .3s; }
-.lc:active { cursor: grabbing; }
-.lc small { font-size: 10px; font-family: ui-monospace, Menlo, monospace; color: var(--muted); font-variant-numeric: tabular-nums; }
-.lc span { font-size: 13px; line-height: 1.2; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lc .pin { position: absolute; right: 8px; top: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--c1); color: var(--on-accent); display: grid; place-items: center; font-style: normal; font-size: 8px; font-weight: 700; }
-.lc::after { content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: var(--f, 0%); background: var(--c1); }
-.lc.done { opacity: .45; }
-.lc.now { border-color: var(--c1); }
-.lc.now small { color: var(--c1); }
-.lc:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px; }
-.lane__ph { position: absolute; top: 0; bottom: 0; left: 28%; width: 2px; background: #fff; z-index: 3; pointer-events: none; }
-.lane__ph::before { content: ""; position: absolute; top: 0; left: -6px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid #fff; }
-@media (max-width: 900px) { .ltop { grid-template-columns: 1fr; } }
-.lsec .s0, .lsec .s1, .lsec .s2 { background: none; }
-.lsec { height: 22px; }
-.lsec b { height: 22px; padding-top: 0; border-radius: 0; border-bottom: 1px solid var(--line-2); color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
-.lrule { display: none; }
-.lcn { display: none; }
-.lclips { margin-top: 10px; }
-.lane { height: 134px; }
-.lane__track { height: 110px; }
-.lc .pin { width: 8px; height: 8px; right: 12px; top: 12px; font-size: 0; }
-.lcur { min-height: 170px; }
-.lane__ph::before { display: none; }
-.lane__ph { background: var(--c1); }
+
+.lhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.ltop__txt { display: grid; gap: 8px; }
+.ltop__txt small { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--c1); }
+.ltop__txt h3 { margin: 0; font-size: clamp(26px, 3vw, 40px); line-height: 1.08; letter-spacing: -0.03em; color: #fff; }
+.lstyle { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); }
+.lstyle button { all: unset; box-sizing: border-box; cursor: pointer; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--text-2); transition: background .2s, color .2s; }
+.lstyle button:hover { color: #fff; }
+.lstyle button.on { background: var(--c1); color: var(--on-accent); }
+.lstyle button:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px; }
+.lstage { position: relative; display: grid; grid-template-rows: auto 1fr auto; min-height: 320px; padding: 20px 26px 22px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); overflow: hidden; }
+.lstage__top { display: flex; justify-content: space-between; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.lstage__top time { color: var(--c1); font-family: ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.lbig { margin: 0; align-self: center; text-align: center; font-size: clamp(32px, 4.6vw, 62px); line-height: 1.08; font-weight: 700; letter-spacing: -0.04em; color: var(--muted); padding: 10px 4%; }
+.lbig.in { animation: lin .5s cubic-bezier(.2, .8, .2, 1); }
+@keyframes lin { from { opacity: 0; transform: translateY(14px); } }
+.lstage[data-m="fill"] .lbig { background: linear-gradient(90deg, var(--c1) var(--f, 0%), #4a4f5a var(--f, 0%)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lbig .w { transition: color .25s; }
+.lbig .w.on { color: var(--c1); }
+.lbig .h { color: transparent; }
+.lbig .car { display: inline-block; width: .06em; height: .85em; margin-left: .06em; background: var(--c1); vertical-align: -0.08em; animation: blink 1s steps(2) infinite; }
+.lnote { position: absolute; left: 22px; bottom: 54px; display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--raised); opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s; }
+.lnote.show { opacity: 1; transform: none; }
+.lseg { display: flex; gap: 6px; }
+.lseg button { all: unset; box-sizing: border-box; flex: 1; height: 22px; cursor: pointer; position: relative; }
+.lseg button::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 4px; border-radius: 2px; background: var(--line-2); }
+.lseg button::after { content: ""; position: absolute; left: 0; top: 9px; height: 4px; border-radius: 2px; background: var(--c1); width: var(--f, 0%); }
+.lseg button.done::after { width: 100%; opacity: .55; }
+.lseg button:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px; }
+@media (max-width: 700px) { .lstage { min-height: 280px; } }
