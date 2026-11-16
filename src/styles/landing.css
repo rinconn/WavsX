@@ -62,67 +62,51 @@ main { overflow-x: clip; }
 
 
 /* ---------- estudio a oscuras (ambientación del hero) ----------
-   Sala negra iluminada solo por dos tubos LED de neón: pervinca a la izquierda, lila a la derecha.
-   Colores y posición en variables para reutilizarlo en otras secciones. */
+   Sala negra; la única luz es una tira LED tras la mesa que barre la pared
+   acústica de abajo arriba, y el puente de medidores. Todo cuelga de --led. */
+.heroC, .nav { --led: 255, 170, 60; --accent: rgb(var(--led)); --accent-rgb: var(--led); }
 .heroC {
-  --neon-l: var(--c1-rgb);
-  --neon-r: var(--c3-rgb);
-  --neon-x: 9%;                   /* distancia de los tubos al borde */
-  --floor: 18.4vh;                /* línea base del ecualizador: 46vh × 0.4 */
+  --floor: 7.4vh;                 /* línea de la mesa: 46vh × 0.16 */
 }
-.heroC:has(.room) { background: #040405; }
+.heroC:has(.room) { background: #030303; }
 .room { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .room > * { position: absolute; }
-.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 50% 40%, transparent 40%, rgba(0, 0, 0, .85) 100%); }
-/* pared de listones: solo se ve donde llega la luz de los tubos */
+.room::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 75% 85% at 50% 60%, transparent 45%, rgba(0, 0, 0, .9) 100%); }
+/* pared de listones iluminada en rasante desde la tira */
 .room__wall {
-  inset: 0;
+  left: 0; right: 0; top: 0; bottom: var(--floor);
   background:
-    radial-gradient(ellipse 26% 62% at var(--neon-x) 40%, rgba(var(--neon-l), .26), transparent 70%),
-    radial-gradient(ellipse 26% 62% at calc(100% - var(--neon-x)) 40%, rgba(var(--neon-r), .26), transparent 70%),
+    linear-gradient(0deg, rgba(var(--led), .30), rgba(var(--led), .08) 35%, transparent 75%),
     repeating-linear-gradient(0deg, transparent 0 179px, rgba(0, 0, 0, .6) 179px 181px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, .20) 0 1px, rgba(255, 255, 255, .05) 1px 20px, rgba(0, 0, 0, .7) 20px 24px);
-  -webkit-mask: radial-gradient(ellipse 30% 66% at var(--neon-x) 40%, #000, transparent 72%), radial-gradient(ellipse 30% 66% at calc(100% - var(--neon-x)) 40%, #000, transparent 72%);
-          mask: radial-gradient(ellipse 30% 66% at var(--neon-x) 40%, #000, transparent 72%), radial-gradient(ellipse 30% 66% at calc(100% - var(--neon-x)) 40%, #000, transparent 72%);
-  animation: neonOn 1.6s linear .2s both;
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .16) 0 1px, rgba(255, 255, 255, .03) 1px 22px, rgba(0, 0, 0, .75) 22px 26px);
+  -webkit-mask: radial-gradient(ellipse 60% 100% at 50% 100%, #000 10%, transparent 80%);
+          mask: radial-gradient(ellipse 60% 100% at 50% 100%, #000 10%, transparent 80%);
+  animation: ledOn 1.4s var(--ease) .3s both;
 }
-/* el tubo: núcleo casi blanco y halo de color en capas */
-.room__neon {
-  --c: var(--neon-l);
-  top: 14vh; height: 52vh; width: 6px; margin-left: -3px; border-radius: 6px;
-  background: linear-gradient(rgba(255, 255, 255, .85), #fff 50%, rgba(255, 255, 255, .85));
-  box-shadow: 0 0 4px 1px rgb(var(--c)), 0 0 18px 4px rgba(var(--c), .75), 0 0 60px 14px rgba(var(--c), .4), 0 0 160px 40px rgba(var(--c), .18);
-  animation: neonOn 1.6s linear .2s both, buzz 9s linear 3s infinite;
+.room__wash { left: 0; right: 0; bottom: var(--floor); height: 60%; background: radial-gradient(ellipse 50% 70% at 50% 100%, rgba(var(--led), .22), transparent 70%); animation: ledOn 1.4s var(--ease) .3s both; }
+/* la tira: línea fina casi blanca con halo del color */
+.room__strip {
+  left: 6%; right: 6%; bottom: var(--floor); height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgb(var(--led)) 8%, #FFF4E0 50%, rgb(var(--led)) 92%, transparent);
+  box-shadow: 0 0 8px 1px rgba(var(--led), .9), 0 -6px 30px 4px rgba(var(--led), .45), 0 -20px 90px 20px rgba(var(--led), .18);
+  animation: ledOn 1.4s var(--ease) .1s both;
 }
-.room__neon--l { left: var(--neon-x); }
-.room__neon--r { --c: var(--neon-r); left: calc(100% - var(--neon-x)); animation-delay: .55s, 6s; }
-.room__wash { left: 0; right: 0; bottom: 0; height: 70%; background: radial-gradient(ellipse 55% 55% at 50% 78%, rgba(var(--c1-rgb), .14), transparent 70%); }
-/* suelo: reflejo alargado de cada tubo y del ecualizador */
+/* mesa / suelo: recoge el reflejo de la tira */
 .room__floor {
   left: 0; right: 0; bottom: 0; height: var(--floor);
-  background:
-    radial-gradient(ellipse 1.6% 90% at var(--neon-x) 0%, rgba(var(--neon-l), .55), transparent 80%),
-    radial-gradient(ellipse 1.6% 90% at calc(100% - var(--neon-x)) 0%, rgba(var(--neon-r), .55), transparent 80%),
-    radial-gradient(ellipse 14% 70% at var(--neon-x) 0%, rgba(var(--neon-l), .16), transparent 75%),
-    radial-gradient(ellipse 14% 70% at calc(100% - var(--neon-x)) 0%, rgba(var(--neon-r), .16), transparent 75%),
-    radial-gradient(ellipse 46% 90% at 50% 0%, rgba(var(--c1-rgb), .10), transparent 70%),
-    linear-gradient(#0B0B10, var(--bg) 90%);
+  background: radial-gradient(ellipse 45% 100% at 50% 0%, rgba(var(--led), .14), transparent 75%), linear-gradient(#0C0A08, #030303);
 }
-.room__floor::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--neon-l), .35) 9%, rgba(255, 255, 255, .08) 50%, rgba(var(--neon-r), .35) 91%, transparent); }
+@keyframes ledOn { from { opacity: 0; } to { opacity: 1; } }
 /* piloto "en el aire": se enciende al ir a entrar en el estudio */
 .room__tally {
-  top: 108px; right: calc(var(--neon-x) + 32px); padding: 6px 12px 6px 22px; border-radius: 6px;
+  top: 108px; right: 48px; padding: 6px 12px 6px 22px; border-radius: 6px;
   font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
   color: #4A2226; background: #140B0D; border: 1px solid #2A1417;
   transition: color .25s, background .25s, box-shadow .25s, border-color .25s;
 }
 .room__tally::before { content: ''; position: absolute; left: 10px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: currentColor; }
 .heroC.is-air .room__tally { color: #FF5A5F; background: #2A0F12; border-color: #5C1D22; box-shadow: 0 0 24px rgba(255, 70, 80, .35), inset 0 0 12px rgba(255, 70, 80, .15); }
-/* encendido de fluorescente y algún parpadeo ocasional */
-@keyframes neonOn { 0% { opacity: 0; } 5% { opacity: .8; } 9% { opacity: .05; } 14% { opacity: 1; } 18% { opacity: .3; } 30%, 100% { opacity: 1; } }
-@keyframes buzz { 0%, 95% { opacity: 1; } 95.6% { opacity: .35; } 96.2% { opacity: 1; } 96.8% { opacity: .55; } 97.4%, 100% { opacity: 1; } }
 .heroC__canvas { z-index: 1; }
-.heroC .hero__title { text-shadow: -1px 0 0 rgba(var(--neon-l), .5), 1px 0 0 rgba(var(--neon-r), .5), 0 0 60px rgba(255, 255, 255, .06); }
 @media (prefers-reduced-motion: reduce) { .room > * { animation: none !important; } }
 
 /* ---------- carrusel: línea de tiempo de estudio ---------- */
@@ -335,10 +319,8 @@ main { overflow-x: clip; }
   .heroC:has(#wavefield) { min-height: 0; }
   .heroC:has(#wavefield) .heroC__content { padding-top: 128px; }
   .heroC #wavefield { position: relative; height: 36vh; margin-top: 12px; }
-  .heroC { --floor: 14.4vh; }
+  .heroC { --floor: 5.8vh; }
   .room__tally { display: none; }
-  .heroC { --neon-x: 5%; }
-  .room__neon { top: 110px; height: 40vh; width: 4px; }
   .nav { gap: 12px; width: calc(100% - 24px); justify-content: space-between; }
   .nav__links { display: none; }
   .hero__content { padding-top: 16vh; }
