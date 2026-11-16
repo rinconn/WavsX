@@ -109,7 +109,7 @@ $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.c
 
 /* portadas: cambian dentro de la app */
 const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
-const CT = ['Foto', 'Diseño', 'GIF · bucle', 'Vídeo · 0:08'];
+const CT = ['Foto', 'GIF · bucle', 'Vídeo · 0:08'];
 let covI = 0, covLast = 0, covLock = 0;
 const setCov = (n) => {
   covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
@@ -189,7 +189,7 @@ const frame = (t) => {
     });
   } else if (cur === 2 && !still) {
     if (playing && !still) { pos += Math.min(0.1, (t - fT) / 1000); if (pos >= TOT) setTrack(ti + 1); else drawPl(); }
-    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 4); }
+    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 3); }
   } else if (cur === 3) {
     if (!lt0) lt0 = t;
     const e = (t - lt0) / 1000, i = Math.min(2, Math.floor(e / 3.4) % 3), f = Math.min(1, (e % 3.4) / 2.4);

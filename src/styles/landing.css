@@ -500,14 +500,14 @@ main { overflow-x: clip; }
 .app__cover .m { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .5s; }
 .app__cover .m.on { opacity: 1; }
 @keyframes gifj { 0% { transform: scale(1.02); filter: contrast(1.05); } 25% { transform: scale(1.06) translate(-1%, 0); filter: contrast(1.2) saturate(1.2); } 50% { transform: scale(1.03) translate(1%, 1%); filter: contrast(1.05); } 75% { transform: scale(1.08); filter: contrast(1.25) saturate(1.3); } }
-.m3 { animation: kb 8s ease-in-out infinite alternate; }
+.m2 { animation: kb 8s ease-in-out infinite alternate; }
 @keyframes kb { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.18) translate(-4%, -3%); } }
 .vid { position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none; }
-.app__cover[data-k="3"] .vid { opacity: 1; }
+.app__cover[data-k="2"] .vid { opacity: 1; }
 .vid i { position: absolute; right: 10px; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, .55); }
 .vid i::after { content: ""; position: absolute; left: 10px; top: 7px; border-left: 8px solid #fff; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
 .vid u { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--c1); width: 0; text-decoration: none; }
-.app__cover[data-k="3"] .vid u { animation: stp 8s linear infinite; }
+.app__cover[data-k="2"] .vid u { animation: stp 8s linear infinite; }
 .app__cover .tag { opacity: 1; z-index: 2; }
 @media (max-width: 900px) { .cov { grid-template-columns: 1fr; } .win .app { grid-template-columns: 1fr; } .app__cover { max-width: 240px; } }
 
@@ -517,15 +517,15 @@ main { overflow-x: clip; }
 .cov .v.on i { translate: 0 -3px; }
 .cov .v i::after { content: attr(data-t); position: absolute; right: 6px; top: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(0, 0, 0, .7); color: var(--c1); font-size: 9px; font-weight: 700; letter-spacing: .1em; opacity: 0; transform: translateY(-4px); transition: opacity .25s, transform .25s; }
 .cov .v:hover i::after, .cov .v.on i::after { opacity: 1; transform: none; }
-.cov .v[data-c="2"] i::before, .cov .v[data-c="3"] i::before { content: ""; position: absolute; left: 10px; bottom: 9px; border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .8)); opacity: 0; transition: opacity .25s; z-index: 1; }
-.cov .v[data-c="2"]:hover i::before, .cov .v[data-c="3"]:hover i::before { opacity: 1; }
-.cov .v[data-c="3"]:hover i { animation: kb 4s ease-in-out infinite alternate; }
+.cov .v[data-c="1"] i::before, .cov .v[data-c="2"] i::before { content: ""; position: absolute; left: 10px; bottom: 9px; border-left: 11px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .8)); opacity: 0; transition: opacity .25s; z-index: 1; }
+.cov .v[data-c="1"]:hover i::before, .cov .v[data-c="2"]:hover i::before { opacity: 1; }
+.cov .v[data-c="2"]:hover i { animation: kb 4s ease-in-out infinite alternate; }
 .cov .v span { position: relative; width: max-content; }
 .cov .v span::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; background: var(--c1); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .cov .v:hover span::after, .cov .v.on span::after { transform: scaleX(1); }
 .app__cover { transform-style: preserve-3d; transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out, box-shadow .3s; }
 .app__cover:hover { box-shadow: 0 28px 50px rgba(0, 0, 0, .65); }
-@media (prefers-reduced-motion: reduce) { .cov .v[data-c="2"]:hover i, .cov .v[data-c="3"]:hover i { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .cov .v[data-c="1"]:hover i, .cov .v[data-c="2"]:hover i { animation: none; } }
 
 .stage { display: grid; justify-items: center; gap: 16px; padding: 30px 24px 22px; }
 .stage .app__cover { width: min(250px, 70%); }
@@ -558,7 +558,7 @@ main { overflow-x: clip; }
 .pb.play:hover { background: var(--c1); transform: scale(1.06); }
 .pb.play::before { content: ""; width: 18px; height: 20px; background: linear-gradient(90deg, currentColor 0 36%, transparent 36% 64%, currentColor 64%); }
 .pb.play.paused::before { background: currentColor; clip-path: polygon(14% 0, 100% 50%, 14% 100%); width: 20px; }
-.stage.paused .m2, .stage.paused .m3, .stage.paused .vid u { animation-play-state: paused; }
+.stage.paused .m2, .stage.paused .vid u { animation-play-state: paused; }
 
 .sleeve { position: relative; width: min(250px, 70%); transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
 .stage .sleeve .app__cover { width: 100%; position: relative; z-index: 1; }
@@ -573,3 +573,4 @@ main { overflow-x: clip; }
 .stage.paused .disc::before, .stage.paused .disc b { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .disc::before, .disc b { animation: none; } }
 .pl__ctl { gap: 14px; }
+.cov .variants { grid-template-columns: repeat(3, 1fr); }
