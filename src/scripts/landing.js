@@ -303,7 +303,7 @@ if (spec) requestAnimationFrame(frame);
       const ph = (t % 10000) / 10000;
       const k = ph < 0.3 ? 0 : ph < 0.46 ? ease((ph - 0.3) / 0.16) : ph < 0.56 ? 1 - (ph - 0.46) / 0.1 : 0;
       const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
-      const Rx = Math.min(W * 0.5, 560), Ry = Math.min(Rx * 0.46, H - cy + 30);
+      const Rx = W * 0.62, Ry = Rx * 0.5;
       ctx.fillStyle = 'rgba(7,8,10,.24)'; ctx.fillRect(0, 0, W, H);
       for (const p of P) {
         p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
