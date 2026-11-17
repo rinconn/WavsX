@@ -768,12 +768,20 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 /* luz de la vitrina: la propia portada desenfocada */
 .stage { position: relative; overflow: hidden; isolation: isolate; }
 .stage::before { content: ""; position: absolute; inset: -30%; z-index: -1; background: var(--lab, none) center / cover; filter: blur(60px) saturate(1.4); opacity: .26; transition: opacity .6s; }
-.stage::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse 70% 55% at 50% 0, rgba(255, 255, 255, .08), transparent 70%); }
 .stage.lit::before { animation: litp 1.1s ease-out; }
 @keyframes litp { from { opacity: .7; } }
 @media (prefers-reduced-motion: reduce) { .stage.lit::before { animation: none; } }
-/* haz de luz por detrás */
-.stage::after { left: 50%; right: auto; top: -6%; width: 86%; height: 88%; transform: translateX(-50%); background: linear-gradient(rgba(230, 255, 148, .34), rgba(230, 255, 148, .09) 62%, transparent); clip-path: polygon(41% 0, 59% 0, 100% 100%, 0 100%); filter: blur(12px); transition: opacity .5s; }
-.stage.lit::after { animation: beam 1.1s ease-out; }
-@keyframes beam { from { opacity: 0; transform: translateX(-50%) scaleY(.6); transform-origin: top; } }
-@media (prefers-reduced-motion: reduce) { .stage.lit::after { animation: none; } }
+/* hover: la portada ilumina por detrás */
+.stage > .halo, .stage > .sleeve, .stage > .phone { grid-area: 1 / 1; }
+.halo { width: min(250px, 70%); aspect-ratio: 1; align-self: center; border-radius: 30px; background: var(--lab, none) center / cover; filter: blur(34px) saturate(1.7); opacity: .3; transform: scale(.92); transition: opacity .5s, transform .6s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+.stage[data-f="casete"] .halo { width: min(320px, 92%); aspect-ratio: 1.6; }
+.stage[data-f="vinilo"]:not(.paused) .halo, .stage:not([data-f]):not(.paused) .halo { translate: 8% 0; width: min(330px, 92%); aspect-ratio: 1.45; }
+.stage[data-k="2"] .halo { display: none; }
+.sleeve { transition: transform .8s cubic-bezier(.2, .8, .2, 1), translate .4s cubic-bezier(.2, .8, .2, 1), width .5s; }
+.stage:has(.sleeve:hover) .halo { opacity: .95; transform: scale(1.14); }
+.sleeve:hover { translate: 0 -6px; }
+.stage.lit .halo { animation: halo 1s ease-out; }
+@keyframes halo { from { opacity: .95; transform: scale(1.2); } }
+@media (prefers-reduced-motion: reduce) { .halo, .sleeve { transition: none; } .stage.lit .halo { animation: none; } .sleeve:hover { translate: none; } }
+.halo { filter: blur(38px) saturate(2.2) brightness(1.6); }
+.stage:has(.sleeve:hover) .halo { opacity: 1; transform: scale(1.32); }
