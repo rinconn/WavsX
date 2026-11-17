@@ -199,7 +199,7 @@ const V = [
   ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB'],
 ];
 const nodes = $('.tl__nodes');
-if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}"><i></i><b>${v[0]}</b><small>${v[1]}</small></button>`).join('');
+if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}"><i></i><b>${v[0]}</b><em>${v[2]}</em><small>${v[1]}</small></button>`).join('');
 const crate = $('#crate'), cfront = $('.crate__front');
 if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la carpeta de versiones' : 'Abrir la carpeta de versiones'); });
 let tlI = -1;
@@ -209,8 +209,21 @@ const setV = (i) => {
   $('.tl')?.style.setProperty('--w', (i / (V.length - 1)) * 100 + '%');
   const c = $('.tl__card');
   c.children[0].textContent = `${V[i][0]} · ${V[i][1]}`; c.children[1].textContent = V[i][3]; c.children[2].textContent = V[i][2];
+  const vb = $('.vsel__btn span'); if (vb) vb.textContent = `${V[i][0]} · ${V[i][1]}`;
+  $$('.vsel__list li').forEach((li, k) => li.setAttribute('aria-selected', k === i));
 };
 $$('.tn').forEach((b) => b.addEventListener('click', () => { setV(+b.dataset.i); lt0 = performance.now() + 5000; }));
+const vsel = $('.vsel'), vbtn = $('.vsel__btn'), vlist = $('.vsel__list');
+if (vsel) {
+  vlist.innerHTML = V.map((v, i) => `<li role="option" tabindex="-1" data-i="${i}"><b>${v[0]}</b><span>${v[1]}</span><small>${v[2]}</small></li>`).join('');
+  const vOpen = (o) => { vsel.classList.toggle('open', o); vbtn.setAttribute('aria-expanded', o); };
+  vbtn.addEventListener('click', (e) => { e.stopPropagation(); vOpen(!vsel.classList.contains('open')); });
+  vlist.addEventListener('click', (e) => { const li = e.target.closest('li'); if (!li) return; setV(+li.dataset.i); lt0 = performance.now() + 9000; vOpen(false); if (crate && !crate.classList.contains('open')) cfront.click(); });
+  document.addEventListener('click', (e) => { if (!vsel.contains(e.target)) vOpen(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') vOpen(false); });
+}
+const eq = $('.eq');
+if (eq) eq.innerHTML = Array.from({ length: 64 }, (_, k) => `<i style="--d:${(-(k * 0.37) % 1.6).toFixed(2)}s;--h:${(0.25 + Math.abs(Math.sin(k * 0.45)) * 0.75).toFixed(2)}"></i>`).join('');
 setV(4);
 
 let covAuto = 0;

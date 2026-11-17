@@ -160,16 +160,22 @@ const keeps = [
         <div class="pane" data-i="5">
           <div class="pane__top"><b>Historial</b><span class="badge">carpeta de versiones</span></div>
           <div class="vx">
-            <div class="vx__txt">
-              <small>¿Y las versiones?</small>
-              <h3>Cada versión, guardada para siempre.</h3>
-              <p>De la demo del móvil al master: todo vive en la carpeta de la canción. Ábrela y vuelve a cualquier versión cuando quieras.</p>
-              <div class="vx__song"><i style="background-image:url(/covers/foto.jpg)"></i><div><b>Resiliencia</b><span>Hostilidad · 9 versiones</span></div></div>
-              <div class="tl__card"><b></b><span></span><small></small></div>
+            <div class="vx__top">
+              <div class="vx__txt">
+                <small>¿Y las versiones?</small>
+                <h3>Cada versión, guardada para siempre.</h3>
+                <p>De la demo del móvil al master: todo vive en la carpeta de la canción. Ábrela o elige una versión y vuelve a ella cuando quieras.</p>
+                <div class="vx__song"><i style="background-image:url(/covers/foto.jpg)"></i><div><b>Resiliencia</b><span>Hostilidad · 9 versiones</span></div></div>
+              </div>
+              <div class="vx__pick">
+                <div class="vsel"><button type="button" class="vsel__btn" aria-haspopup="listbox" aria-expanded="false"><small>Versión</small><span>v9 · master</span><i aria-hidden="true"></i></button><ul class="vsel__list" role="listbox" aria-label="Versiones de Resiliencia"></ul></div>
+                <div class="tl__card"><b></b><span></span><small></small></div>
+              </div>
             </div>
             <div class="vx__art">
-              <div class="flows" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-              <div class="crate" id="crate"><p class="crate__hint">Pulsa la carpeta</p><div class="tl__nodes"></div><button type="button" class="crate__front" aria-expanded="false" aria-label="Abrir la carpeta de versiones"><span class="crate__badge" aria-hidden="true"></span></button></div>
+              <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="eq" aria-hidden="true"></div>
+              <div class="crate" id="crate"><p class="crate__hint">Pulsa la carpeta</p><div class="tl__nodes"></div><button type="button" class="crate__front" aria-expanded="false" aria-label="Abrir la carpeta de versiones"><span class="crate__badge" aria-hidden="true"></span><span class="crate__lbl">Resiliencia</span></button></div>
             </div>
           </div>
         </div>
