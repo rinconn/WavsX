@@ -62,7 +62,6 @@ const select = (i) => {
   tabs.forEach((x, k) => x.classList.toggle('on', k === i));
   panes.forEach((p, k) => p.classList.toggle('on', k === i));
   lt0 = 0; tlI = -1; lyI = -1;
-  if (i === 4) rsign();
 };
 tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));
 
@@ -186,9 +185,6 @@ $$('.lstyle button').forEach((b) => b.addEventListener('click', () => {
   $$('.lstyle button').forEach((x) => x.classList.toggle('on', x === b));
 }));
 /* reparto: tarjetas con firma */
-const rcards = $('.rcards');
-function rsign() { rcards.classList.remove('signed'); void rcards.offsetWidth; setTimeout(() => rcards.classList.add('signed'), 100); }
-$('#rsign').addEventListener('click', rsign);
 
 /* versiones */
 const V = [
@@ -374,3 +370,5 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });
+
+$$('.liner a').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
