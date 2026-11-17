@@ -130,6 +130,9 @@ if (!still) {
 setCov(0);
 $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
+/* formato de la portada (vitrina) */
+$$('.fmts button').forEach((b) => b.addEventListener('click', () => { $('.stage').dataset.f = b.dataset.f; $$('.fmts button').forEach((x) => x.classList.toggle('on', x === b)); }));
+
 /* reproductor de la maqueta */
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
 const TRK = [['Neón en la M-30', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
