@@ -120,6 +120,7 @@ const setCov = (n) => {
   cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
   $$('.pane[data-i="2"] .amb__m').forEach((m, k) => { m.classList.toggle('on', k === n); if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
   const bg = cms[n].tagName === 'VIDEO' ? `url(${cms[n].poster})` : getComputedStyle(cms[n]).backgroundImage;
+  stg.style.setProperty('--lab', bg);
   const cp = $('#cap'); if (cp) cp.innerHTML = `<b>${CAP[n][0]}</b><span>${CAP[n][1]}</span>`; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
   if (cv.animate && !still) cms[n].animate([{ opacity: 0, scale: '1.08' }, { opacity: 1, scale: '1' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' });
@@ -132,7 +133,7 @@ setCov(0);
 $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
 /* formato de la portada (vitrina) */
-$$('.fmts button').forEach((b) => b.addEventListener('click', () => { $('.stage').dataset.f = b.dataset.f; $$('.fmts button').forEach((x) => x.classList.toggle('on', x === b)); }));
+$$('.fmts button').forEach((b) => b.addEventListener('click', () => { stg.dataset.f = b.dataset.f; if (!still) $('.sleeve').animate([{ transform: 'scale(.88)', opacity: .3 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.34,1.56,.64,1)' }); $$('.fmts button').forEach((x) => x.classList.toggle('on', x === b)); }));
 
 /* reproductor de la maqueta */
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
