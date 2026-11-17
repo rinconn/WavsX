@@ -199,12 +199,14 @@ const V = [
   ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB'],
 ];
 const nodes = $('.tl__nodes');
-if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}"><b>${v[0]}</b><small>${v[2]}</small></button>`).join('');
+if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}"><i></i><b>${v[0]}</b><small>${v[1]}</small></button>`).join('');
+const crate = $('#crate'), cfront = $('.crate__front');
+if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la caja de versiones' : 'Abrir la caja de versiones'); });
 let tlI = -1;
 const setV = (i) => {
   tlI = i;
   $$('.tn').forEach((b, k) => { b.classList.toggle('on', k === i); b.classList.toggle('past', k < i); });
-  $('.tl').style.setProperty('--w', (i / (V.length - 1)) * 100 + '%');
+  $('.tl')?.style.setProperty('--w', (i / (V.length - 1)) * 100 + '%');
   const c = $('.tl__card');
   c.children[0].textContent = `${V[i][0]} · ${V[i][1]}`; c.children[1].textContent = V[i][3]; c.children[2].textContent = V[i][2];
 };
