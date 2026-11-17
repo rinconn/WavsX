@@ -133,7 +133,7 @@ setCov(0);
 $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
 /* formato de la portada (vitrina) */
-$$('.fmts button').forEach((b) => b.addEventListener('click', () => { stg.dataset.f = b.dataset.f; if (!still) $('.sleeve').animate([{ transform: 'scale(.88)', opacity: .3 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.34,1.56,.64,1)' }); $$('.fmts button').forEach((x) => x.classList.toggle('on', x === b)); }));
+$$('.fmts button').forEach((b) => b.addEventListener('click', () => { covLock = Infinity; stg.dataset.f = b.dataset.f; if (!still) $('.sleeve').animate([{ transform: 'scale(.88)', opacity: .3 }, { transform: 'none', opacity: 1 }], { duration: 480, easing: 'cubic-bezier(.34,1.56,.64,1)' }); $$('.fmts button').forEach((x) => x.classList.toggle('on', x === b)); }));
 
 /* reproductor de la maqueta */
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
@@ -230,7 +230,7 @@ const frame = (t) => {
     });
   } else if (cur === 2 && !still) {
     if (playing && !still) { pos += Math.min(0.1, (t - fT) / 1000); if (pos >= TOT) setTrack(ti + 1); else drawPl(); }
-    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 3); }
+    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 2); }
   } else if (cur === 3) {
     const dt = Math.min(0.1, (t - fT) / 1000);
     if (!still) { LT += dt * 1.6; if (LT >= LEND) LT = 12; } else LT = 38.5;
