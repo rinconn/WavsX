@@ -374,12 +374,3 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });
-
-/* perfiles en los créditos */
-$$('.rc').forEach((c) => {
-  const o = c.querySelector('.rc__open'), x = c.querySelector('.rc__x');
-  if (!o) return;
-  o.addEventListener('click', () => { c.classList.add('open'); x.focus({ preventScroll: true }); });
-  x.addEventListener('click', () => { c.classList.remove('open'); o.focus({ preventScroll: true }); });
-});
-$$('.rc__back a').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));

@@ -827,3 +827,16 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .rc__map i { position: absolute; left: 52%; top: 46%; width: 14px; height: 14px; margin: -14px 0 0 -7px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--c1); }
 .rc__map i::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #0B0D06; }
 @media (prefers-reduced-motion: reduce) { .rc__back { transition: none; } }
+
+/* créditos: el perfil va a la vista, sin pulsar nada */
+.rc { height: auto; display: flex; flex-direction: column; }
+.rc__img, .rc::after { bottom: auto; height: 240px; }
+.rc__bot { position: relative; left: auto; right: auto; bottom: auto; margin-top: 120px; padding: 0 20px; }
+.rc__back { position: static; transform: none; visibility: visible; transition: none; background: none; padding: 4px 20px 18px; gap: 12px; flex: 1; }
+.rc__bh { display: block; order: -1; }
+.rc__bh b { display: none; }
+.rc__bot b + .rc__tags { margin-bottom: 0; }
+.rc__list li { padding: 8px 0; }
+.rc__map { height: 74px; }
+.rcards { align-items: stretch; }
+@media (max-width: 900px) { .rc { height: auto; } }
