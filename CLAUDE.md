@@ -32,3 +32,10 @@ Ver `TODO` en la sección "Lo que guarda cada canción" más abajo.
 ### Sección "Lo que guarda cada canción" (`.desk` en index.astro)
 Lista a la izquierda + panel a la derecha, con animación solo en el panel visible (bucle en `landing.js`): espectrograma que desfila (WAV), vúmetros y M/S (stems), reproductor con 4 portadas (cambian al pulsar), letra karaoke, reparto con donut y firmas, línea de versiones que avanza.
 Falta: las portadas son procedurales (`.c0`-`.c3`); sustituir por fotos reales de Unsplash (entorno "wavsx") en `public/covers/` y un vídeo/gif corto para la animada.
+
+## Vista previa (importante)
+- El usuario NO puede abrir `localhost`: el servidor corre en la nube. Para que vea la web, publícala con la herramienta Artifact (privada) y dale el enlace.
+- Antes: `npm install` (si falta `node_modules`) y `npm run build`. Copia `dist/` a una carpeta temporal y prepara solo la landing (`index.html`).
+- Reglas para que cargue en el visor: quitar `<!doctype>`, `<html>`, `<head>`, `<body>` y el meta viewport; título corto `<title>WavsX</title>`; rutas relativas (`covers/...`, no `/covers/...`); renombrar `_astro` a `assets` (el servicio prohíbe rutas que empiezan por `_`); inlinar CSS y JS en el HTML; publicar TAMBIÉN los módulos que importa el JS (p. ej. `data.*.js`) y todas las imágenes/vídeo en `files`. Si falta un módulo, la página se queda en negro (`.reveal` no recibe `.is-in`).
+- Para cambios pequeños: `edits` sobre el mismo `file_path`; mantén la URL con `url`. Enlace actual: https://claude.ai/artifact/H3CHBMm6cc1h4H3Ryfv2JY
+- Solo está la landing; `/app`, `/login` y `/cancion` no se ven en esa vista.
