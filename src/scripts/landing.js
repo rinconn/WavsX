@@ -292,11 +292,12 @@ if (spec) requestAnimationFrame(frame);
       w: (0.00016 + Math.random() * 0.0002) * (n % 2 ? 1 : -1), sp: Math.random() * 3
     }));
     const P = Array.from({ length: 1000 }, () => ({ a: Math.random() * 6.28, r: 0.05 + Math.random() * 0.95, s: 0.5 + Math.random() * 1.2 }));
-    let W = 0, H = 0, run = false, last = 0;
+    let W = 0, H = 0, run = false, last = 0, bg = '9,9,11';
     const size = () => {
       const d = Math.min(devicePixelRatio || 1, 2);
       W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-      ctx.fillStyle = '#07080a'; ctx.fillRect(0, 0, W, H);
+      bg = getComputedStyle(document.body).backgroundColor.replace('rgb(', '').replace(')', '');
+      ctx.fillStyle = `rgb(${bg})`; ctx.fillRect(0, 0, W, H);
     };
     const ease = (x) => x * x * (3 - 2 * x);
     const draw = (t, dt) => {
@@ -304,7 +305,7 @@ if (spec) requestAnimationFrame(frame);
       const k = ph < 0.3 ? 0 : ph < 0.46 ? ease((ph - 0.3) / 0.16) : ph < 0.56 ? 1 - (ph - 0.46) / 0.1 : 0;
       const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
       const Rx = W * 0.62, Ry = Rx * 0.5;
-      ctx.fillStyle = 'rgba(7,8,10,.24)'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = `rgba(${bg},.24)`; ctx.fillRect(0, 0, W, H);
       for (const p of P) {
         p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
         p.r -= dt * (0.000014 + 0.00002 * (1 - p.r)) * (1 + k * 7);
@@ -315,7 +316,7 @@ if (spec) requestAnimationFrame(frame);
         ctx.beginPath(); ctx.arc(x, y, (0.5 + (1 - p.r) * 1.2) * p.s, 0, 6.2832); ctx.fill();
       }
       ctx.globalAlpha = 1;
-      const sc = Math.min(1, W / 1000);
+      const sc = Math.min(1.7, W / 1000);
       for (const c of chips) {
         c.a += dt * c.w * (1 + k * 14);
         const rr = 1 - k, wob = Math.sin(t * 0.0012 + c.sp) * 10;
