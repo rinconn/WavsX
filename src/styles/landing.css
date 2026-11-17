@@ -785,3 +785,12 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 @media (prefers-reduced-motion: reduce) { .halo, .sleeve { transition: none; } .stage.lit .halo { animation: none; } .sleeve:hover { translate: none; } }
 .halo { filter: blur(38px) saturate(2.2) brightness(1.6); }
 .stage:has(.sleeve:hover) .halo { opacity: 1; transform: scale(1.32); }
+/* CD: caja de plástico con bisagra y disco plateado que asoma */
+.stage[data-f="cd"] .sleeve { padding: 7px 7px 7px 24px; border-radius: 5px; background: linear-gradient(140deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .03) 38%, rgba(255, 255, 255, .02) 62%, rgba(255, 255, 255, .09)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 18px 40px rgba(0, 0, 0, .55); }
+.stage[data-f="cd"] .sleeve .app__cover { margin: 0; width: 100%; outline: 0; border-radius: 2px; box-shadow: none; }
+.stage[data-f="cd"] .sleeve::before { left: 3px; top: 3px; bottom: 3px; width: 17px; border-radius: 3px 0 0 3px; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .14) 0 1px, transparent 1px 4px), linear-gradient(rgba(255, 255, 255, .1), rgba(255, 255, 255, .03)); box-shadow: inset -1px 0 0 rgba(255, 255, 255, .2); }
+.stage[data-f="cd"] .sleeve .disc { display: grid; top: 4%; left: 6%; width: 90%; background: radial-gradient(circle, transparent 0 7%, rgba(255, 255, 255, .5) 7.5% 8.5%, #8d9196 9% 15%, transparent 15.5%), conic-gradient(from 20deg, #c9cdd2, #eef0f2, #b9c4cf, #dfe6d6, #c4c9d0, #f1f2f3, #b8bec7, #e2e9d8, #c9cdd2); box-shadow: 0 10px 30px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(0, 0, 0, .25); }
+.stage[data-f="cd"] .sleeve .disc::before { background: conic-gradient(transparent 0 15%, rgba(255, 255, 255, .55) 22%, transparent 30% 65%, rgba(255, 255, 255, .4) 72%, transparent 80%); mix-blend-mode: soft-light; }
+.stage[data-f="cd"] .sleeve .disc b { width: 30%; box-shadow: 0 0 0 3px rgba(255, 255, 255, .35); }
+.stage[data-f="cd"]:not(.paused) .sleeve { transform: translateX(-16%); }
+.stage[data-f="cd"]:not(.paused) .sleeve .disc { transform: translateX(46%); }
