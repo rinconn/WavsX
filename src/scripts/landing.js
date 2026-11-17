@@ -111,14 +111,16 @@ $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.c
 /* portadas: cambian dentro de la app */
 const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
 const CT = ['Foto', 'GIF · bucle', 'Vídeo · 0:08'];
-const CAP = [['Foto · JPG o PNG', 'Hasta 3000 × 3000 px. Se ve igual de nítida en grande que en la lista.'], ['GIF · en bucle', 'Hasta 15 MB. Se mueve en la ficha de la canción y en las miniaturas.'], ['Vídeo · MP4', 'De 5 a 8 s, sin sonido y en bucle. Pensado para quien quiere algo más que una imagen.']];
+const phv = $('.phone video'), stg = $('.stage');
+const CAP = [['Foto · JPG o PNG', 'Hasta 3000 × 3000 px. Se ve igual de nítida en grande que en la lista.'], ['GIF · en bucle', 'Hasta 15 MB. Se mueve en la ficha de la canción y en las miniaturas.'], ['Vídeo · MP4 vertical 9:16', 'Pensado para stories y Reels. De 5 a 15 s, sin sonido y en bucle.']];
 let covI = 0, covLast = 0, covLock = 0, playing = true;
 const setCov = (n) => {
-  covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
+  covI = n; cv.dataset.k = n; stg.dataset.k = n; if (phv) { if (n === 2 && playing && !still) phv.play().catch(() => {}); else phv.pause(); } cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
   cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
   $$('.pane[data-i="2"] .amb__m').forEach((m, k) => { m.classList.toggle('on', k === n); if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
   const bg = cms[n].tagName === 'VIDEO' ? `url(${cms[n].poster})` : getComputedStyle(cms[n]).backgroundImage;
+  stg.style.setProperty('--lab', bg);
   const cp = $('#cap'); if (cp) cp.innerHTML = `<b>${CAP[n][0]}</b><span>${CAP[n][1]}</span>`; $$('.mini').forEach((m) => { m.style.backgroundImage = bg; });
   $$('.v').forEach((x, k) => x.classList.toggle('on', k === n));
   if (cv.animate && !still) cms[n].animate([{ opacity: 0, scale: '1.08' }, { opacity: 1, scale: '1' }], { duration: 550, easing: 'cubic-bezier(.2,.8,.2,1)' });
@@ -130,9 +132,12 @@ if (!still) {
 setCov(0);
 $$('.v').forEach((b) => b.addEventListener('click', () => { setCov(+b.dataset.c); covLock = performance.now() + 9000; }));
 
+/* formato de la portada (vitrina) */
+$$('.fmts button').forEach((b) => b.addEventListener('click', () => { covLock = Infinity; stg.dataset.f = b.dataset.f; stg.classList.remove('lit'); void stg.offsetWidth; stg.classList.add('lit'); if (!still) $('.sleeve').animate([{ transform: 'scale(.88)', opacity: .3, filter: 'brightness(1.8)' }, { transform: 'none', opacity: 1, filter: 'brightness(1)' }], { duration: 480, easing: 'cubic-bezier(.34,1.56,.64,1)' }); $$('.fmts button').forEach((x) => x.classList.toggle('on', x === b)); }));
+
 /* reproductor de la maqueta */
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
-const TRK = [['Neón en la M-30', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
+const TRK = [['Resiliencia', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
 let TOT = 304, ti = 0;
 let pos = 72, fT = 0;
 const drawPl = () => { plb.style.setProperty('--pr', (pos / TOT) * 100 + '%'); pt.textContent = fmt(pos); };
@@ -142,7 +147,7 @@ plb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') seek(pos + 
 $('#pback').addEventListener('click', () => seek(pos - 15));
 $('#pfwd').addEventListener('click', () => seek(pos + 15));
 pp.addEventListener('click', () => { playing = !playing; pp.classList.toggle('paused', !playing); pp.setAttribute('aria-label', playing ? 'Pausa' : 'Reproducir'); plst.classList.toggle('paused', !playing); const av = $('video.amb__m'); if (av && cv.dataset.k === '2') { if (playing) av.play().catch(() => {}); else av.pause(); }
-  const vd = $('video.m'); if (vd && cv.dataset.k === '2') { if (playing) vd.play().catch(() => {}); else vd.pause(); } });
+  if (phv) { if (playing && cv.dataset.k === '2' && !still) phv.play().catch(() => {}); else phv.pause(); } const vd = $('video.m'); if (vd && cv.dataset.k === '2') { if (playing) vd.play().catch(() => {}); else vd.pause(); } });
 const setTrack = (i) => {
   ti = (i + TRK.length) % TRK.length; TOT = TRK[ti][1]; pos = 0;
   $('.stage__t b').textContent = TRK[ti][0]; $('.sz b').textContent = TRK[ti][0]; $('.pl__t span:last-child').textContent = fmt(TOT);
@@ -194,16 +199,31 @@ const V = [
   ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB'],
 ];
 const nodes = $('.tl__nodes');
-if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}"><b>${v[0]}</b><small>${v[2]}</small></button>`).join('');
+if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}"><i></i><b>${v[0]}</b><em>${v[2]}</em><small>${v[1]}</small></button>`).join('');
+const crate = $('#crate'), cfront = $('.crate__front');
+if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la carpeta de versiones' : 'Abrir la carpeta de versiones'); });
 let tlI = -1;
 const setV = (i) => {
   tlI = i;
   $$('.tn').forEach((b, k) => { b.classList.toggle('on', k === i); b.classList.toggle('past', k < i); });
-  $('.tl').style.setProperty('--w', (i / (V.length - 1)) * 100 + '%');
+  $('.tl')?.style.setProperty('--w', (i / (V.length - 1)) * 100 + '%');
   const c = $('.tl__card');
   c.children[0].textContent = `${V[i][0]} · ${V[i][1]}`; c.children[1].textContent = V[i][3]; c.children[2].textContent = V[i][2];
+  const vb = $('.vsel__btn span'); if (vb) vb.textContent = `${V[i][0]} · ${V[i][1]}`;
+  $$('.vsel__list li').forEach((li, k) => li.setAttribute('aria-selected', k === i));
 };
 $$('.tn').forEach((b) => b.addEventListener('click', () => { setV(+b.dataset.i); lt0 = performance.now() + 5000; }));
+const vsel = $('.vsel'), vbtn = $('.vsel__btn'), vlist = $('.vsel__list');
+if (vsel) {
+  vlist.innerHTML = V.map((v, i) => `<li role="option" tabindex="-1" data-i="${i}"><b>${v[0]}</b><span>${v[1]}</span><small>${v[2]}</small></li>`).join('');
+  const vOpen = (o) => { vsel.classList.toggle('open', o); vbtn.setAttribute('aria-expanded', o); };
+  vbtn.addEventListener('click', (e) => { e.stopPropagation(); vOpen(!vsel.classList.contains('open')); });
+  vlist.addEventListener('click', (e) => { const li = e.target.closest('li'); if (!li) return; setV(+li.dataset.i); lt0 = performance.now() + 9000; vOpen(false); if (crate && !crate.classList.contains('open')) cfront.click(); });
+  document.addEventListener('click', (e) => { if (!vsel.contains(e.target)) vOpen(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') vOpen(false); });
+}
+const eq = $('.eq');
+if (eq) eq.innerHTML = Array.from({ length: 64 }, (_, k) => `<i style="--d:${(-(k * 0.37) % 1.6).toFixed(2)}s;--h:${(0.25 + Math.abs(Math.sin(k * 0.45)) * 0.75).toFixed(2)}"></i>`).join('');
 setV(4);
 
 let covAuto = 0;
@@ -225,7 +245,7 @@ const frame = (t) => {
     });
   } else if (cur === 2 && !still) {
     if (playing && !still) { pos += Math.min(0.1, (t - fT) / 1000); if (pos >= TOT) setTrack(ti + 1); else drawPl(); }
-    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 3); }
+    if (t > covLock && t - covLast > 3800) { covLast = t; setCov((covI + 1) % 2); }
   } else if (cur === 3) {
     const dt = Math.min(0.1, (t - fT) / 1000);
     if (!still) { LT += dt * 1.6; if (LT >= LEND) LT = 12; } else LT = 38.5;
@@ -262,42 +282,56 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- 3 · historia por pasos ---------- */
-const steps = $$('#steps li');
-steps.forEach((li) => {
-  const [ic, text] = li.dataset.sticker.split('|');
-  li.insertAdjacentHTML('afterbegin', sticker({ icon: ic, text, color: li.style.getPropertyValue('--sc'), size: 80 }));
-});
-const scenes = $$('.scene');
-const dots = $$('#dots i');
-const STAGE = [
-  { status: 'Demo · v1', icon: 'subir', c: 1 },
-  { status: 'Mezcla · v5', icon: 'versiones', c: 2 },
-  { status: 'Mezcla · v5 · compartida', icon: 'escucha', c: 3 },
-  { status: 'Lista para salir', icon: 'lanzar', c: 4 }
-];
-const stage = $('#stage');
-renderWave($('#story-wave'), waveHeights(3.1, 70, 96), 0.42);
-let active = -1;
-function setStep(i) {
-  if (i === active) return;
-  active = i;
-  steps.forEach((li, n) => li.classList.toggle('is-active', n === i));
-  scenes.forEach((s, n) => s.classList.toggle('is-active', n === i));
-  dots.forEach((d, n) => d.classList.toggle('on', n === i));
-  const s = STAGE[i];
-  $('#sc-status').textContent = s.status;
-  $('#sc-badge').innerHTML = icon(s.icon, 20);
-  stage.style.setProperty('--stage', `var(--c${s.c})`);
-  stage.style.setProperty('--stage-rgb', `var(--c${s.c}-rgb)`);
+/* ---------- proceso: agujero de gusano que absorbe los archivos ---------- */
+{
+  const cv = $('.mv__dots'), cvr = $('.mv__cv');
+  if (cv && cvr) {
+    const ctx = cv.getContext('2d');
+    const chips = $$('.mv__chips i').map((el, n) => ({
+      el, a: Math.random() * 6.28, rx: 110 + Math.random() * 360, ry: 50 + Math.random() * 120,
+      w: (0.00016 + Math.random() * 0.0002) * (n % 2 ? 1 : -1), sp: Math.random() * 3
+    }));
+    const P = Array.from({ length: 1000 }, () => ({ a: Math.random() * 6.28, r: 0.05 + Math.random() * 0.95, s: 0.5 + Math.random() * 1.2 }));
+    let W = 0, H = 0, run = false, last = 0, bg = '9,9,11';
+    const size = () => {
+      const d = Math.min(devicePixelRatio || 1, 2);
+      W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      bg = getComputedStyle(document.body).backgroundColor.replace('rgb(', '').replace(')', '');
+      ctx.fillStyle = `rgb(${bg})`; ctx.fillRect(0, 0, W, H);
+    };
+    const ease = (x) => x * x * (3 - 2 * x);
+    const draw = (t, dt) => {
+      const ph = (t % 10000) / 10000;
+      const k = ph < 0.3 ? 0 : ph < 0.46 ? ease((ph - 0.3) / 0.16) : ph < 0.56 ? 1 - (ph - 0.46) / 0.1 : 0;
+      const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
+      const Rx = W * 0.62, Ry = Rx * 0.5;
+      ctx.fillStyle = `rgba(${bg},.24)`; ctx.fillRect(0, 0, W, H);
+      for (const p of P) {
+        p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
+        p.r -= dt * (0.000014 + 0.00002 * (1 - p.r)) * (1 + k * 7);
+        if (p.r < 0.05) { p.r = 1; p.a = Math.random() * 6.28; }
+        const x = cx + Math.cos(p.a) * p.r * Rx, y = cy + Math.sin(p.a) * p.r * Ry;
+        ctx.globalAlpha = Math.min(1, 0.2 + (1 - p.r) * 0.65 + k * 0.25);
+        ctx.fillStyle = p.r < 0.3 ? '#E6FF94' : p.r < 0.65 ? '#C6FF3D' : '#5BE6B4';
+        ctx.beginPath(); ctx.arc(x, y, (0.5 + (1 - p.r) * 1.2) * p.s, 0, 6.2832); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      const sc = Math.min(1.7, W / 1000);
+      for (const c of chips) {
+        c.a += dt * c.w * (1 + k * 14);
+        const rr = 1 - k, wob = Math.sin(t * 0.0012 + c.sp) * 10;
+        const x = cx + Math.cos(c.a) * c.rx * sc * rr, y = cy + Math.sin(c.a) * c.ry * rr + wob * rr;
+        const depth = (Math.sin(c.a) + 1) / 2, vis = ph < 0.03 ? ph / 0.03 : ph < 0.44 ? 1 : ph < 0.47 ? 1 - (ph - 0.44) / 0.03 : 0;
+        c.el.style.opacity = vis.toFixed(2);
+        c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(c.a * 40 + Math.sin(t * 0.001 + c.sp) * 25).toFixed(1)}deg) scale(${((0.7 + depth * 0.5) * (1 - k * 0.8)).toFixed(2)})`;
+      }
+    };
+    const loop = (t) => { if (!run) return; draw(t, Math.min(48, t - last)); last = t; requestAnimationFrame(loop); };
+    size(); addEventListener('resize', size);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { for (let i = 0; i < 40; i++) draw(4800, 32); }
+    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) { last = performance.now(); requestAnimationFrame(loop); } }).observe(cv);
+  }
 }
-setStep(0);
-steps.forEach((li, n) => li.addEventListener('click', () => {
-  if (!wide) return;
-  const story = $('.story');
-  const top = story.offsetTop + (story.offsetHeight - innerHeight) * ((n + 0.5) / 4);
-  smooth.to(top);
-}));
 
 /* ---------- 4 · cartel ON AIR ---------- */
 new IntersectionObserver(([e]) => {
@@ -314,7 +348,6 @@ $$('.reveal').forEach((el, i) => {
 });
 
 /* ---------- scroll: progreso de lectura, sección activa del menú y pasos ---------- */
-const story = $('.story');
 const navLinks = $$('.nav__links a');
 const sections = navLinks.map((a) => $(a.getAttribute('href')));
 const clamp = (v) => Math.max(0, Math.min(1, v));
@@ -325,12 +358,6 @@ function onScroll() {
   let here = -1;
   sections.forEach((sec, n) => { if (sec && sec.getBoundingClientRect().top < innerHeight * 0.5) here = n; });
   navLinks.forEach((a, n) => a.classList.toggle('is-here', n === here));
-
-  if (wide) {
-    const r = story.getBoundingClientRect();
-    const p = clamp(-r.top / (r.height - innerHeight));
-    setStep(Math.min(3, Math.floor(p * 4)));
-  }
 }
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll);
@@ -369,3 +396,37 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });
+
+/* fondo de versiones: disco de puntos con surcos y una onda que sale del centro */
+(() => {
+  const cv = $('.globe'); if (!cv) return;
+  const g = cv.getContext('2d'), P = [];
+  for (let k = 0; k < 34; k++) {
+    const r = 0.22 + (k / 33) * 0.78, n = Math.round(40 + r * 150);
+    for (let j = 0; j < n; j++) P.push([r, (j / n) * 6.283 + Math.random() * 0.03, 0.5 + Math.pow(Math.random(), 3) * 1.8]);
+  }
+  let W = 0, H = 0, dpr = 1, rot = 0, tm = 0, tx = 0, ty = 0, mx = 0, my = 0, vis = false, raf = 0, last = 0;
+  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; };
+  const draw = () => {
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const R = Math.min(W * 0.46, 420), cx = W / 2 + tx * 40, cy = H * 0.74 + ty * 20, sq = 0.3 + ty * 0.06;
+    for (const [r, a0, s] of P) {
+      const a = a0 + rot, x = Math.cos(a) * r, z = Math.sin(a) * r;
+      const px = cx + x * R, py = cy + z * R * sq;
+      if (py < -4 || py > H + 4) continue;
+      const wave = Math.max(0, Math.sin(r * 18 - tm * 2.2)), front = (z + 1) / 2;
+      g.globalAlpha = 0.1 + front * 0.35 + wave * 0.45;
+      g.fillStyle = wave > 0.85 ? '#E6FF94' : r < 0.5 ? '#5BE6B4' : '#C6FF3D';
+      g.beginPath(); g.arc(px, py, s * (0.6 + front * 0.6) + wave * 0.9, 0, 6.283); g.fill();
+    }
+  };
+  const loop = (t) => { raf = 0; if (!vis) return; const dt = Math.min(50, t - (last || t)); last = t; rot += dt * 0.00009; tm += dt * 0.001; tx += (mx - tx) * 0.05; ty += (my - ty) * 0.05; draw(); raf = requestAnimationFrame(loop); };
+  const start = () => { if (still) { draw(); return; } if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
+  size(); draw();
+  addEventListener('resize', () => { size(); draw(); });
+  const art = cv.parentElement;
+  art.addEventListener('pointermove', (e) => { const r = art.getBoundingClientRect(); mx = (e.clientX - r.left) / r.width - 0.5; my = (e.clientY - r.top) / r.height - 0.5; });
+  art.addEventListener('pointerleave', () => { mx = 0; my = 0; });
+  new IntersectionObserver((es) => { vis = es[0].isIntersecting && cv.offsetParent !== null; if (vis) { size(); start(); } }, { threshold: 0.05 }).observe(art);
+  new MutationObserver(() => { if (cv.offsetParent !== null) { vis = true; size(); start(); } else vis = false; }).observe(cv.closest('.pane'), { attributes: true, attributeFilter: ['class'] });
+})();

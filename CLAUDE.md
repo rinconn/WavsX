@@ -32,3 +32,6 @@ Ver `TODO` en la sección "Lo que guarda cada canción" más abajo.
 ### Sección "Lo que guarda cada canción" (`.desk` en index.astro)
 Lista a la izquierda + panel a la derecha, con animación solo en el panel visible (bucle en `landing.js`): espectrograma que desfila (WAV), vúmetros y M/S (stems), reproductor con 4 portadas (cambian al pulsar), letra karaoke, reparto con donut y firmas, línea de versiones que avanza.
 Falta: las portadas son procedurales (`.c0`-`.c3`); sustituir por fotos reales de Unsplash (entorno "wavsx") en `public/covers/` y un vídeo/gif corto para la animada.
+
+## Publicar para el dueño (no puede abrir localhost)
+`npm run build && python3 tools/prep.py` deja en `pub/` un `index.html` con CSS y JS dentro, y `pub/covers/` y `pub/assets/`. Publícalo en el artifact https://claude.ai/artifact/NDtmmfirVkScpEaN9JvgUx: léelo antes con la acción `read` y sube covers/ y assets/ en `files`.
