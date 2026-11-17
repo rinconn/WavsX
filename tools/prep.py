@@ -1,6 +1,6 @@
 import re, shutil, os, glob
 src = '/home/user/WavsX/dist'
-out = '/tmp/claude-0/-home-user-WavsX/3c24c89f-274e-5b00-831c-e399cfa60d23/scratchpad/pub'
+out = 'pub'
 if os.path.isdir(out):
     shutil.rmtree(out)
 os.makedirs(out + '/assets')
