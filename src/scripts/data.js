@@ -18,7 +18,7 @@ const K = '#0A0A0D', W = '#EDEDF2', A = 'var(--accent)', G = '#3A3A46', D = '#24
 
 // cover: si pones una ruta (p. ej. '/covers/neon.jpg' dentro de /public) se usa la imagen real.
 export const SONGS = [
-  { title: 'Neón en la M-30', state: 'mezcla',   bpm: 128, key: 'Fm',  dur: '3:24', v: 5, files: 22, c1: A, c2: K, art: 0, edited: 'hace 2 h' },
+  { title: 'Resiliencia', state: 'mezcla',   bpm: 128, key: 'Fm',  dur: '3:24', v: 5, files: 22, c1: A, c2: K, art: 0, edited: 'hace 2 h' },
   { title: 'Madrugada',       state: 'master',   bpm: 92,  key: 'Am',  dur: '2:58', v: 7, files: 17, c1: K, c2: S, art: 5, edited: 'ayer' },
   { title: 'Sin cobertura',   state: 'demo',     bpm: 140, key: 'Gm',  dur: '2:41', v: 2, files: 4,  c1: W, c2: K, art: 2, edited: 'hace 3 días' },
   { title: 'Cristal',         state: 'lista',    bpm: 118, key: 'C♯m', dur: '3:12', v: 9, files: 28, c1: S, c2: A, art: 4, edited: 'hace 5 días' },

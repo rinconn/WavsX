@@ -137,7 +137,7 @@ $$('.fmts button').forEach((b) => b.addEventListener('click', () => { covLock = 
 
 /* reproductor de la maqueta */
 const plst = $('.stage'), plb = $('#plb'), pt = $('#pt'), pp = $('#pplay');
-const TRK = [['Neón en la M-30', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
+const TRK = [['Resiliencia', 304], ['Madrid a las cinco', 221], ['Cierra la puerta al salir', 268]];
 let TOT = 304, ti = 0;
 let pos = 72, fT = 0;
 const drawPl = () => { plb.style.setProperty('--pr', (pos / TOT) * 100 + '%'); pt.textContent = fmt(pos); };
