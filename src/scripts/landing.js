@@ -282,41 +282,53 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- proceso: esfera de puntos que gira detrás de la escena ---------- */
+/* ---------- proceso: agujero de gusano que absorbe los archivos ---------- */
 {
-  const cv = $('.mv__dots');
-  if (cv) {
+  const cv = $('.mv__dots'), cvr = $('.mv__cv');
+  if (cv && cvr) {
     const ctx = cv.getContext('2d');
-    const N = 1100, pts = [];
-    for (let i = 0; i < N; i++) {
-      const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
-      pts.push({ x: Math.cos(th) * r, y, z: Math.sin(th) * r, k: 0.45 + Math.random() * 1.3 });
-    }
-    let W = 0, H = 0, run = false;
+    const chips = $$('.mv__chips i').map((el, n) => ({
+      el, a: Math.random() * 6.28, rx: 110 + Math.random() * 360, ry: 50 + Math.random() * 120,
+      w: (0.00016 + Math.random() * 0.0002) * (n % 2 ? 1 : -1), sp: Math.random() * 3
+    }));
+    const P = Array.from({ length: 1000 }, () => ({ a: Math.random() * 6.28, r: 0.05 + Math.random() * 0.95, s: 0.5 + Math.random() * 1.2 }));
+    let W = 0, H = 0, run = false, last = 0;
     const size = () => {
       const d = Math.min(devicePixelRatio || 1, 2);
       W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      ctx.fillStyle = '#07080a'; ctx.fillRect(0, 0, W, H);
     };
-    const draw = (t) => {
-      ctx.clearRect(0, 0, W, H);
-      const ph = (t % 10000) / 10000, bump = 1 + 0.05 * Math.max(0, 1 - Math.abs(ph - 0.44) / 0.08);
-      const R = Math.min(W * 0.42, H * 1.05) * bump, cx = W / 2, cy = H * 1.12;
-      const a = t * 0.00014, ca = Math.cos(a), sa = Math.sin(a), tl = 0.5, ct = Math.cos(tl), st = Math.sin(tl);
-      for (const p of pts) {
-        const x1 = p.x * ca + p.z * sa, z1 = -p.x * sa + p.z * ca;
-        const y2 = p.y * ct - z1 * st, z2 = p.y * st + z1 * ct;
-        const py = cy + y2 * R;
-        if (py > H + 6 || py < -6) continue;
-        const d = (z2 + 1) / 2;
-        ctx.globalAlpha = 0.12 + d * 0.7;
-        ctx.fillStyle = d > 0.55 ? '#C6FF3D' : '#5BE6B4';
-        ctx.beginPath(); ctx.arc(cx + x1 * R, py, (0.5 + d * 2.3) * p.k, 0, 6.2832); ctx.fill();
+    const ease = (x) => x * x * (3 - 2 * x);
+    const draw = (t, dt) => {
+      const ph = (t % 10000) / 10000;
+      const k = ph < 0.3 ? 0 : ph < 0.46 ? ease((ph - 0.3) / 0.16) : ph < 0.56 ? 1 - (ph - 0.46) / 0.1 : 0;
+      const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
+      const Rx = Math.min(W * 0.5, 560), Ry = Math.min(Rx * 0.46, H - cy + 30);
+      ctx.fillStyle = 'rgba(7,8,10,.24)'; ctx.fillRect(0, 0, W, H);
+      for (const p of P) {
+        p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
+        p.r -= dt * (0.000014 + 0.00002 * (1 - p.r)) * (1 + k * 7);
+        if (p.r < 0.05) { p.r = 1; p.a = Math.random() * 6.28; }
+        const x = cx + Math.cos(p.a) * p.r * Rx, y = cy + Math.sin(p.a) * p.r * Ry;
+        ctx.globalAlpha = Math.min(1, 0.2 + (1 - p.r) * 0.65 + k * 0.25);
+        ctx.fillStyle = p.r < 0.3 ? '#E6FF94' : p.r < 0.65 ? '#C6FF3D' : '#5BE6B4';
+        ctx.beginPath(); ctx.arc(x, y, (0.5 + (1 - p.r) * 1.2) * p.s, 0, 6.2832); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      const sc = Math.min(1, W / 1000);
+      for (const c of chips) {
+        c.a += dt * c.w * (1 + k * 14);
+        const rr = 1 - k, wob = Math.sin(t * 0.0012 + c.sp) * 10;
+        const x = cx + Math.cos(c.a) * c.rx * sc * rr, y = cy + Math.sin(c.a) * c.ry * rr + wob * rr;
+        const depth = (Math.sin(c.a) + 1) / 2, vis = ph < 0.03 ? ph / 0.03 : ph < 0.44 ? 1 : ph < 0.47 ? 1 - (ph - 0.44) / 0.03 : 0;
+        c.el.style.opacity = vis.toFixed(2);
+        c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(c.a * 40 + Math.sin(t * 0.001 + c.sp) * 25).toFixed(1)}deg) scale(${((0.7 + depth * 0.5) * (1 - k * 0.8)).toFixed(2)})`;
       }
     };
-    const loop = (t) => { if (!run) return; draw(t); requestAnimationFrame(loop); };
-    size(); addEventListener('resize', () => { size(); draw(performance.now()); });
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) draw(4400);
-    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) requestAnimationFrame(loop); }).observe(cv);
+    const loop = (t) => { if (!run) return; draw(t, Math.min(48, t - last)); last = t; requestAnimationFrame(loop); };
+    size(); addEventListener('resize', size);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { for (let i = 0; i < 40; i++) draw(4800, 32); }
+    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) { last = performance.now(); requestAnimationFrame(loop); } }).observe(cv);
   }
 }
 
