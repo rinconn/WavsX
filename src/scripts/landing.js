@@ -282,6 +282,44 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
+/* ---------- proceso: esfera de puntos que gira detrás de la escena ---------- */
+{
+  const cv = $('.mv__dots');
+  if (cv) {
+    const ctx = cv.getContext('2d');
+    const N = 1100, pts = [];
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+      pts.push({ x: Math.cos(th) * r, y, z: Math.sin(th) * r, k: 0.45 + Math.random() * 1.3 });
+    }
+    let W = 0, H = 0, run = false;
+    const size = () => {
+      const d = Math.min(devicePixelRatio || 1, 2);
+      W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    };
+    const draw = (t) => {
+      ctx.clearRect(0, 0, W, H);
+      const ph = (t % 10000) / 10000, bump = 1 + 0.05 * Math.max(0, 1 - Math.abs(ph - 0.44) / 0.08);
+      const R = Math.min(W * 0.42, H * 1.05) * bump, cx = W / 2, cy = H * 1.12;
+      const a = t * 0.00014, ca = Math.cos(a), sa = Math.sin(a), tl = 0.5, ct = Math.cos(tl), st = Math.sin(tl);
+      for (const p of pts) {
+        const x1 = p.x * ca + p.z * sa, z1 = -p.x * sa + p.z * ca;
+        const y2 = p.y * ct - z1 * st, z2 = p.y * st + z1 * ct;
+        const py = cy + y2 * R;
+        if (py > H + 6 || py < -6) continue;
+        const d = (z2 + 1) / 2;
+        ctx.globalAlpha = 0.12 + d * 0.7;
+        ctx.fillStyle = d > 0.55 ? '#C6FF3D' : '#5BE6B4';
+        ctx.beginPath(); ctx.arc(cx + x1 * R, py, (0.5 + d * 2.3) * p.k, 0, 6.2832); ctx.fill();
+      }
+    };
+    const loop = (t) => { if (!run) return; draw(t); requestAnimationFrame(loop); };
+    size(); addEventListener('resize', () => { size(); draw(performance.now()); });
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) draw(4400);
+    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) requestAnimationFrame(loop); }).observe(cv);
+  }
+}
+
 /* ---------- 4 · cartel ON AIR ---------- */
 new IntersectionObserver(([e]) => {
   if (e.isIntersecting) $('.onair').classList.add('is-on');

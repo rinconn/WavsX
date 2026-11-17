@@ -306,20 +306,22 @@ main { overflow-x: clip; }
 .story { position: relative; padding: 120px 0; }
 .story__in { max-width: 1100px; margin: 0 auto; padding: 0 48px; text-align: center; }
 .story__in h2 { margin: 0 0 40px; font-size: clamp(34px, 3.8vw, 56px); line-height: 1; letter-spacing: -0.045em; font-weight: 700; }
-.mv__stage { position: relative; height: 380px; --k: 1; border-radius: 24px; overflow: hidden; background: #08090a; border: 1px solid var(--line); }
-.mv__stage::before, .mv__stage::after { content: ''; position: absolute; width: 520px; height: 520px; border-radius: 50%; filter: blur(80px); pointer-events: none; }
-.mv__stage::before { left: -6%; top: -40%; background: rgba(198,255,61,.2); animation: mvDriftA 16s ease-in-out infinite alternate, mvMerge 10s infinite; }
-.mv__stage::after { right: -8%; bottom: -50%; background: rgba(91,230,180,.16); animation: mvDriftB 19s ease-in-out infinite alternate; }
-@keyframes mvDriftA { to { transform: translate(55vw, 90px) scale(1.2); } }
-@keyframes mvDriftB { to { transform: translate(-50vw, -70px) scale(1.15); } }
-@keyframes mvMerge { 0%, 34%, 52%, 100% { opacity: 1; } 44% { opacity: 2; } }
+.mv__stage { position: relative; height: 380px; --k: 1; border-radius: 24px; overflow: hidden; background: #07080a; border: 1px solid var(--line); }
+.mv__dots { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mv__chips, .mv__cv, .mv__go { z-index: 1; }
-.mv__chips i s { display: block; text-decoration: none; animation: mvBob 3.4s ease-in-out infinite alternate; animation-delay: var(--d); }
 @keyframes mvBob { from { transform: translateY(-7px) rotate(-2deg); } to { transform: translateY(7px) rotate(2deg); } }
-.mv__chips i:nth-child(3n+1) { border-color: rgba(198,255,61,.5); color: var(--c1); }
-.mv__chips i:nth-child(3n+2) { border-color: rgba(91,230,180,.45); }
 .mv__cv em { position: absolute; left: 50%; top: 190px; transform: translateX(-50%) rotate(-3deg); padding: 5px 12px; background: var(--c1); color: var(--on-accent); font-style: normal; font-weight: 800; font-size: 13px; letter-spacing: .04em; border-radius: 4px; white-space: nowrap; }
-.mv__chips i { position: absolute; left: 42%; top: 44%; margin: -16px 0 0 -30px; padding: 7px 14px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line-2); font: 500 14px ui-monospace, Menlo, monospace; color: var(--text-2); font-style: normal; opacity: 0; animation: mvGather 10s infinite; }
+.mv__chips i { position: absolute; left: 42%; top: 44%; margin: -32px 0 0 -26px; font-style: normal; opacity: 0; animation: mvGather 10s infinite; }
+.mv__chips s { display: block; text-decoration: none; width: 52px; height: 64px; position: relative; border-radius: 5px 14px 5px 5px; background: #15171a; border: 1px solid var(--line-2); overflow: hidden; animation: mvBob 3.4s ease-in-out infinite alternate; animation-delay: var(--d); }
+.mv__chips s::after { content: ''; position: absolute; right: 0; top: 0; width: 14px; height: 14px; background: linear-gradient(225deg, var(--bg) 50%, #2b2e33 50%); }
+.mv__chips u { position: absolute; left: 6px; right: 6px; top: 10px; height: 30px; border-radius: 3px; }
+.mv__chips em { position: absolute; left: 0; right: 0; bottom: 5px; text-align: center; font: 600 10px ui-monospace, Menlo, monospace; color: var(--text-2); }
+.mv__chips i[data-t="wav"] u, .mv__chips i[data-t="mp3"] u { background: repeating-linear-gradient(90deg, var(--c1) 0 2px, transparent 2px 4px); -webkit-mask: linear-gradient(0deg, #000 0 100%); clip-path: polygon(0 40%, 8% 15%, 16% 60%, 24% 5%, 32% 70%, 40% 20%, 48% 85%, 56% 0, 64% 65%, 72% 25%, 80% 75%, 88% 30%, 100% 50%, 100% 100%, 0 100%); }
+.mv__chips i[data-t="jpg"] u { background: url(/covers/foto.jpg) center / cover; }
+.mv__chips i[data-t="zip"] u { background: repeating-linear-gradient(0deg, #5BE6B4 0 3px, transparent 3px 6px); width: 8px; left: 22px; right: auto; }
+.mv__chips i[data-t="stems"] u { background: linear-gradient(90deg, var(--c1) 0 18%, transparent 18% 27%, #5BE6B4 27% 45%, transparent 45% 54%, #E6FF94 54% 72%, transparent 72% 81%, var(--c1) 81%); clip-path: polygon(0 30%, 100% 30%, 100% 100%, 0 100%); }
+.mv__chips i[data-t="doc"] u, .mv__chips i[data-t="txt"] u, .mv__chips i[data-t="pdf"] u { background: repeating-linear-gradient(0deg, #8C879A 0 2px, transparent 2px 6px); }
+.mv__chips i[data-t="pdf"] em { color: #C6FF3D; }
 @keyframes mvGather {
   0% { opacity: 0; transform: translate(calc(var(--x) * var(--k) * 1.15), calc(var(--y) * var(--k) * 1.15)) rotate(var(--r)); }
   6%, 28% { opacity: 1; transform: translate(calc(var(--x) * var(--k)), calc(var(--y) * var(--k))) rotate(var(--r)); }
