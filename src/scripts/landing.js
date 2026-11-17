@@ -111,10 +111,11 @@ $$('.st__play').forEach((b) => b.addEventListener('click', () => { const r = b.c
 /* portadas: cambian dentro de la app */
 const cv = $('#cv'), cms = $$('.app__cover .m'), cvt = $('.app__cover .tag');
 const CT = ['Foto', 'GIF · bucle', 'Vídeo · 0:08'];
-const CAP = [['Foto · JPG o PNG', 'Hasta 3000 × 3000 px. Se ve igual de nítida en grande que en la lista.'], ['GIF · en bucle', 'Hasta 15 MB. Se mueve en la ficha de la canción y en las miniaturas.'], ['Vídeo · MP4', 'De 5 a 8 s, sin sonido y en bucle. Pensado para quien quiere algo más que una imagen.']];
+const phv = $('.phone video'), stg = $('.stage');
+const CAP = [['Foto · JPG o PNG', 'Hasta 3000 × 3000 px. Se ve igual de nítida en grande que en la lista.'], ['GIF · en bucle', 'Hasta 15 MB. Se mueve en la ficha de la canción y en las miniaturas.'], ['Vídeo · MP4 vertical 9:16', 'Pensado para stories y Reels. De 5 a 15 s, sin sonido y en bucle.']];
 let covI = 0, covLast = 0, covLock = 0, playing = true;
 const setCov = (n) => {
-  covI = n; cv.dataset.k = n; cvt.textContent = CT[n];
+  covI = n; cv.dataset.k = n; stg.dataset.k = n; if (phv) { if (n === 2 && playing && !still) phv.play().catch(() => {}); else phv.pause(); } cvt.textContent = CT[n];
   cms.forEach((m, k) => m.classList.toggle('on', k === n));
   cms.forEach((m, k) => { if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
   $$('.pane[data-i="2"] .amb__m').forEach((m, k) => { m.classList.toggle('on', k === n); if (m.tagName === 'VIDEO') { if (k === n && playing) m.play().catch(() => {}); else m.pause(); } });
@@ -145,7 +146,7 @@ plb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') seek(pos + 
 $('#pback').addEventListener('click', () => seek(pos - 15));
 $('#pfwd').addEventListener('click', () => seek(pos + 15));
 pp.addEventListener('click', () => { playing = !playing; pp.classList.toggle('paused', !playing); pp.setAttribute('aria-label', playing ? 'Pausa' : 'Reproducir'); plst.classList.toggle('paused', !playing); const av = $('video.amb__m'); if (av && cv.dataset.k === '2') { if (playing) av.play().catch(() => {}); else av.pause(); }
-  const vd = $('video.m'); if (vd && cv.dataset.k === '2') { if (playing) vd.play().catch(() => {}); else vd.pause(); } });
+  if (phv) { if (playing && cv.dataset.k === '2' && !still) phv.play().catch(() => {}); else phv.pause(); } const vd = $('video.m'); if (vd && cv.dataset.k === '2') { if (playing) vd.play().catch(() => {}); else vd.pause(); } });
 const setTrack = (i) => {
   ti = (i + TRK.length) % TRK.length; TOT = TRK[ti][1]; pos = 0;
   $('.stage__t b').textContent = TRK[ti][0]; $('.sz b').textContent = TRK[ti][0]; $('.pl__t span:last-child').textContent = fmt(TOT);
