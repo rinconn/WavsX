@@ -201,7 +201,7 @@ const V = [
 const nodes = $('.tl__nodes');
 if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}"><i></i><b>${v[0]}</b><small>${v[1]}</small></button>`).join('');
 const crate = $('#crate'), cfront = $('.crate__front');
-if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la caja de versiones' : 'Abrir la caja de versiones'); });
+if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la carpeta de versiones' : 'Abrir la carpeta de versiones'); });
 let tlI = -1;
 const setV = (i) => {
   tlI = i;
