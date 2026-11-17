@@ -186,68 +186,21 @@ const keeps = [
 
   <!-- 3 · LA VIDA DE UNA CANCIÓN -->
   <section class="story" id="como">
-    <div class="story__sticky">
-      <div class="story__text">
+    <div class="story__in">
+      <div class="story__text reveal">
         <span class="kicker">De la primera idea a la distribuidora</span>
         <h2>La vida de una canción,<br>en un solo sitio.</h2>
-        <ol class="steps" id="steps">
-          <li class="is-active" data-sticker="subir|Paso 01 · súbelo" style="--sc: var(--c1)"><div><h3>Súbelo todo</h3><p>Arrastra la carpeta y WavsX separa audio, stems, portadas y letras.</p></div></li>
-          <li data-sticker="versiones|Paso 02 · versiona" style="--sc: var(--c2)"><div><h3>Versiona sin perder nada</h3><p>Cada mezcla nueva es una versión. Las anteriores siguen ahí.</p></div></li>
-          <li data-sticker="escucha|Paso 03 · comparte" style="--sc: var(--c3)"><div><h3>Comparte sin soltar el archivo</h3><p>Un enlace privado para tu productor: escucha y comenta, pero no descarga.</p></div></li>
-          <li data-sticker="lanzar|Paso 04 · lánzala" style="--sc: var(--c4)"><div><h3>Lánzala</h3><p>Checklist completo y paquete listo para tu distribuidora.</p></div></li>
-        </ol>
+        <p>Lo que hoy vive en un cuaderno, tres carpetas y un chat, escrito una sola vez y siempre al día.</p>
       </div>
-
-      <div class="story__stage" id="stage" aria-hidden="true">
-        <div class="songcard">
-          <div class="songcard__top">
-            <div class="songcard__cover"></div>
-            <div><b>Resiliencia</b><span class="songcard__status" id="sc-status">Demo · v1</span></div>
-            <span class="songcard__badge" id="sc-badge"></span>
-          </div>
-
-          <div class="scene is-active" data-scene="0">
-            <div class="drop"><span data-icon="subir"></span>Suelta aquí la carpeta de la canción</div>
-            <ul class="files">
-              <li><span class="ft" data-icon="wav" style="--ic: var(--c1)"></span>mezcla_v1.wav<small class="num">38 MB</small></li>
-              <li><span class="ft" data-icon="stems" style="--ic: var(--c2)"></span>stems.zip<small class="num">412 MB</small></li>
-              <li><span class="ft" data-icon="portada" style="--ic: var(--c3)"></span>portada.jpg<small class="num">4 MB</small></li>
-              <li><span class="ft" data-icon="letra" style="--ic: var(--c4)"></span>letra.txt<small class="num">2 KB</small></li>
-            </ul>
-          </div>
-
-          <div class="scene" data-scene="1">
-            <div class="vers"><span>v1</span><span>v2</span><span>v3</span><span>v4</span><span class="on">v5</span></div>
-            <div class="bigwave">
-              <span class="pin" style="left: 28%">0:48 · sube la voz</span>
-              <div class="wave wave--grad" id="story-wave" style="height: 96px"></div>
-            </div>
-            <p class="note"><b>Productor</b> comentó en el 0:48</p>
-          </div>
-
-          <div class="scene" data-scene="2">
-            <div class="share">
-              <span class="share__label"><span data-icon="enlace"></span>Enlace privado · v5</span>
-              <code>wavsx.app/s/k4ir0-n30n</code>
-              <div class="share__row"><span>Permitir descarga</span><i class="sw"></i></div>
-            </div>
-            <ul class="activity">
-              <li><span class="av" style="--ic: var(--c3)">P</span><div><b>Productor</b> lo ha escuchado 3 veces</div><small>hace 2 min</small></li>
-              <li><span class="av" style="--ic: var(--c2)">S</span><div><b>Sello</b> ha abierto el enlace</div><small>hace 1 h</small></li>
-            </ul>
-          </div>
-
-          <div class="scene" data-scene="3">
-            <ul class="checks">
-              <li><i></i>Portada 3000 × 3000</li>
-              <li><i></i>Créditos y reparto</li>
-              <li><i></i>Master final en WAV</li>
-              <li><i></i>ISRC y fecha de salida</li>
-            </ul>
-            <div class="ready"><span data-icon="lanzar"></span>Lista para salir · 28 nov</div>
-          </div>
-        </div>
-        <div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="sheet reveal" role="img" aria-label="Hoja de sesión de la canción Resiliencia: subida, versiones, comentarios, enlace privado y lanzamiento">
+        <div class="sheet__head"><b>RESILIENCIA</b><span>Hostilidad · hoja de sesión</span></div>
+        <ol class="sheet__rows">
+          <li><time>12 MAR</time><div><b>Subida la carpeta</b><span>mezcla_v1.wav · stems.zip · portada · letra</span></div><i>v1</i></li>
+          <li><time>29 MAR</time><div><b>Cinco mezclas después</b><span>la v2 sigue ahí, por si el cliente vuelve a la <mark>v2</mark></span></div><i>v5</i></li>
+          <li><time>02 ABR</time><div><b>Enlace privado a Marcos</b><span>escucha y comenta, no descarga</span><em>0:48 · sube la voz</em></div><i>v5</i></li>
+          <li><time>28 NOV</time><div><b>Paquete para la distribuidora</b><span>master WAV · ISRC · créditos · portada 3000×3000</span></div><i>OK</i></li>
+        </ol>
+        <div class="sheet__stamp">Lista<br>para salir</div>
       </div>
     </div>
   </section>

@@ -282,43 +282,6 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- 3 · historia por pasos ---------- */
-const steps = $$('#steps li');
-steps.forEach((li) => {
-  const [ic, text] = li.dataset.sticker.split('|');
-  li.insertAdjacentHTML('afterbegin', sticker({ icon: ic, text, color: li.style.getPropertyValue('--sc'), size: 80 }));
-});
-const scenes = $$('.scene');
-const dots = $$('#dots i');
-const STAGE = [
-  { status: 'Demo · v1', icon: 'subir', c: 1 },
-  { status: 'Mezcla · v5', icon: 'versiones', c: 2 },
-  { status: 'Mezcla · v5 · compartida', icon: 'escucha', c: 3 },
-  { status: 'Lista para salir', icon: 'lanzar', c: 4 }
-];
-const stage = $('#stage');
-renderWave($('#story-wave'), waveHeights(3.1, 70, 96), 0.42);
-let active = -1;
-function setStep(i) {
-  if (i === active) return;
-  active = i;
-  steps.forEach((li, n) => li.classList.toggle('is-active', n === i));
-  scenes.forEach((s, n) => s.classList.toggle('is-active', n === i));
-  dots.forEach((d, n) => d.classList.toggle('on', n === i));
-  const s = STAGE[i];
-  $('#sc-status').textContent = s.status;
-  $('#sc-badge').innerHTML = icon(s.icon, 20);
-  stage.style.setProperty('--stage', `var(--c${s.c})`);
-  stage.style.setProperty('--stage-rgb', `var(--c${s.c}-rgb)`);
-}
-setStep(0);
-steps.forEach((li, n) => li.addEventListener('click', () => {
-  if (!wide) return;
-  const story = $('.story');
-  const top = story.offsetTop + (story.offsetHeight - innerHeight) * ((n + 0.5) / 4);
-  smooth.to(top);
-}));
-
 /* ---------- 4 · cartel ON AIR ---------- */
 new IntersectionObserver(([e]) => {
   if (e.isIntersecting) $('.onair').classList.add('is-on');
@@ -334,7 +297,6 @@ $$('.reveal').forEach((el, i) => {
 });
 
 /* ---------- scroll: progreso de lectura, sección activa del menú y pasos ---------- */
-const story = $('.story');
 const navLinks = $$('.nav__links a');
 const sections = navLinks.map((a) => $(a.getAttribute('href')));
 const clamp = (v) => Math.max(0, Math.min(1, v));
@@ -345,12 +307,6 @@ function onScroll() {
   let here = -1;
   sections.forEach((sec, n) => { if (sec && sec.getBoundingClientRect().top < innerHeight * 0.5) here = n; });
   navLinks.forEach((a, n) => a.classList.toggle('is-here', n === here));
-
-  if (wide) {
-    const r = story.getBoundingClientRect();
-    const p = clamp(-r.top / (r.height - innerHeight));
-    setStep(Math.min(3, Math.floor(p * 4)));
-  }
 }
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll);
