@@ -389,3 +389,39 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });
+
+/* globo de puntos (versiones) */
+(() => {
+  const cv = $('.globe'); if (!cv) return;
+  const g = cv.getContext('2d'), N = 900, P = [];
+  for (let k = 0; k < N; k++) {
+    const y = 1 - (k / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = k * 2.39996;
+    P.push([Math.cos(th) * r, y, Math.sin(th) * r, 0.8 + Math.pow(Math.random(), 2) * 2.6]);
+  }
+  let W = 0, H = 0, dpr = 1, rot = 0, tx = 0, ty = 0, mx = 0, my = 0, vis = false, raf = 0, last = 0;
+  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; };
+  const draw = () => {
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    const R = Math.min(W * 0.48, 360), cx = W / 2, cy = H * 0.92;
+    const ca = Math.cos(rot), sa = Math.sin(rot), tilt = -0.35 + ty, cb = Math.cos(tilt), sb = Math.sin(tilt);
+    for (const [x0, y0, z0, s] of P) {
+      const x1 = x0 * ca + z0 * sa, z1 = -x0 * sa + z0 * ca;
+      const y2 = y0 * cb - z1 * sb, z2 = y0 * sb + z1 * cb;
+      const k = 900 / (900 + z2 * R * 0.6), px = cx + (x1 + tx) * R * k, py = cy + y2 * R * k;
+      if (py > H + 4 || py < -4) continue;
+      const d = (z2 + 1) / 2;
+      g.globalAlpha = 0.12 + (1 - d) * 0.75;
+      g.fillStyle = d < 0.45 ? '#C6FF3D' : '#5BE6B4';
+      g.beginPath(); g.arc(px, py, s * (1.15 - d * 0.6), 0, 6.283); g.fill();
+    }
+  };
+  const loop = (t) => { raf = 0; if (!vis) return; const dt = Math.min(50, t - (last || t)); last = t; rot += dt * 0.00012; tx += (mx - tx) * 0.05; ty += (my - ty) * 0.05; draw(); raf = requestAnimationFrame(loop); };
+  const start = () => { if (still) { draw(); return; } if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
+  size(); draw();
+  addEventListener('resize', () => { size(); draw(); });
+  const art = cv.parentElement;
+  art.addEventListener('pointermove', (e) => { const r = art.getBoundingClientRect(); mx = ((e.clientX - r.left) / r.width - 0.5) * 0.12; my = ((e.clientY - r.top) / r.height - 0.5) * 0.25; });
+  art.addEventListener('pointerleave', () => { mx = 0; my = 0; });
+  new IntersectionObserver((es) => { vis = es[0].isIntersecting && cv.offsetParent !== null; if (vis) { if (!W) size(); start(); } }, { threshold: 0.05 }).observe(art);
+  new MutationObserver(() => { const on = cv.offsetParent !== null; if (on && !W) size(); if (on) { vis = true; size(); start(); } else vis = false; }).observe(cv.closest('.pane'), { attributes: true, attributeFilter: ['class'] });
+})();
