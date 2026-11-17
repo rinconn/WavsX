@@ -772,3 +772,8 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .stage.lit::before { animation: litp 1.1s ease-out; }
 @keyframes litp { from { opacity: .7; } }
 @media (prefers-reduced-motion: reduce) { .stage.lit::before { animation: none; } }
+/* haz de luz por detrás */
+.stage::after { left: 50%; right: auto; top: -6%; width: 86%; height: 88%; transform: translateX(-50%); background: linear-gradient(rgba(230, 255, 148, .34), rgba(230, 255, 148, .09) 62%, transparent); clip-path: polygon(41% 0, 59% 0, 100% 100%, 0 100%); filter: blur(12px); transition: opacity .5s; }
+.stage.lit::after { animation: beam 1.1s ease-out; }
+@keyframes beam { from { opacity: 0; transform: translateX(-50%) scaleY(.6); transform-origin: top; } }
+@media (prefers-reduced-motion: reduce) { .stage.lit::after { animation: none; } }
