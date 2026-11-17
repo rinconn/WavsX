@@ -307,20 +307,26 @@ main { overflow-x: clip; }
 .story__in { max-width: 1180px; margin: 0 auto; padding: 0 48px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 80px; align-items: center; }
 .story__text h2 { margin: 0 0 24px; font-size: clamp(34px, 3.8vw, 56px); line-height: 1; letter-spacing: -0.045em; font-weight: 700; }
 .story__text p { margin: 0; max-width: 34ch; color: var(--text-2); font-size: 17px; line-height: 1.5; }
-.sheet { position: relative; background: var(--surface); color: var(--text); border: 1px solid var(--line-2); padding: 26px 30px 34px; border-radius: 12px; font-family: ui-monospace, "Courier New", monospace; }
-.sheet__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line-2); }
-.sheet__head b { font-size: 22px; letter-spacing: .12em; }
-.sheet__head span { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; opacity: .7; }
-.sheet__rows { list-style: none; margin: 0; padding: 0; }
-.sheet__rows li { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: start; padding: 16px 0; border-bottom: 1px dashed var(--line-2); }
-.sheet__rows time { font-size: 12px; letter-spacing: .06em; padding-top: 3px; opacity: .65; }
-.sheet__rows b { display: block; font-size: 16px; }
-.sheet__rows span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.45; opacity: .75; }
-.sheet__rows mark { background: var(--c1); color: var(--on-accent); padding: 0 3px; }
-.sheet__rows em { display: inline-block; margin-top: 6px; font: italic 15px Georgia, serif; color: var(--c1); }
-.sheet__rows i { font-style: normal; font-weight: 700; font-size: 13px; border: 1px solid var(--line-2); color: var(--c1); padding: 1px 7px; border-radius: 3px; }
-.sheet__stamp { position: absolute; right: 22px; bottom: 16px; transform: rotate(-7deg); border: 2px solid var(--c1); color: var(--c1); padding: 4px 12px; font-weight: 800; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; text-align: center; line-height: 1.15; opacity: .9; }
-@media (max-width: 860px) { .story { padding: 80px 0; } .story__in { grid-template-columns: 1fr; gap: 48px; padding: 0 20px; } .sheet { padding: 22px 18px 70px; } .sheet__rows li { grid-template-columns: 52px 1fr auto; gap: 10px; } }
+.sort { background: var(--surface); border: 1px solid var(--line-2); border-radius: 12px; padding: 22px 28px 20px; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.sort__head, .sort__foot { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+.sort__head { padding-bottom: 14px; border-bottom: 1px solid var(--line-2); }
+.sort__head span:first-child { color: var(--text); }
+.sort__rows { list-style: none; margin: 0; padding: 0; }
+.sort__rows li { display: grid; grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr); align-items: center; gap: 12px; padding: 16px 0; border-bottom: 1px dashed var(--line-2); }
+.sort__rows code { font: inherit; font-size: 13px; color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(140,135,154,.4); overflow-wrap: anywhere; }
+.sort__rows i { height: 1px; background: var(--line-2); position: relative; }
+.sort__rows i::after { content: ''; position: absolute; right: 0; top: -3px; width: 6px; height: 6px; border-top: 1px solid var(--c1); border-right: 1px solid var(--c1); transform: rotate(45deg); }
+.sort__rows b { display: block; font-size: 16px; color: var(--c1); }
+.sort__rows span { display: block; margin-top: 2px; font-size: 12px; color: var(--text-2); }
+.sort__foot { padding-top: 16px; }
+.sort__foot b { color: var(--c1); font-weight: 600; }
+.sort.is-in .sort__rows li { animation: sortIn .6s var(--ease) both; }
+.sort.is-in .sort__rows li:nth-child(2) { animation-delay: .15s; }
+.sort.is-in .sort__rows li:nth-child(3) { animation-delay: .3s; }
+.sort.is-in .sort__rows li:nth-child(4) { animation-delay: .45s; }
+.sort.is-in .sort__rows li:nth-child(5) { animation-delay: .6s; }
+@keyframes sortIn { from { opacity: 0; transform: translateX(-14px); } }
+@media (max-width: 860px) { .story { padding: 80px 0; } .story__in { grid-template-columns: 1fr; gap: 48px; padding: 0 20px; } .sort { padding: 18px; } .sort__rows li { grid-template-columns: 1fr; gap: 6px; } .sort__rows i { display: none; } }
 
 
 /* ---------- 4 · on air ---------- */
