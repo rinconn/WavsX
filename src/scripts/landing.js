@@ -296,7 +296,9 @@ if (spec) requestAnimationFrame(frame);
       const oc = document.createElement('canvas'); oc.width = oc.height = DN; const g = oc.getContext('2d'), m = Math.min(img.width, img.height);
       g.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, DN, DN);
       try { const px = g.getImageData(0, 0, DN, DN).data; DOTS = [];
-        for (let y = 0; y < DN; y++) for (let x = 0; x < DN; x++) { const k = (y * DN + x) * 4, l = Math.pow((0.3 * px[k] + 0.59 * px[k + 1] + 0.11 * px[k + 2]) / 255, 0.8); if (l < 0.07) continue;
+        const lu = []; for (let k = 0; k < px.length; k += 4) lu.push((0.3 * px[k] + 0.59 * px[k + 1] + 0.11 * px[k + 2]) / 255);
+        const lo = Math.min(...lu), hi = Math.max(...lu) || 1;
+        for (let y = 0; y < DN; y++) for (let x = 0; x < DN; x++) { const l = Math.pow((lu[y * DN + x] - lo) / (hi - lo || 1), 1.5); if (l < 0.07) continue;
           const fx = (x + 0.5) / DN, fy = (y + 0.5) / DN; DOTS.push({ fx, fy, l, d: Math.hypot(fx - 0.5, fy - 0.5) / 0.707 * 0.75 + Math.random() * 0.25, a0: (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 2) }); }
       } catch (e) { DOTS = null; }
     };
