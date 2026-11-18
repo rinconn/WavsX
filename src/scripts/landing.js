@@ -398,3 +398,41 @@ document.addEventListener('click', (e) => {
 });
 
 
+
+/* versiones: polvo y chispas dentro de los haces de luz */
+(() => {
+  const cv = $('.dust'); if (!cv) return;
+  const g = cv.getContext('2d'), N = 90, P = [];
+  let W = 0, H = 0, dpr = 1, vis = false, raf = 0, last = 0;
+  const spawn = (p, init) => {
+    const up = Math.random() < 0.35;            // chispas que suben desde la carpeta
+    p.up = up; p.t = 0; p.life = up ? 1.6 + Math.random() * 1.6 : 5 + Math.random() * 6;
+    if (up) { p.x = W / 2 + (Math.random() - 0.5) * 220; p.y = H - 70 - Math.random() * 40; p.vx = (Math.random() - 0.5) * 18; p.vy = -(30 + Math.random() * 50); }
+    else { const d = Math.random() * 2 - 1; p.y = init ? Math.random() * H : -10; p.x = W / 2 + d * (40 + p.y * 0.9); p.vx = d * 6; p.vy = 6 + Math.random() * 14; }
+    p.s = up ? 0.8 + Math.random() * 1.6 : 0.6 + Math.random() * 1.4; p.ph = Math.random() * 6.28;
+    if (init) p.t = Math.random() * p.life;
+  };
+  const size = () => { dpr = Math.min(1.5, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; };
+  const star = (x, y, r) => { g.fillRect(x - r * 3, y - 0.5, r * 6, 1); g.fillRect(x - 0.5, y - r * 3, 1, r * 6); };
+  const frame = (dt) => {
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H); g.globalCompositeOperation = 'lighter';
+    for (const p of P) {
+      p.t += dt; if (p.t > p.life || p.y < -20 || p.y > H + 20) spawn(p);
+      p.x += (p.vx + Math.sin(p.t * 1.3 + p.ph) * 6) * dt; p.y += p.vy * dt;
+      const k = p.t / p.life, fade = Math.sin(Math.PI * k), tw = 0.6 + 0.4 * Math.sin(p.t * 5 + p.ph);
+      g.globalAlpha = fade * tw * (p.up ? 0.95 : 0.55);
+      g.fillStyle = p.up ? '#F7FFD6' : (p.ph > 4 ? '#5BE6B4' : '#E6FF94');
+      g.beginPath(); g.arc(p.x, p.y, p.s, 0, 6.283); g.fill();
+      if (p.up && tw > 0.9) star(p.x, p.y, p.s);
+    }
+    g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+  };
+  const loop = (t) => { raf = 0; if (!vis) return; const dt = Math.min(0.05, (t - (last || t)) / 1000); last = t; frame(dt); raf = requestAnimationFrame(loop); };
+  const start = () => { if (still) { frame(0); return; } if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
+  for (let i = 0; i < N; i++) P.push({});
+  let seeded = false; const seed = () => { if (!seeded && W) { seeded = true; P.forEach((p) => spawn(p, true)); } };
+  addEventListener('resize', size);
+  const art = cv.parentElement;
+  new IntersectionObserver((es) => { vis = es[0].isIntersecting && cv.offsetParent !== null; if (vis) { size(); seed(); start(); } }, { threshold: 0.05 }).observe(art);
+  new MutationObserver(() => { if (cv.offsetParent !== null) { vis = true; size(); seed(); start(); } else vis = false; }).observe(cv.closest('.pane'), { attributes: true, attributeFilter: ['class'] });
+})();
