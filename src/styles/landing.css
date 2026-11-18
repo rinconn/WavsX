@@ -957,26 +957,32 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .vx__ph { position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background: radial-gradient(70% 80% at 50% 60%, rgba(7, 8, 5, .25), rgba(7, 8, 5, .85)), linear-gradient(transparent 55%, rgba(7, 8, 5, .9)), url(/covers/estudio.jpg) center 35% / cover; }
 
-/* versiones: cada versión es una "toma", moneda propia de WavsX. Cara: el gato. Cruz: los datos.
-   El aro exterior marca cuánto ha avanzado la canción (demo 20 % ... master 100 %). Gira al pasar el ratón y en la seleccionada. */
-.vx .crate .tn, .vx .crate .tn.on { width: 96px; height: 96px; border-radius: 50%; border: 0; padding: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-mask: none; mask: none; overflow: visible; }
-.vx .crate .tn::after, .vx .crate .tn[data-i="4"]::after, .vx .crate .tn > i, .vx .crate .tn > em, .vx .crate .tn > small { display: none; }
-.vx .crate .tn { --p: calc((var(--i) + 1) * 20%); }
-.vx .crate .tn::before { display: block; content: ""; position: absolute; inset: -7px; width: auto; height: auto; margin: 0; border: 0; border-radius: 50%; transform: none; box-shadow: none;
-  background: conic-gradient(#C6FF3D var(--p), rgba(255, 255, 255, .12) 0);
-  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px)); mask: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px)); }
-.tk { position: absolute; inset: 0; border-radius: 50%; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
-.tk__f, .tk__b { position: absolute; inset: 0; border-radius: 50%; backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 0 0 1px #000, 0 12px 22px rgba(0, 0, 0, .75); }
-.tk__f { background: #000 url(/covers/toma.jpg) center / 104% 104%; }
-.tk__b { transform: rotateY(180deg); display: grid; place-content: center; justify-items: center; gap: 3px; text-align: center; background: #0B0D06; box-shadow: inset 0 0 0 2px #C6FF3D, 0 12px 22px rgba(0, 0, 0, .75); }
-.tk__b u { text-decoration: none; font: 700 9px/1 var(--font); letter-spacing: .14em; text-transform: uppercase; color: #C6FF3D; }
-.tk__b strong { font-size: 24px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: #fff; }
-.tk__b s { text-decoration: none; font: 500 10px/1 var(--font); color: rgba(255, 255, 255, .55); }
+/* versiones: cada versión es una "toma", moneda de WavsX acuñada en un metal según su fase, como los discos
+   de oro y platino: demo hierro, maqueta bronce, mezcla plata, final oro, master platino. Gira y enseña sus datos. */
+.vx .crate .tn, .vx .crate .tn.on { width: 108px; height: 108px; border-radius: 50%; border: 0; padding: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-mask: none; mask: none; overflow: visible; }
+.vx .crate .tn::before, .vx .crate .tn::after, .vx .crate .tn[data-i="4"]::after, .vx .crate .tn > i, .vx .crate .tn > em, .vx .crate .tn > small { display: none; }
+.vx .crate .tn[data-i="0"] { --metal: linear-gradient(135deg, #4b4f55, #c3c7cc 45%, #3f4247 70%, #8b9096); --ink: #e9ebee; }
+.vx .crate .tn[data-i="1"] { --metal: linear-gradient(135deg, #5a2f12, #e6a46a 45%, #6e3a17 70%, #b8743d); --ink: #ffd6b0; }
+.vx .crate .tn[data-i="2"] { --metal: linear-gradient(135deg, #7d838b, #ffffff 45%, #8a9098 70%, #d8dde2); --ink: #ffffff; }
+.vx .crate .tn[data-i="3"] { --metal: linear-gradient(135deg, #7a520a, #ffe08a 45%, #8d6210 70%, #e0b043); --ink: #ffe9a8; }
+.vx .crate .tn[data-i="4"] { --metal: linear-gradient(135deg, #9aa7ad, #ffffff 40%, #b9c6cc 60%, #eef6f8 80%, #a6b4ba); --ink: #ffffff; }
+.tk { position: absolute; inset: 0; border-radius: 50%; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
+.tk__f, .tk__b { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+/* cara: el gato en relieve sobre el metal (luminosidad de la imagen sobre el degradado metálico) */
+.tk__f { background: url(/covers/toma.jpg) center / 104% 104%, var(--metal); background-blend-mode: luminosity; filter: contrast(1.25) brightness(1.05);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .35), inset 0 0 0 5px rgba(0, 0, 0, .5), inset 0 -10px 20px rgba(0, 0, 0, .45), 0 14px 24px rgba(0, 0, 0, .8); }
+.tk__f::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%); transform: translateX(-120%); }
+.vx .crate .tn:hover .tk__f::after { transition: transform .9s ease; transform: translateX(120%); }
+/* cruz: metal liso con los datos grabados */
+.tk__b { transform: rotateY(180deg); display: grid; place-content: center; justify-items: center; gap: 2px; text-align: center; background: var(--metal);
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .35), inset 0 0 0 5px rgba(0, 0, 0, .45), inset 0 0 0 12px rgba(0, 0, 0, .08), 0 14px 24px rgba(0, 0, 0, .8); }
+.tk__b u { text-decoration: none; font: 800 9px/1 var(--font); letter-spacing: .2em; text-transform: uppercase; color: rgba(0, 0, 0, .6); }
+.tk__b strong { font-size: 26px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: #121212; text-shadow: 0 1px 0 rgba(255, 255, 255, .5); }
+.tk__b s { text-decoration: none; font: 700 10px/1 var(--font); color: rgba(0, 0, 0, .55); }
 .vx .crate .tn:hover .tk, .vx .crate .tn.on .tk { transform: rotateY(180deg); }
-.vx .crate .tn.on .tk__b { background: #C6FF3D; box-shadow: 0 0 0 1px #000, 0 14px 26px rgba(0, 0, 0, .7); }
-.vx .crate .tn.on .tk__b u, .vx .crate .tn.on .tk__b strong, .vx .crate .tn.on .tk__b s { color: #0B0D06; }
-.vx .crate .tn > b { position: absolute; left: 50%; top: 108px; bottom: auto; right: auto; transform: translateX(-50%); padding: 3px 7px; border-radius: 5px; background: #0B0D06; border: 1px solid rgba(255, 255, 255, .15);
-  font: 600 10px/1 var(--font); letter-spacing: 0; color: var(--text-2); white-space: nowrap; transition: opacity .3s; }
+.vx .crate .tn.on .tk__b { box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .35), inset 0 0 0 5px rgba(0, 0, 0, .45), 0 0 0 3px #C6FF3D, 0 14px 30px rgba(0, 0, 0, .8); }
+.vx .crate .tn > b { position: absolute; left: 50%; top: 118px; bottom: auto; right: auto; transform: translateX(-50%); padding: 3px 8px; border-radius: 5px; background: rgba(11, 13, 6, .85); border: 1px solid rgba(255, 255, 255, .15);
+  font: 600 11px/1 var(--font); letter-spacing: 0; color: var(--ink); white-space: nowrap; transition: opacity .3s; }
 .vx .crate .tn.on > b { background: #C6FF3D; border-color: #C6FF3D; color: #0B0D06; }
 .vx .crate:not(.open) .tn > b { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .tk { transition: none; } }

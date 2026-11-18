@@ -192,14 +192,14 @@ $('#rsign').addEventListener('click', rsign);
 
 /* versiones */
 const V = [
-  ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB', 'Demo', '3:12', '6 MB'],
-  ['v3', 'maqueta con bajo', '28 mar', 'Entra el bajo y se cierra la estructura · 4:41 · 48 MB', 'Maqueta', '4:41', '48 MB'],
-  ['v5', 'mezcla con voz nueva', '2 jun', 'Voz regrabada en estudio · comentario de Marcos en 0:48', 'Mezcla', '5:02', '1 nota'],
-  ['v7', 'mezcla final', '19 sep', 'Aprobada por todos · 24-bit / 48 kHz · 5:04', 'Final', '5:04', '24-bit'],
-  ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB', 'Master', '-9,4', 'LUFS'],
+  ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB', 'Hierro', '3:12', '6 MB'],
+  ['v3', 'maqueta con bajo', '28 mar', 'Entra el bajo y se cierra la estructura · 4:41 · 48 MB', 'Bronce', '4:41', '48 MB'],
+  ['v5', 'mezcla con voz nueva', '2 jun', 'Voz regrabada en estudio · comentario de Marcos en 0:48', 'Plata', '5:02', '1 nota'],
+  ['v7', 'mezcla final', '19 sep', 'Aprobada por todos · 24-bit / 48 kHz · 5:04', 'Oro', '5:04', '24-bit'],
+  ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB', 'Platino', '-9,4', 'LUFS'],
 ];
 const nodes = $('.tl__nodes');
-if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}" aria-label="${v[0]} · ${v[1]}"><span class="tk"><span class="tk__f"></span><span class="tk__b"><u>${v[4]}</u><strong>${v[5]}</strong><s>${v[6]}</s></span></span><b>${v[0]} · ${v[4].toLowerCase()}</b><small>${v[2]}</small></button>`).join('');
+if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}" aria-label="${v[0]} · ${v[1]}"><span class="tk"><span class="tk__f"></span><span class="tk__b"><u>${v[4]}</u><strong>${v[5]}</strong><s>${v[6]}</s></span></span><b>${v[0]} · ${['demo','maqueta','mezcla','final','master'][i]}</b><small>${v[2]}</small></button>`).join('');
 const crate = $('#crate'), cfront = $('.crate__front');
 if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la carpeta de versiones' : 'Abrir la carpeta de versiones'); });
 let tlI = -1;
