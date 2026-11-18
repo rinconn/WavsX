@@ -963,9 +963,9 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .vx .crate .tn::after, .vx .crate .tn[data-i="4"]::after, .vx .crate .tn > i, .vx .crate .tn > em, .vx .crate .tn > small { display: none; }
 .vx .crate .tn[data-i="0"] { --metal: linear-gradient(135deg, #1d2024, #5d636b 45%, #22262b 70%, #444a52); --ink: #c9ced6; --glow: #9aa3ad; }
 .vx .crate .tn[data-i="1"] { --metal: linear-gradient(135deg, #5a2f12, #e6a46a 45%, #6e3a17 70%, #b8743d); --ink: #ffd6b0; --glow: #ff9a4a; }
-.vx .crate .tn[data-i="2"] { --metal: linear-gradient(135deg, #6f8399, #f2f8ff 45%, #7f93a8 70%, #c9d8e8); --ink: #e3efff; --glow: #8fc7ff; }
+.vx .crate .tn[data-i="2"] { --metal: linear-gradient(135deg, #3f6b9e, #d6ebff 45%, #4f7fb5 70%, #9cc6f0); --ink: #cfe6ff; --glow: #4aa8ff; }
 .vx .crate .tn[data-i="3"] { --metal: linear-gradient(135deg, #7a520a, #ffe08a 45%, #8d6210 70%, #e0b043); --ink: #ffe9a8; --glow: #ffcc33; }
-.vx .crate .tn[data-i="4"] { --metal: linear-gradient(135deg, #9aa7ad, #ffffff 40%, #b9c6cc 60%, #eef6f8 80%, #a6b4ba); --ink: #ffffff; --glow: #ff6ad5; }
+.vx .crate .tn[data-i="4"] { --metal: linear-gradient(135deg, #9aa7ad, #ffffff 40%, #b9c6cc 60%, #eef6f8 80%, #a6b4ba); --ink: #ffffff; --glow: #d8e6ff; }
 .tk { position: absolute; inset: 0; border-radius: 50%; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
 .tk__f, .tk__b { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 /* cara: el gato en relieve sobre el metal (luminosidad de la imagen sobre el degradado metálico) */
@@ -979,7 +979,7 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .tk__b u { text-decoration: none; font: 800 9px/1 var(--font); letter-spacing: .2em; text-transform: uppercase; color: rgba(0, 0, 0, .6); }
 .tk__b strong { font-size: 26px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: #121212; text-shadow: 0 1px 0 rgba(255, 255, 255, .5); }
 .tk__b s { text-decoration: none; font: 700 10px/1 var(--font); color: rgba(0, 0, 0, .55); }
-.vx .crate .tn:hover .tk, .vx .crate .tn.on .tk { transform: rotateY(180deg); }
+.vx .crate .tn.on .tk { transform: rotateY(180deg); }
 .vx .crate .tn.on .tk__b { box-shadow: inset 0 0 0 4px rgba(255, 255, 255, .35), inset 0 0 0 5px rgba(0, 0, 0, .45), 0 0 0 3px #C6FF3D, 0 14px 30px rgba(0, 0, 0, .8); }
 .vx .crate .tn > b { position: absolute; left: 50%; top: 118px; bottom: auto; right: auto; transform: translateX(-50%); padding: 3px 8px; border-radius: 5px; background: rgba(11, 13, 6, .85); border: 1px solid rgba(255, 255, 255, .15);
   font: 600 11px/1 var(--font); letter-spacing: 0; color: var(--ink); white-space: nowrap; transition: opacity .3s; }
@@ -993,8 +993,8 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .vx .crate .tn.on::before { inset: -24px; animation-duration: 1.6s; }
 @keyframes tkhalo { to { transform: rotate(360deg); } }
 /* platino: acabado de CD tornasolado */
-.vx .crate .tn[data-i="4"] .tk__f::before, .vx .crate .tn[data-i="4"] .tk__b::before { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: color; opacity: .85;
-  background: conic-gradient(from 20deg, #ff6ad5, #6af0ff, #c6ff3d, #ffe27a, #a07cff, #ff6ad5, #6af0ff, #c6ff3d, #ffe27a, #a07cff, #ff6ad5); }
+.vx .crate .tn[data-i="4"] .tk__f::before, .vx .crate .tn[data-i="4"] .tk__b::before { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: color; opacity: .4;
+  background: conic-gradient(from 20deg, #c9b6ff, #a8e6ff, #e6ffd0, #fff1c4, #c9b6ff, #a8e6ff, #e6ffd0, #fff1c4, #c9b6ff); }
 @media (prefers-reduced-motion: reduce) { .tk { transition: none; } .vx .crate .tn::before { animation: none; } }
 
 /* Pantalla de entrada: un bote de humo tumbado suelta humo verde y sale el logo */

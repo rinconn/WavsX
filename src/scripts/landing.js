@@ -275,7 +275,7 @@ const frame = (t) => {
     else { const n = Math.ceil(g * LY[i][1].length); if (n !== lyN) { lyN = n; lbig.innerHTML = `<span class="r">${LY[i][1].slice(0, n)}</span><span class="car"></span><span class="h">${LY[i][1].slice(n)}</span>`; } }
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
-    if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
+    if (t - lt0 > 5000) { lt0 = t; setV((tlI + 1) % V.length); }
   }
   fT = t;
   requestAnimationFrame(frame);
