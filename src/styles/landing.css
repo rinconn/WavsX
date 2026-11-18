@@ -952,18 +952,18 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .globe { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .vx__art { background: radial-gradient(70% 60% at 50% 100%, rgba(198, 255, 61, .08), transparent 70%), #0a0c07; }
 
-/* Pantalla de entrada: oscuridad, se abren dos ojos de gato y aparece el logo */
-.splash { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; overflow: hidden; background: #010101; cursor: pointer; transition: opacity .8s ease, visibility .8s; animation: wxGone .8s ease 5.2s forwards; }
+/* Pantalla de entrada: un bote de humo tumbado suelta humo verde y sale el logo */
+.splash { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; overflow: hidden; background: #020302; cursor: pointer; transition: opacity .8s ease, visibility .8s; animation: wxGone .8s ease 5.4s forwards; }
 @keyframes wxGone { to { opacity: 0; visibility: hidden; } }
 .splash.is-out { opacity: 0; visibility: hidden; }
-.splash__eyes { position: absolute; left: 50%; top: 50%; width: min(78vw, 640px); translate: -50% -50%; overflow: visible; filter: drop-shadow(0 0 10px rgba(198,255,61,.75)) drop-shadow(0 0 40px rgba(198,255,61,.35)); animation: wxEyesOut .5s ease 2.75s forwards; }
-.splash__eye { transform-box: fill-box; transform-origin: center; transform: scaleY(0); animation: wxOpen .22s cubic-bezier(.2,0,.1,1) .7s forwards, wxBlink .18s ease-in-out 2.1s; }
-.splash__pupil { transform-box: fill-box; transform-origin: center; animation: wxSlit .6s cubic-bezier(.3,0,.2,1) 1.2s forwards; }
-@keyframes wxOpen { to { transform: scaleY(1); } }
-@keyframes wxBlink { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.04); } }
-@keyframes wxSlit { to { transform: scaleX(.6); } }
-@keyframes wxEyesOut { to { opacity: 0; transform: scale(1.15); } }
-.splash__in { position: relative; z-index: 2; width: min(58vmin, 380px); aspect-ratio: 1; transition: transform .8s ease; }
+.splash__can { position: absolute; left: 50%; bottom: 12vh; width: min(30vw, 190px); translate: -80% 0; z-index: 1; opacity: 0; animation: wxCan .5s ease forwards, wxCanOut .8s ease 3s forwards; }
+@keyframes wxCan { from { opacity: 0; } to { opacity: 1; filter: drop-shadow(10px 0 26px rgba(110,200,70,.3)); } }
+@keyframes wxCanOut { to { opacity: .15; } }
+.splash__smoke { position: absolute; inset: 0; z-index: 2; pointer-events: none; filter: url(#wxfog); animation: wxSmokeOut 1.4s ease 3.4s forwards; }
+@keyframes wxSmokeOut { to { opacity: .35; } }
+.splash__smoke i { position: absolute; left: calc(50% + min(30vw, 190px) * .1); bottom: calc(12vh + min(30vw, 190px) * .2); width: 34vmin; aspect-ratio: 1; margin: 0 0 -17vmin -17vmin; border-radius: 50%; background: radial-gradient(closest-side, rgba(88,190,70,.85), rgba(45,130,45,.5) 45%, rgba(20,60,20,.18) 72%, transparent); opacity: 0; transform: scale(.12); animation: wxPuff 3.2s cubic-bezier(.2,.65,.35,1) var(--d) forwards; }
+@keyframes wxPuff { 0% { opacity: 0; transform: translate(0,0) scale(.12) rotate(0); } 8% { opacity: .95; } 70% { opacity: .75; } 100% { opacity: .45; transform: translate(var(--tx), var(--ty)) scale(var(--s)) rotate(var(--r)); } }
+.splash__in { position: relative; z-index: 3; width: min(58vmin, 380px); aspect-ratio: 1; transition: transform .8s ease; }
 .splash.is-out .splash__in { transform: scale(1.05); }
-.splash__logo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; opacity: 0; transform: scale(.9); filter: brightness(.15); animation: wxLogo .9s cubic-bezier(.2,.8,.2,1) 2.95s forwards; }
-@keyframes wxLogo { to { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 40px rgba(198,255,61,.45)); } }
+.splash__logo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; opacity: 0; transform: scale(.92); filter: brightness(.2) blur(6px); animation: wxLogo 1s cubic-bezier(.2,.8,.2,1) 2.5s forwards; }
+@keyframes wxLogo { to { opacity: 1; transform: scale(1); filter: brightness(1) blur(0) drop-shadow(0 0 40px rgba(198,255,61,.45)); } }
