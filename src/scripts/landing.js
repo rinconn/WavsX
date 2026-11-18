@@ -289,9 +289,11 @@ if (spec) requestAnimationFrame(frame);
     const ctx = cv.getContext('2d'), CYC = 12000;
     const chips = $$('.mv__chips i').map((el, n, all) => ({ el, a0: (n / all.length) * 6.283, ring: n % 2 ? 1 : 0.74, sp: n * 1.7 }));
     const subs = $$('.mv__go li'), caps = $$('.mv__cap span');
-    const BX = [[-400, -60], [-250, 120], [270, -90], [410, 70]];
-    const bolts = subs.map(() => ({ t: -1e9, o: [] }));
-    const P = Array.from({ length: 520 }, () => ({ a: Math.random() * 6.283, r: 0.12 + Math.random() * 0.88, s: 0.6 + Math.random() }));
+    const ORB = [3.75, 2.5, 5.65, 0.65];
+    const bolts = subs.map(() => ({ t: -1e9, m: [], br: [], fl: 1, hit: 0, p: [], nx: 0, s0: 0 }));
+    let SP = [];
+    const mid = (A, Bp, off, gens) => { let p = [A, Bp]; for (let g = 0; g < gens; g++) { const n = [p[0]]; for (let i = 1; i < p.length; i++) n.push([(p[i - 1][0] + p[i][0]) / 2, (p[i - 1][1] + p[i][1]) / 2 + (Math.random() * 2 - 1) * off], p[i]); p = n; off *= 0.55; } return p; };
+    const P = Array.from({ length: 760 }, () => ({ a: Math.random() * 6.283, r: 0.12 + Math.random() * 0.88, s: 0.6 + Math.random() }));
     let W = 0, H = 0, run = false, last = 0, T = 0;
     const size = () => {
       const d = Math.min(devicePixelRatio || 1, 2);
@@ -319,20 +321,20 @@ if (spec) requestAnimationFrame(frame);
           for (const p of P) {
             const sn = Math.sin(p.a); if (sn > 0 !== front) continue;
             const b = p.a - 0.06 - pull * 0.1;
-            ctx.globalAlpha = Math.min(1, ho) * (0.12 + (1 - p.r) * 0.7);
-            ctx.strokeStyle = p.r < 0.35 ? '#E6FF94' : p.r < 0.7 ? '#C6FF3D' : '#5BE6B4';
-            ctx.lineWidth = p.s * (0.5 + (1 - p.r));
+            ctx.globalAlpha = Math.min(1, ho) * (0.3 + (1 - p.r) * 0.7);
+            ctx.strokeStyle = p.r < 0.3 ? '#E6FF94' : p.r < 0.8 ? '#C6FF3D' : '#8EF05A';
+            ctx.lineWidth = p.s * (0.7 + (1 - p.r) * 1.2);
             ctx.beginPath(); ctx.moveTo(cx + Math.cos(b) * p.r * Rx, cy + Math.sin(b) * p.r * Ry); ctx.lineTo(cx + Math.cos(p.a) * p.r * Rx, cy + sn * p.r * Ry); ctx.stroke();
           }
         };
-        dots(false);
+        ctx.globalCompositeOperation = 'lighter'; dots(false); ctx.globalCompositeOperation = 'source-over';
         ctx.globalAlpha = 1;
         const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, hr * 2);
         g.addColorStop(0, '#000'); g.addColorStop(0.5, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, hr * 2, 0, 6.283); ctx.fill();
         ctx.globalAlpha = 0.8 * Math.min(1, ho); ctx.strokeStyle = '#E6FF94'; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.arc(cx, cy, hr, 0, 6.283); ctx.stroke();
-        dots(true);
+        ctx.globalCompositeOperation = 'lighter'; dots(true); ctx.globalCompositeOperation = 'source-over';
       }
       /* onda al escupir */
       const sw = seg(ph, 0.535, 0.64);
@@ -350,24 +352,51 @@ if (spec) requestAnimationFrame(frame);
       const cu = seg(ph, 0.54, 0.62);
       cvr.style.opacity = (Math.min(1, cu * 3) * (1 - out)).toFixed(2);
       cvr.style.transform = `scale(${(cu ? back(cu) : 0).toFixed(3)}) rotate(${((1 - eo(cu)) * -14).toFixed(1)}deg)`;
-      /* burbujas de plataformas, unidas por rayos */
-      const br = mob ? 46 : 60;
+      /* pompas de plataformas que orbitan en 3D alrededor de la canción, unidas por rayos vivos */
+      const br = mob ? 46 : 60, ORX = Math.min(W * (mob ? 0.36 : 0.31), 430), ORY = mob ? 170 : 150;
+      ctx.globalCompositeOperation = 'lighter';
       subs.forEach((li, i) => {
-        const L = 0.63 + i * 0.035, u = seg(ph, L, L + 0.06), e = eo(u), [bx, by] = BX[i];
-        const ox = bx * s * e, oy = by * s * e + Math.sin(T * 0.0016 + i * 1.9) * 7 * e, sc = 0.25 + 0.75 * back(u);
-        li.style.opacity = (Math.min(1, u * 4) * (1 - out)).toFixed(2);
-        li.style.transform = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px) scale(${sc.toFixed(3)})`;
+        const L = 0.63 + i * 0.035, u = seg(ph, L, L + 0.07), e = eo(u), B = bolts[i];
+        const a = ORB[i] + (ph - 0.63) * CYC * 0.00005, front = (Math.sin(a) + 1) / 2;
+        const ox = Math.cos(a) * ORX * e, oy = (Math.sin(a) * ORY - 14 + Math.sin(T * 0.0017 + i * 1.9) * 6) * e;
+        const wob = Math.sin(T * 0.005 + i * 2.1) * 0.035, sc = (0.25 + 0.75 * back(u)) * (0.78 + 0.3 * front) * (1 + B.hit * 0.07);
+        li.style.opacity = (Math.min(1, u * 4) * (1 - out) * (0.55 + 0.45 * front)).toFixed(2);
+        li.style.zIndex = front > 0.5 ? 3 : 1;
+        li.style.transform = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px) scale(${(sc * (1 + wob)).toFixed(3)},${(sc * (1 - wob)).toFixed(3)})`;
+        li.style.setProperty('--hit', B.hit.toFixed(2));
+        B.hit = Math.max(0, B.hit - dt / 600);
         if (!u || out >= 1) return;
-        const strike = 1 - seg(ph, L, L + 0.12), b = bolts[i];
-        if (T - b.t > (strike > 0.05 ? 50 : 160)) { b.t = T; b.o = Array.from({ length: 9 }, () => Math.random() * 2 - 1); }
-        const len = Math.hypot(ox, oy) || 1, k = Math.max(0, len - br * sc) / len, nx = -oy / len, ny = ox / len, amp = 3 + strike * 22;
-        const pts = [[cx, cy]];
-        for (let j = 1; j < 10; j++) { const f = (j / 10) * k, o = b.o[j - 1] * amp * Math.sin((j / 10) * Math.PI); pts.push([cx + ox * f + nx * o, cy + oy * f + ny * o]); }
-        pts.push([cx + ox * k, cy + oy * k]);
-        ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 5; ctx.globalAlpha = (1 - out) * (0.06 + strike * 0.2); line(pts);
-        ctx.strokeStyle = '#E6FF94'; ctx.lineWidth = 1.2; ctx.globalAlpha = (1 - out) * (0.35 + strike * 0.6); line(pts);
-        if (strike < 0.3) { const f = ((T * 0.0005 + i * 0.27) % 1) * k; ctx.globalAlpha = (1 - out) * 0.9; ctx.fillStyle = '#E6FF94'; ctx.beginPath(); ctx.arc(cx + ox * f, cy + oy * f, 2.2, 0, 6.283); ctx.fill(); }
+        const len = Math.hypot(ox, oy) || 1, k = Math.max(0, len - br * sc) / len, D = len * k, nx = -oy / len, ny = ox / len;
+        const strike = 1 - seg(ph, L, L + 0.1);
+        if (T - B.t > (strike > 0.1 ? 35 : 55 + Math.random() * 60)) {
+          B.t = T; B.m = mid([0, 0], [1, 0], D * (0.08 + strike * 0.12), 5);
+          B.br = []; for (let q = 0; q < 2 + (strike > 0.1 ? 2 : 0); q++) { const s0 = B.m[6 + ((Math.random() * 18) | 0)], r = 0.12 + Math.random() * 0.25, sd = Math.random() < 0.5 ? -1 : 1; B.br.push(mid(s0, [s0[0] + r, s0[1] + sd * r * D * 0.5], D * 0.05, 3)); }
+          B.fl = Math.random() < 0.12 ? 1.5 : 0.6 + Math.random() * 0.4;
+        }
+        const map = (arr) => arr.map(([f, o]) => [cx + ox * k * f + nx * o, cy + oy * k * f + ny * o]);
+        const M = map(B.m), I = (1 - out) * B.fl * (0.45 + 0.55 * front) * (1 + strike);
+        ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 12; ctx.globalAlpha = 0.05 * I; line(M);
+        ctx.lineWidth = 4; ctx.globalAlpha = 0.16 * I; line(M);
+        ctx.strokeStyle = '#F4FFD8'; ctx.lineWidth = 1.3; ctx.globalAlpha = Math.min(1, 0.8 * I); line(M);
+        ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 0.9; for (const r of B.br) { ctx.globalAlpha = 0.45 * I; line(map(r)); }
+        /* pulsos de energía que viajan hasta la pompa */
+        if (T > B.nx) { B.p.push(0); B.nx = T + 700 + Math.random() * 900; }
+        B.p = B.p.filter((f) => f < 1);
+        B.p.forEach((f, q) => {
+          const nf = f + dt * 0.0017; B.p[q] = nf;
+          const j = Math.min(M.length - 1, Math.floor(nf * (M.length - 1))), [x, y] = M[j];
+          const g = ctx.createRadialGradient(x, y, 0, x, y, 14); g.addColorStop(0, 'rgba(244,255,216,.95)'); g.addColorStop(0.3, 'rgba(198,255,61,.5)'); g.addColorStop(1, 'rgba(198,255,61,0)');
+          ctx.globalAlpha = 1 - out; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 14, 0, 6.283); ctx.fill();
+          if (nf >= 1) { B.hit = 1; for (let z = 0; z < 12; z++) { const an = Math.random() * 6.283, v = 0.08 + Math.random() * 0.2; SP.push({ x: cx + ox * k, y: cy + oy * k, vx: Math.cos(an) * v, vy: Math.sin(an) * v, l: 1 }); } }
+        });
+        if (strike > 0.9 && !B.s0) { B.s0 = 1; B.hit = 1; }
+        if (strike < 0.5) B.s0 = 0;
       });
+      /* chispas al impactar */
+      ctx.strokeStyle = '#E6FF94'; ctx.lineWidth = 1.2;
+      SP = SP.filter((p) => (p.l -= dt / 450) > 0);
+      for (const p of SP) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += dt * 0.0002; ctx.globalAlpha = p.l * (1 - out); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * 30, p.y - p.vy * 30); ctx.stroke(); }
+      ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 1;
       /* rótulos */
       const co = [seg(ph, 0, 0.04) * (1 - seg(ph, 0.3, 0.34)), seg(ph, 0.34, 0.38) * (1 - seg(ph, 0.55, 0.59)), seg(ph, 0.62, 0.67) * (1 - out)];

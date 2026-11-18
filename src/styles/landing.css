@@ -328,7 +328,14 @@ main { overflow-x: clip; }
 .mv__cv b { display: block; margin-top: 14px; font-size: 20px; letter-spacing: -.02em; }
 .mv__cv small { color: var(--muted); font-size: 14px; }
 .mv__go { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.mv__go li { position: absolute; left: 50%; top: 200px; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; display: grid; align-content: center; justify-items: center; gap: 6px; opacity: 0; border: 1.5px solid rgba(198,255,61,.55); background: radial-gradient(circle at 30% 24%, rgba(255,255,255,.3), rgba(255,255,255,.05) 26%, transparent 50%), radial-gradient(circle, rgba(198,255,61,.03) 52%, rgba(198,255,61,.24) 100%); box-shadow: 0 0 34px rgba(198,255,61,.32), inset 0 0 24px rgba(198,255,61,.28); backdrop-filter: blur(2px); }
+@property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.mv__go li { position: absolute; left: 50%; top: 200px; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; display: grid; align-content: center; justify-items: center; gap: 6px; opacity: 0; isolation: isolate; will-change: transform;
+  background: radial-gradient(circle at 70% 80%, rgba(255,255,255,.22) 0 2%, transparent 8%), radial-gradient(circle, rgba(255,255,255,.02) 55%, rgba(230,255,148,.10) 80%, rgba(255,255,255,.22) 97%, transparent 100%);
+  box-shadow: inset 0 -10px 24px rgba(198,255,61,calc(.08 + var(--hit, 0) * .35)), inset 0 8px 18px rgba(255,255,255,.06), 0 22px 40px rgba(0,0,0,.5), 0 0 calc(var(--hit, 0) * 60px) rgba(198,255,61,calc(var(--hit, 0) * .55));
+  backdrop-filter: blur(1.5px) saturate(1.5) brightness(calc(1 + var(--hit, 0) * .5)); }
+.mv__go li::before { content: ''; position: absolute; inset: 0; z-index: -1; border-radius: 50%; pointer-events: none; opacity: .75; mix-blend-mode: screen; background: conic-gradient(from var(--ang), #C6FF3D, #5BE6B4 18%, #9fd8e8 32%, #d6b8f0 46%, #ffe7a3 60%, #E6FF94 76%, #C6FF3D); -webkit-mask: radial-gradient(closest-side, transparent 76%, #000 96%, transparent 100%); mask: radial-gradient(closest-side, transparent 76%, #000 96%, transparent 100%); animation: mvIri 7s linear infinite; }
+.mv__go li::after { content: ''; position: absolute; left: 17%; top: 11%; width: 34%; height: 17%; border-radius: 50%; pointer-events: none; background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,0)); transform: rotate(-38deg); filter: blur(.4px); }
+@keyframes mvIri { to { --ang: 360deg; } }
 .mv__go li:nth-child(1) { --bx: -400px; --by: -60px; } .mv__go li:nth-child(2) { --bx: -250px; --by: 120px; } .mv__go li:nth-child(3) { --bx: 270px; --by: -90px; } .mv__go li:nth-child(4) { --bx: 410px; --by: 70px; }
 .mv__go svg { width: 46px; height: 46px; }
 .mv__go b { font-size: 12px; font-weight: 700; }
