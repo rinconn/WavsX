@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import '../styles/landing.css';
+import fs from 'node:fs';
+const splash = 'data:image/webp;base64,' + fs.readFileSync('src/assets-splash.webp').toString('base64');
 const keeps = [
   ['wav', 'Audio WAV', '24-bit · 48 kHz'],
   ['stems', 'Stems', '12 pistas'],
@@ -13,6 +15,33 @@ const keeps = [
 ];
 ---
 <Base title="WavsX — Tu música, antes de salir" description="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
+<div class="splash" id="splash" aria-hidden="true">
+  <svg width="0" height="0" style="position:absolute"><filter id="wxfog" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency="0.013 0.02" numOctaves="4" seed="3"><animate attributeName="baseFrequency" dur="4s" values="0.013 0.02;0.02 0.012" fill="freeze"/></feTurbulence><feDisplacementMap in="SourceGraphic" scale="120"/></filter></svg>
+  <div class="splash__smoke"><i style="--tx:-1vw;--ty:-87vh;--d:0.35s;--s:1.50;--r:41deg"></i><i style="--tx:-1vw;--ty:-57vh;--d:0.41s;--s:1.35;--r:87deg"></i><i style="--tx:5vw;--ty:-76vh;--d:0.48s;--s:2.18;--r:-50deg"></i><i style="--tx:1vw;--ty:-50vh;--d:0.54s;--s:1.59;--r:-83deg"></i><i style="--tx:7vw;--ty:-86vh;--d:0.61s;--s:2.03;--r:73deg"></i><i style="--tx:-8vw;--ty:-65vh;--d:0.68s;--s:1.65;--r:51deg"></i><i style="--tx:2vw;--ty:-57vh;--d:0.74s;--s:1.57;--r:-17deg"></i><i style="--tx:-12vw;--ty:-87vh;--d:0.80s;--s:1.82;--r:-86deg"></i><i style="--tx:2vw;--ty:-91vh;--d:0.87s;--s:1.28;--r:6deg"></i><i style="--tx:14vw;--ty:-71vh;--d:0.93s;--s:1.52;--r:82deg"></i><i style="--tx:-9vw;--ty:-41vh;--d:1.00s;--s:1.86;--r:-60deg"></i><i style="--tx:-8vw;--ty:-66vh;--d:1.06s;--s:1.98;--r:84deg"></i><i style="--tx:10vw;--ty:-94vh;--d:1.13s;--s:2.43;--r:17deg"></i><i style="--tx:-6vw;--ty:-94vh;--d:1.19s;--s:1.20;--r:61deg"></i><i style="--tx:-9vw;--ty:-62vh;--d:1.26s;--s:2.57;--r:74deg"></i><i style="--tx:-19vw;--ty:-52vh;--d:1.33s;--s:1.61;--r:66deg"></i><i style="--tx:7vw;--ty:-44vh;--d:1.39s;--s:1.53;--r:72deg"></i><i style="--tx:6vw;--ty:-65vh;--d:1.46s;--s:2.73;--r:33deg"></i><i style="--tx:-16vw;--ty:-50vh;--d:1.52s;--s:1.45;--r:-32deg"></i><i style="--tx:-14vw;--ty:-49vh;--d:1.58s;--s:2.21;--r:51deg"></i><i style="--tx:19vw;--ty:-73vh;--d:1.65s;--s:1.87;--r:-64deg"></i><i style="--tx:4vw;--ty:-79vh;--d:1.71s;--s:1.61;--r:62deg"></i><i style="--tx:-28vw;--ty:-94vh;--d:1.78s;--s:1.40;--r:32deg"></i><i style="--tx:-11vw;--ty:-90vh;--d:1.85s;--s:1.53;--r:-86deg"></i><i style="--tx:10vw;--ty:-43vh;--d:1.91s;--s:1.48;--r:4deg"></i><i style="--tx:-7vw;--ty:-48vh;--d:1.98s;--s:1.92;--r:-6deg"></i></div>
+  <svg class="splash__can" viewBox="0 0 60 200">
+    <defs>
+      <linearGradient id="wxBody" x1="0" x2="1"><stop offset="0" stop-color="#050505"/><stop offset=".22" stop-color="#2c2c2c"/><stop offset=".34" stop-color="#151515"/><stop offset=".8" stop-color="#0b0b0b"/><stop offset="1" stop-color="#020202"/></linearGradient>
+      <linearGradient id="wxCap" x1="0" x2="1"><stop offset="0" stop-color="#1a1a1a"/><stop offset=".3" stop-color="#6b6b6b"/><stop offset=".5" stop-color="#2e2e2e"/><stop offset="1" stop-color="#0d0d0d"/></linearGradient>
+    </defs>
+    <ellipse cx="30" cy="197" rx="34" ry="4" fill="#000" opacity=".8"/>
+    <rect x="8" y="30" width="44" height="166" rx="3" fill="url(#wxBody)"/>
+    <rect x="6" y="18" width="48" height="16" rx="3" fill="url(#wxCap)"/>
+    <rect x="12" y="10" width="36" height="10" rx="2" fill="url(#wxCap)"/>
+    <circle cx="50" cy="40" r="11" fill="none" stroke="#8a8a8a" stroke-width="2.4"/>
+    <text x="30" y="120" transform="rotate(-90 30 120)" text-anchor="middle" font-family="Arial Narrow, Arial, sans-serif" font-weight="700" font-size="11" letter-spacing="1" fill="#9BD43A">WAVSX SMOKE</text>
+    <text x="42" y="120" transform="rotate(-90 42 120)" text-anchor="middle" font-family="Arial, sans-serif" font-size="4.5" letter-spacing=".5" fill="#6c6c6c">TOXIC GREEN · 60 S</text>
+  </svg>
+  <div class="splash__in">
+    <img class="splash__logo" src={splash} alt="" width="360" height="360">
+    <span class="splash__eye" style="--ex:43.3%;--ey:33.6%;--rot:18deg"></span>
+    <span class="splash__eye" style="--ex:66.3%;--ey:42.9%;--rot:-8deg"></span>
+  </div>
+</div>
+<script is:inline>
+  (function(){var s=document.getElementById('splash');if(!s)return;
+  function end(){if(!s.isConnected)return;s.classList.add('is-out');setTimeout(function(){s.remove()},800)}
+  s.addEventListener('click',end);setTimeout(end,5200);})();
+</script>
 <header class="nav">
   <a href="/" class="logo" data-logo aria-label="WavsX, inicio">wavsX</a>
   <nav aria-label="Principal" class="nav__links">
