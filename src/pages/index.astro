@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import '../styles/landing.css';
+import fs from 'node:fs';
+const splash = 'data:image/webp;base64,' + fs.readFileSync('src/assets-splash.webp').toString('base64');
 const keeps = [
   ['wav', 'Audio WAV', '24-bit · 48 kHz'],
   ['stems', 'Stems', '12 pistas'],
@@ -13,6 +15,20 @@ const keeps = [
 ];
 ---
 <Base title="WavsX — Tu música, antes de salir" description="El estudio online para artistas: cada canción con sus WAV, stems, portadas, versiones y lanzamiento, en un solo sitio.">
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash__in">
+    <svg class="splash__ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48.5"/></svg>
+    <img class="splash__logo" src={splash} alt="" width="360" height="360">
+  </div>
+</div>
+<script is:inline>
+  (function(){var s=document.getElementById('splash');var seen=false;try{seen=sessionStorage.getItem('wx-splash')}catch(e){}
+  if(seen||matchMedia('(prefers-reduced-motion: reduce)').matches){s.remove();return}
+  try{sessionStorage.setItem('wx-splash','1')}catch(e){}
+  document.documentElement.style.overflow='hidden';
+  function end(){if(!s.isConnected)return;s.classList.add('is-out');document.documentElement.style.overflow='';setTimeout(function(){s.remove()},700)}
+  s.addEventListener('click',end);setTimeout(end,2500);})();
+</script>
 <header class="nav">
   <a href="/" class="logo" data-logo aria-label="WavsX, inicio">wavsX</a>
   <nav aria-label="Principal" class="nav__links">

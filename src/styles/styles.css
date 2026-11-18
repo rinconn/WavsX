@@ -48,7 +48,7 @@ button { cursor: pointer; }
 
 /* logo */
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 20px; letter-spacing: -0.04em; }
-.logo__mark { width: 26px; height: 26px; flex: none; }
+.logo__mark { width: 34px; height: 34px; flex: none; border-radius: 50%; box-shadow: 0 0 14px rgba(198,255,61,.45); }
 
 /* botones */
 .btn {
