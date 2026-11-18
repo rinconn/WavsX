@@ -952,18 +952,16 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .globe { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .vx__art { background: radial-gradient(70% 60% at 50% 100%, rgba(198, 255, 61, .08), transparent 70%), #0a0c07; }
 
-/* Pantalla de entrada: el aro se traza y el gato se enciende como un tubo de neón */
-.splash { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; background: #050604; cursor: pointer; transition: opacity .6s ease, visibility .6s; }
+/* Pantalla de entrada: se encienden los ojos del gato y sube humo tóxico */
+.splash { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; overflow: hidden; background: #040503; cursor: pointer; transition: opacity .7s ease, visibility .7s; }
 .splash.is-out { opacity: 0; visibility: hidden; }
-.splash.is-out .splash__in { transform: scale(1.08); }
-.splash__in { position: relative; width: min(46vmin, 300px); aspect-ratio: 1; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
-.splash__ring { position: absolute; inset: -4%; width: 108%; height: 108%; transform: rotate(-90deg); overflow: visible; }
-.splash__ring circle { fill: none; stroke: #C6FF3D; stroke-width: 1.2; stroke-dasharray: 305; stroke-dashoffset: 305; filter: drop-shadow(0 0 4px #C6FF3D); animation: wxTrace .8s cubic-bezier(.6,0,.2,1) forwards; }
-.splash__logo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; opacity: 0; animation: wxIgnite 1s steps(1) .75s forwards, wxHum 1.6s ease-in-out 1.8s infinite; }
-@keyframes wxTrace { to { stroke-dashoffset: 0; } }
-@keyframes wxIgnite {
-  0% { opacity: .9; filter: brightness(1.6); } 8% { opacity: .05; } 16% { opacity: .7; } 22% { opacity: .1; }
-  34% { opacity: 1; filter: brightness(1.3); } 40% { opacity: .35; } 52% { opacity: 1; filter: brightness(1.1) drop-shadow(0 0 30px rgba(198,255,61,.55)); }
-  100% { opacity: 1; filter: drop-shadow(0 0 30px rgba(198,255,61,.55)); }
-}
-@keyframes wxHum { 50% { filter: drop-shadow(0 0 46px rgba(198,255,61,.75)); } }
+.splash.is-out .splash__in { transform: scale(1.06); filter: blur(4px); }
+.splash__in { position: relative; z-index: 1; width: min(46vmin, 300px); aspect-ratio: 1; transition: transform .7s ease, filter .7s; }
+.splash__logo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; filter: brightness(.08) saturate(0); animation: wxWake .9s cubic-bezier(.3,0,.2,1) .75s forwards; }
+.splash__eye { position: absolute; left: var(--ex); top: var(--ey); width: 7%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle, #fbffe6 0 18%, #C6FF3D 40%, rgba(198,255,61,0) 70%); mix-blend-mode: screen; opacity: 0; animation: wxEye .9s ease-out .25s forwards; }
+.splash__eye + .splash__eye { animation-delay: .32s; }
+.splash__smoke { position: absolute; inset: 0; z-index: 2; pointer-events: none; filter: url(#wxfog); }
+.splash__smoke i { position: absolute; left: var(--x); bottom: -30vmin; width: 60vmin; aspect-ratio: 1; translate: -50% 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(198,255,61,.5), rgba(142,240,90,.2) 45%, transparent 75%); filter: blur(6px); mix-blend-mode: screen; opacity: 0; animation: wxSmoke 2.6s cubic-bezier(.2,.6,.3,1) var(--d) forwards; }
+@keyframes wxEye { 0% { opacity: 0; scale: .3; } 25% { opacity: 1; scale: 3.2; } 60% { scale: 1.3; } 100% { opacity: .9; scale: 1.5; } }
+@keyframes wxWake { to { filter: brightness(1) saturate(1) drop-shadow(0 0 34px rgba(198,255,61,.55)); } }
+@keyframes wxSmoke { 0% { opacity: 0; transform: translateY(0) scale(.4) rotate(0); } 30% { opacity: .75; } 70% { opacity: .45; } 100% { opacity: 0; transform: translateY(-85vh) scale(var(--s)) rotate(var(--r)); } }
