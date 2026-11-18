@@ -284,12 +284,23 @@ if (spec) requestAnimationFrame(frame);
 
 /* ---------- proceso: agujero que se abre, se traga los archivos y escupe la canción ---------- */
 {
-  const cv = $('.mv__dots'), cvr = $('.mv__cv'), sl = $('.mv__sl'), rec = $('.mv__rec'), vy = $('.mv__vy'), tt = $('.mv__tt');
+  const cv = $('.mv__dots'), cvr = $('.mv__cv'), sl = $('.mv__sl'), tt = $('.mv__tt');
   if (cv && cvr) {
     const ctx = cv.getContext('2d'), CYC = 12000;
     const chips = $$('.mv__chips i').map((el, n, all) => ({ el, a0: (n / all.length) * 6.283, ring: n % 2 ? 1 : 0.74, sp: n * 1.7 }));
     const subs = $$('.mv__go li'), caps = $$('.mv__cap span');
     const ORB = [3.75, 2.5, 5.65, 0.65];
+    const DN = 64; let DOTS = null;
+    const img = new Image();
+    img.onload = () => {
+      const oc = document.createElement('canvas'); oc.width = oc.height = DN; const g = oc.getContext('2d'), m = Math.min(img.width, img.height);
+      g.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, DN, DN);
+      try { const px = g.getImageData(0, 0, DN, DN).data; DOTS = [];
+        for (let y = 0; y < DN; y++) for (let x = 0; x < DN; x++) { const k = (y * DN + x) * 4, l = Math.pow((0.3 * px[k] + 0.59 * px[k + 1] + 0.11 * px[k + 2]) / 255, 0.8); if (l < 0.07) continue;
+          const fx = (x + 0.5) / DN, fy = (y + 0.5) / DN; DOTS.push({ fx, fy, l, d: Math.hypot(fx - 0.5, fy - 0.5) / 0.707 * 0.75 + Math.random() * 0.25, a0: (Math.random() < 0.5 ? -1 : 1) * (2 + Math.random() * 2) }); }
+      } catch (e) { DOTS = null; }
+    };
+    img.src = (getComputedStyle(sl).backgroundImage.match(/url\("?(.*?)"?\)/) || [])[1] || '';
     const FS = Array.from({ length: 170 }, (_, i) => { const y = 1 - (2 * (i + 0.5)) / 170, r = Math.sqrt(1 - y * y), th = i * 2.39996; return [Math.cos(th) * r, y, Math.sin(th) * r]; });
     const P = Array.from({ length: 760 }, () => ({ a: Math.random() * 6.283, r: 0.12 + Math.random() * 0.88, s: 0.6 + Math.random() }));
     let W = 0, H = 0, run = false, last = 0, T = 0;
@@ -303,7 +314,7 @@ if (spec) requestAnimationFrame(frame);
     const line = (pts) => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); };
     const draw = (T, dt) => {
       const ph = (T % CYC) / CYC, mob = W < 860, s = mob ? 0.38 : 1;
-      const cx = W / 2, cy = cvr.offsetTop + 125;
+      const S = cvr.offsetWidth, cx = cvr.offsetLeft + S / 2, cy = cvr.offsetTop + S / 2;
       const ho = ph < 0.08 ? eo(ph / 0.08) : ph < 0.52 ? 1 : ph < 0.555 ? 1 + 0.35 * Math.sin(seg(ph, 0.52, 0.555) * Math.PI) : 1 - eo(seg(ph, 0.555, 0.66));
       const pull = seg(ph, 0.3, 0.5) * (1 - seg(ph, 0.52, 0.56)), out = seg(ph, 0.94, 0.99);
       ctx.clearRect(0, 0, W, H);
@@ -346,18 +357,29 @@ if (spec) requestAnimationFrame(frame);
         c.el.style.opacity = (ph > st + 0.09 ? 0 : vin * (u > 0.75 ? (1 - u) / 0.25 : 1)).toFixed(2);
         c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(Math.sin(T * 0.001 + c.sp) * 12 + u * 540).toFixed(1)}deg) scale(${((0.75 + depth * 0.35) * (0.6 + 0.4 * vin) * (1 - u * 0.85)).toFixed(3)})`;
       });
-      /* sale la canción: funda que salta del agujero y el vinilo que se desliza y gira */
-      const cu = seg(ph, 0.54, 0.62), vs = eo(seg(ph, 0.6, 0.7)), base = mob ? 0.66 : 1.22;
-      cvr.style.opacity = (Math.min(1, cu * 3) * (1 - out)).toFixed(2);
-      cvr.style.transform = `perspective(900px) rotateY(${(Math.sin(T * 0.0007) * 7).toFixed(2)}deg) rotateX(${(Math.sin(T * 0.0005 + 1) * 4).toFixed(2)}deg) scale(${((cu ? back(cu) : 0) * base).toFixed(3)}) rotate(${((1 - eo(cu)) * -14).toFixed(1)}deg)`;
-      sl.style.transform = `translateX(${(-62 * vs).toFixed(1)}px)`;
-      rec.style.transform = `translateX(${(70 * vs).toFixed(1)}px)`;
-      vy.style.transform = `rotate(${(T * 0.2) % 360}deg)`;
-      tt.style.opacity = seg(ph, 0.62, 0.68).toFixed(2);
+      /* la canción: las partículas salen del agujero en espiral y dibujan la portada en puntos; un barrido revela la foto */
+      const rv = eo(seg(ph, 0.72, 0.8)), scan = cy - S / 2 + rv * S;
+      if (DOTS && ph > 0.53 && rv < 1) {
+        const cs = S / DN;
+        for (const p of DOTS) {
+          const st = 0.535 + p.d * 0.1, e = eo(seg(ph, st, st + 0.075));
+          if (!e) continue;
+          const dx = (p.fx - 0.5) * S, dy = (p.fy - 0.5) * S, R = Math.hypot(dx, dy) * e, A = Math.atan2(dy, dx) + (1 - e) * p.a0;
+          const x = cx + Math.cos(A) * R, y = cy + Math.sin(A) * R;
+          if (rv > 0 && cy + dy < scan) continue;
+          ctx.globalAlpha = (0.55 + 0.45 * p.l) * (1 - out);
+          ctx.fillStyle = p.l > 0.7 ? '#E6FF94' : p.l > 0.35 ? '#C6FF3D' : '#8EF05A';
+          ctx.beginPath(); ctx.arc(x, y, cs * 0.55 * Math.sqrt(p.l) * (0.5 + 0.5 * e), 0, 6.283); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+      cvr.style.opacity = (rv > 0 ? 1 - out : 0).toFixed(2);
+      cvr.style.clipPath = rv >= 1 ? 'none' : `inset(0 0 ${((1 - rv) * 100).toFixed(1)}% 0)`;
+      tt.style.opacity = (seg(ph, 0.78, 0.84) * (1 - out)).toFixed(2);
       /* plataformas: salen como esfera de puntos girando, se deshace y queda el logo */
       const br = mob ? 46 : 62, ORX = Math.min(W * (mob ? 0.37 : 0.36), 530), ORY = mob ? 205 : 150;
       subs.forEach((li, i) => {
-        const L = 0.62 + i * 0.04, u = seg(ph, L, L + 0.06), e = eo(u), d = seg(ph, L + 0.07, L + 0.14), a = ORB[i];
+        const L = 0.76 + i * 0.02, u = seg(ph, L, L + 0.05), e = eo(u), d = seg(ph, L + 0.055, L + 0.11), a = ORB[i];
         const ox = Math.cos(a) * ORX * e, oy = (Math.sin(a) * ORY - 14) * e + Math.sin(T * 0.0015 + i * 1.9) * 5 * e;
         const lg = eo(d);
         li.style.opacity = (lg * (1 - out)).toFixed(2);
@@ -375,7 +397,7 @@ if (spec) requestAnimationFrame(frame);
       });
       ctx.globalAlpha = 1;
       /* rótulos */
-      const co = [seg(ph, 0, 0.04) * (1 - seg(ph, 0.3, 0.34)), seg(ph, 0.34, 0.38) * (1 - seg(ph, 0.55, 0.59)), seg(ph, 0.62, 0.67) * (1 - out)];
+      const co = [seg(ph, 0, 0.04) * (1 - seg(ph, 0.3, 0.34)), seg(ph, 0.34, 0.38) * (1 - seg(ph, 0.74, 0.78)), seg(ph, 0.78, 0.82) * (1 - out)];
       caps.forEach((el, i) => { el.style.opacity = co[i].toFixed(2); });
     };
     const loop = (t) => { if (!run) return; const dt = Math.min(48, t - last); last = t; T += dt; draw(T, dt); requestAnimationFrame(loop); };
