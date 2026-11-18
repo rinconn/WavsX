@@ -282,54 +282,101 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- proceso: agujero de gusano que absorbe los archivos ---------- */
+/* ---------- proceso: agujero que se abre, se traga los archivos y escupe la canción ---------- */
 {
   const cv = $('.mv__dots'), cvr = $('.mv__cv');
   if (cv && cvr) {
-    const ctx = cv.getContext('2d');
-    const chips = $$('.mv__chips i').map((el, n) => ({
-      el, a: Math.random() * 6.28, rx: 110 + Math.random() * 360, ry: 50 + Math.random() * 120,
-      w: (0.00016 + Math.random() * 0.0002) * (n % 2 ? 1 : -1), sp: Math.random() * 3
-    }));
-    const P = Array.from({ length: 1000 }, () => ({ a: Math.random() * 6.28, r: 0.05 + Math.random() * 0.95, s: 0.5 + Math.random() * 1.2 }));
-    let W = 0, H = 0, run = false, last = 0, bg = '9,9,11';
+    const ctx = cv.getContext('2d'), CYC = 12000;
+    const chips = $$('.mv__chips i').map((el, n, all) => ({ el, a0: (n / all.length) * 6.283, ring: n % 2 ? 1 : 0.74, sp: n * 1.7 }));
+    const subs = $$('.mv__go li'), caps = $$('.mv__cap span');
+    const BX = [[-400, -60], [-250, 120], [270, -90], [410, 70]];
+    const bolts = subs.map(() => ({ t: -1e9, o: [] }));
+    const P = Array.from({ length: 520 }, () => ({ a: Math.random() * 6.283, r: 0.12 + Math.random() * 0.88, s: 0.6 + Math.random() }));
+    let W = 0, H = 0, run = false, last = 0, T = 0;
     const size = () => {
       const d = Math.min(devicePixelRatio || 1, 2);
       W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-      bg = getComputedStyle(document.body).backgroundColor.replace('rgb(', '').replace(')', '');
-      ctx.fillStyle = `rgb(${bg})`; ctx.fillRect(0, 0, W, H);
     };
-    const ease = (x) => x * x * (3 - 2 * x);
-    const draw = (t, dt) => {
-      const ph = (t % 10000) / 10000;
-      const k = ph < 0.3 ? 0 : ph < 0.46 ? ease((ph - 0.3) / 0.16) : ph < 0.56 ? 1 - (ph - 0.46) / 0.1 : 0;
-      const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
-      const Rx = W * 0.62, Ry = Rx * 0.5;
-      ctx.fillStyle = `rgba(${bg},.24)`; ctx.fillRect(0, 0, W, H);
-      for (const p of P) {
-        p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
-        p.r -= dt * (0.000014 + 0.00002 * (1 - p.r)) * (1 + k * 7);
-        if (p.r < 0.05) { p.r = 1; p.a = Math.random() * 6.28; }
-        const x = cx + Math.cos(p.a) * p.r * Rx, y = cy + Math.sin(p.a) * p.r * Ry;
-        ctx.globalAlpha = Math.min(1, 0.2 + (1 - p.r) * 0.65 + k * 0.25);
-        ctx.fillStyle = p.r < 0.3 ? '#E6FF94' : p.r < 0.65 ? '#C6FF3D' : '#5BE6B4';
-        ctx.beginPath(); ctx.arc(x, y, (0.5 + (1 - p.r) * 1.2) * p.s, 0, 6.2832); ctx.fill();
+    const cl = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), seg = (ph, a, b) => cl((ph - a) / (b - a));
+    const eo = (x) => 1 - (1 - x) ** 3, ei = (x) => x * x * x;
+    const back = (x) => 1 + 2.7 * (x - 1) ** 3 + 1.7 * (x - 1) ** 2;
+    const line = (pts) => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); };
+    const draw = (T, dt) => {
+      const ph = (T % CYC) / CYC, mob = W < 860, s = mob ? 0.38 : 1;
+      const cx = W / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
+      const ho = ph < 0.08 ? eo(ph / 0.08) : ph < 0.52 ? 1 : ph < 0.555 ? 1 + 0.35 * Math.sin(seg(ph, 0.52, 0.555) * Math.PI) : 1 - eo(seg(ph, 0.555, 0.66));
+      const pull = seg(ph, 0.3, 0.5) * (1 - seg(ph, 0.52, 0.56)), out = seg(ph, 0.94, 0.99);
+      ctx.clearRect(0, 0, W, H);
+      /* disco de partículas y agujero */
+      if (ho > 0.01) {
+        const Rx = Math.min(W * 0.42, 470) * ho, Ry = Rx * 0.34, hr = (mob ? 24 : 34) * ho;
+        for (const p of P) {
+          p.a += dt * 0.0005 / (p.r + 0.15) * (1 + pull * 3);
+          p.r -= dt * 0.00003 * (1 + pull * 7);
+          if (p.r < 0.1) { p.r = 1; p.a = Math.random() * 6.283; }
+        }
+        const dots = (front) => {
+          for (const p of P) {
+            const sn = Math.sin(p.a); if (sn > 0 !== front) continue;
+            const b = p.a - 0.06 - pull * 0.1;
+            ctx.globalAlpha = Math.min(1, ho) * (0.12 + (1 - p.r) * 0.7);
+            ctx.strokeStyle = p.r < 0.35 ? '#E6FF94' : p.r < 0.7 ? '#C6FF3D' : '#5BE6B4';
+            ctx.lineWidth = p.s * (0.5 + (1 - p.r));
+            ctx.beginPath(); ctx.moveTo(cx + Math.cos(b) * p.r * Rx, cy + Math.sin(b) * p.r * Ry); ctx.lineTo(cx + Math.cos(p.a) * p.r * Rx, cy + sn * p.r * Ry); ctx.stroke();
+          }
+        };
+        dots(false);
+        ctx.globalAlpha = 1;
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, hr * 2);
+        g.addColorStop(0, '#000'); g.addColorStop(0.5, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, hr * 2, 0, 6.283); ctx.fill();
+        ctx.globalAlpha = 0.8 * Math.min(1, ho); ctx.strokeStyle = '#E6FF94'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(cx, cy, hr, 0, 6.283); ctx.stroke();
+        dots(true);
       }
+      /* onda al escupir */
+      const sw = seg(ph, 0.535, 0.64);
+      if (sw > 0 && sw < 1) { const R = 40 + eo(sw) * W * 0.4; ctx.globalAlpha = (1 - sw) * 0.6; ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 0.5 + 2 * (1 - sw); ctx.beginPath(); ctx.ellipse(cx, cy, R, R * 0.45, 0, 0, 6.283); ctx.stroke(); }
+      /* archivos: flotan en órbita y entran en espiral uno detrás de otro */
+      const Rc = Math.min(W * 0.4, 440), Ryc = Math.min(H * 0.34, 140), rot = T * 0.00012, vin = seg(ph, 0.03, 0.11);
+      chips.forEach((c, n) => {
+        const st = 0.3 + n * 0.011, u = ei(seg(ph, st, st + 0.09)), a = c.a0 + rot + u * 4.5, r = c.ring * (1 - u);
+        const x = cx + Math.cos(a) * r * Rc, y = cy + Math.sin(a) * r * Ryc + Math.sin(T * 0.0013 + c.sp) * 8 * (1 - u);
+        const depth = (Math.sin(a) + 1) / 2;
+        c.el.style.opacity = (ph > st + 0.09 ? 0 : vin * (u > 0.75 ? (1 - u) / 0.25 : 1)).toFixed(2);
+        c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(Math.sin(T * 0.001 + c.sp) * 12 + u * 540).toFixed(1)}deg) scale(${((0.75 + depth * 0.35) * (0.6 + 0.4 * vin) * (1 - u * 0.85)).toFixed(3)})`;
+      });
+      /* sale la canción */
+      const cu = seg(ph, 0.54, 0.62);
+      cvr.style.opacity = (Math.min(1, cu * 3) * (1 - out)).toFixed(2);
+      cvr.style.transform = `scale(${(cu ? back(cu) : 0).toFixed(3)}) rotate(${((1 - eo(cu)) * -14).toFixed(1)}deg)`;
+      /* burbujas de plataformas, unidas por rayos */
+      const br = mob ? 46 : 60;
+      subs.forEach((li, i) => {
+        const L = 0.63 + i * 0.035, u = seg(ph, L, L + 0.06), e = eo(u), [bx, by] = BX[i];
+        const ox = bx * s * e, oy = by * s * e + Math.sin(T * 0.0016 + i * 1.9) * 7 * e, sc = 0.25 + 0.75 * back(u);
+        li.style.opacity = (Math.min(1, u * 4) * (1 - out)).toFixed(2);
+        li.style.transform = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px) scale(${sc.toFixed(3)})`;
+        if (!u || out >= 1) return;
+        const strike = 1 - seg(ph, L, L + 0.12), b = bolts[i];
+        if (T - b.t > (strike > 0.05 ? 50 : 160)) { b.t = T; b.o = Array.from({ length: 9 }, () => Math.random() * 2 - 1); }
+        const len = Math.hypot(ox, oy) || 1, k = Math.max(0, len - br * sc) / len, nx = -oy / len, ny = ox / len, amp = 3 + strike * 22;
+        const pts = [[cx, cy]];
+        for (let j = 1; j < 10; j++) { const f = (j / 10) * k, o = b.o[j - 1] * amp * Math.sin((j / 10) * Math.PI); pts.push([cx + ox * f + nx * o, cy + oy * f + ny * o]); }
+        pts.push([cx + ox * k, cy + oy * k]);
+        ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 5; ctx.globalAlpha = (1 - out) * (0.06 + strike * 0.2); line(pts);
+        ctx.strokeStyle = '#E6FF94'; ctx.lineWidth = 1.2; ctx.globalAlpha = (1 - out) * (0.35 + strike * 0.6); line(pts);
+        if (strike < 0.3) { const f = ((T * 0.0005 + i * 0.27) % 1) * k; ctx.globalAlpha = (1 - out) * 0.9; ctx.fillStyle = '#E6FF94'; ctx.beginPath(); ctx.arc(cx + ox * f, cy + oy * f, 2.2, 0, 6.283); ctx.fill(); }
+      });
       ctx.globalAlpha = 1;
-      const sc = Math.min(1.7, W / 1000);
-      for (const c of chips) {
-        c.a += dt * c.w * (1 + k * 14);
-        const rr = 1 - k, wob = Math.sin(t * 0.0012 + c.sp) * 10;
-        const x = cx + Math.cos(c.a) * c.rx * sc * rr, y = cy + Math.sin(c.a) * c.ry * rr + wob * rr;
-        const depth = (Math.sin(c.a) + 1) / 2, vis = ph < 0.03 ? ph / 0.03 : ph < 0.44 ? 1 : ph < 0.47 ? 1 - (ph - 0.44) / 0.03 : 0;
-        c.el.style.opacity = vis.toFixed(2);
-        c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(c.a * 40 + Math.sin(t * 0.001 + c.sp) * 25).toFixed(1)}deg) scale(${((0.7 + depth * 0.5) * (1 - k * 0.8)).toFixed(2)})`;
-      }
+      /* rótulos */
+      const co = [seg(ph, 0, 0.04) * (1 - seg(ph, 0.3, 0.34)), seg(ph, 0.34, 0.38) * (1 - seg(ph, 0.55, 0.59)), seg(ph, 0.62, 0.67) * (1 - out)];
+      caps.forEach((el, i) => { el.style.opacity = co[i].toFixed(2); });
     };
-    const loop = (t) => { if (!run) return; draw(t, Math.min(48, t - last)); last = t; requestAnimationFrame(loop); };
+    const loop = (t) => { if (!run) return; const dt = Math.min(48, t - last); last = t; T += dt; draw(T, dt); requestAnimationFrame(loop); };
     size(); addEventListener('resize', size);
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { for (let i = 0; i < 40; i++) draw(4800, 32); }
-    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) { last = performance.now(); requestAnimationFrame(loop); } }).observe(cv);
+    if (still) draw(CYC * 0.86, 0);
+    else new IntersectionObserver(([e]) => { const was = run; run = e.isIntersecting; if (run && !was) { T = 0; last = performance.now(); requestAnimationFrame(loop); } }).observe(cv);
   }
 }
 
