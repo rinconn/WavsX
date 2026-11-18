@@ -399,30 +399,4 @@ document.addEventListener('click', (e) => {
 
 
 
-/* versiones: motas de polvo flotando dentro del haz de luz */
-(() => {
-  const cv = $('.dust'); if (!cv) return;
-  const g = cv.getContext('2d'), P = Array.from({ length: 70 }, () => ({}));
-  let W = 0, H = 0, dpr = 1, vis = false, raf = 0, last = 0, seeded = false;
-  const inBeam = (y) => W * 0.31 + Math.tan(0.42) * y;   // centro del haz inclinado
-  const spawn = (p) => { p.y = Math.random() * H; p.x = inBeam(p.y) + (Math.random() - 0.5) * W * 0.32; p.s = 0.6 + Math.random() * 1.1; p.vx = (Math.random() - 0.5) * 3; p.vy = (Math.random() - 0.4) * 3; p.ph = Math.random() * 6.28; };
-  const size = () => { dpr = Math.min(1.5, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; };
-  const seed = () => { if (!seeded && W) { seeded = true; P.forEach(spawn); } };
-  const frame = (dt, t) => {
-    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H); g.fillStyle = '#F2F8E4';
-    for (const p of P) {
-      p.x += (p.vx + Math.sin(t * 0.0004 + p.ph) * 2) * dt; p.y += (p.vy + Math.cos(t * 0.0003 + p.ph) * 1.5) * dt;
-      const d = Math.abs(p.x - inBeam(p.y)) / (W * 0.16);           // solo se ven dentro de la luz
-      if (d > 1.3 || p.y < -5 || p.y > H + 5) { spawn(p); continue; }
-      g.globalAlpha = Math.max(0, 1 - d) * (0.45 + 0.25 * Math.sin(t * 0.001 + p.ph)) * (1 - p.y / H * 0.6);
-      g.fillRect(p.x, p.y, p.s, p.s);
-    }
-    g.globalAlpha = 1;
-  };
-  const loop = (t) => { raf = 0; if (!vis) return; const dt = Math.min(0.05, (t - (last || t)) / 1000); last = t; frame(dt, t); raf = requestAnimationFrame(loop); };
-  const start = () => { if (still) { frame(0, 0); return; } if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
-  addEventListener('resize', size);
-  const art = cv.parentElement;
-  new IntersectionObserver((es) => { vis = es[0].isIntersecting && cv.offsetParent !== null; if (vis) { size(); seed(); start(); } }, { threshold: 0.05 }).observe(art);
-  new MutationObserver(() => { if (cv.offsetParent !== null) { vis = true; size(); seed(); start(); } else vis = false; }).observe(cv.closest('.pane'), { attributes: true, attributeFilter: ['class'] });
-})();
+

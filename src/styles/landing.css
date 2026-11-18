@@ -952,17 +952,7 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .globe { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .vx__art { background: #0a0c07; }
 
-/* versiones: luz de ventana entrando en diagonal por la neblina del estudio (solo CSS) */
-.vx__art { background: linear-gradient(180deg, #0b0d08, #070805); }
-.rays { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.rays i { position: absolute; left: 8%; top: -40%; width: 46%; height: 190%; transform-origin: 50% 0; transform: rotate(-24deg); will-change: opacity;
-  background: linear-gradient(90deg, transparent, rgba(230, 255, 190, .1) 18%, rgba(240, 255, 210, .19) 50%, rgba(230, 255, 190, .1) 82%, transparent);
-  -webkit-mask: linear-gradient(#000 20%, rgba(0,0,0,.5) 70%, transparent 95%); mask: linear-gradient(#000 20%, rgba(0,0,0,.5) 70%, transparent 95%);
-  filter: blur(14px); animation: rbr 7s ease-in-out infinite alternate; }
-.rays i + i { left: 30%; width: 14%; background: linear-gradient(90deg, transparent, rgba(240, 255, 210, .1), transparent); animation-duration: 5s; animation-delay: -2s; }
-.rays b { display: none; }
-@keyframes rbr { from { opacity: .7; } to { opacity: 1; } }
-.pool { position: absolute; left: 50%; bottom: 14px; width: 420px; height: 60px; margin-left: -150px; z-index: 1; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(240, 255, 210, .12), transparent); }
-.dust { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { .rays i { animation: none; } }
+/* versiones: foto real de estudio, desenfocada y oscura, detrás de la carpeta (Unsplash) */
+.vx__art { background: #070805; }
+.vx__ph { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(70% 80% at 50% 60%, rgba(7, 8, 5, .25), rgba(7, 8, 5, .85)), linear-gradient(transparent 55%, rgba(7, 8, 5, .9)), url(/covers/estudio.jpg) center 35% / cover; }
