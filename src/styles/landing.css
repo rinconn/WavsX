@@ -952,26 +952,22 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .globe { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .vx__art { background: radial-gradient(70% 60% at 50% 100%, rgba(198, 255, 61, .08), transparent 70%), #0a0c07; }
 
-/* Pantalla de entrada: cae una bomba de humo, el humo tóxico lo llena todo, se encienden unos ojos, destello y sale el logo */
-.splash { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; overflow: hidden; background: #030402; cursor: pointer; transition: opacity .7s ease, visibility .7s; animation: wxGone .7s ease 5.2s forwards; }
+/* Pantalla de entrada: un bote de humo suelta humo verde, todo se apaga, se abren dos ojos en la oscuridad y aparece el logo */
+.splash { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; overflow: hidden; background: #020302; cursor: pointer; transition: opacity .8s ease, visibility .8s; animation: wxGone .8s ease 6s forwards; }
 @keyframes wxGone { to { opacity: 0; visibility: hidden; } }
 .splash.is-out { opacity: 0; visibility: hidden; }
-.splash.is-out .splash__in { transform: scale(1.08); }
-.splash__bomb { position: absolute; left: 50%; top: 66%; width: 34px; translate: -50% -50%; z-index: 1; animation: wxDrop .7s cubic-bezier(.5,0,.75,0) forwards, wxBounce .35s ease-out .7s, wxBombOut .5s ease 2.6s forwards; transform: translateY(-80vh) rotate(-30deg); }
-.splash__spark { fill: #fbffe6; filter: drop-shadow(0 0 4px #C6FF3D); opacity: 0; animation: wxSpark .12s steps(2) .75s 12; }
-@keyframes wxDrop { to { transform: translateY(0) rotate(78deg); } }
-@keyframes wxBounce { 0% { transform: translateY(0) rotate(78deg); } 40% { transform: translateY(-18px) rotate(96deg); } 100% { transform: translateY(0) rotate(90deg); } }
-@keyframes wxBombOut { from { transform: rotate(90deg); } to { transform: rotate(90deg); opacity: 0; } }
-@keyframes wxSpark { 50% { opacity: 1; } }
+.splash::before { content: ""; position: absolute; inset: 0; z-index: 4; background: #020302; opacity: 0; pointer-events: none; animation: wxDark .9s ease 2.2s forwards; }
+@keyframes wxDark { to { opacity: 1; } }
+.splash__can { position: absolute; left: 50%; bottom: 8vh; height: min(34vh, 230px); translate: -50% 0; z-index: 1; opacity: 0; filter: brightness(.6); animation: wxCan .5s ease forwards; }
+@keyframes wxCan { to { opacity: 1; filter: brightness(1) drop-shadow(-6px 0 20px rgba(110,200,70,.25)); } }
 .splash__smoke { position: absolute; inset: 0; z-index: 2; pointer-events: none; filter: url(#wxfog); }
-.splash__smoke i { position: absolute; left: 50%; top: 66%; width: 46vmin; aspect-ratio: 1; margin: -23vmin 0 0 -23vmin; border-radius: 50%; background: radial-gradient(closest-side, rgba(150,215,50,.7), rgba(90,150,30,.35) 45%, rgba(40,70,15,.12) 70%, transparent); filter: blur(5px); opacity: 0; transform: scale(.1); animation: wxPuff 3.4s cubic-bezier(.15,.7,.3,1) var(--d) forwards; }
-@keyframes wxPuff { 0% { opacity: 0; transform: translate(0,0) scale(.1) rotate(0); } 12% { opacity: .95; } 75% { opacity: .8; } 100% { opacity: .55; transform: translate(var(--tx), var(--ty)) scale(var(--s)) rotate(var(--r)); } }
-.splash__in { position: relative; z-index: 3; width: min(58vmin, 380px); aspect-ratio: 1; transition: transform .7s ease; }
-.splash__logo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; opacity: 0; transform: scale(.75); filter: brightness(2.2); animation: wxLogo .45s cubic-bezier(.2,1.4,.4,1) 3.05s forwards; }
-@keyframes wxLogo { to { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 40px rgba(198,255,61,.6)); } }
-.splash__eye { position: absolute; left: var(--ex); top: var(--ey); width: 6%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle, #fbffe6 0 20%, #C6FF3D 42%, rgba(198,255,61,0) 72%); opacity: 0; animation: wxEye .5s ease-out 1.75s forwards, wxEyeOut .4s ease 3.4s forwards; }
-.splash__eye--r { animation-delay: 1.85s, 3.4s; }
-@keyframes wxEye { 0% { opacity: 0; scale: .2; } 30% { opacity: 1; scale: 2.4; } 100% { opacity: 1; scale: 1.4; } }
-@keyframes wxEyeOut { to { opacity: 0; } }
-.splash__flare { position: absolute; left: 50%; top: 50%; width: 900%; height: 900%; translate: -50% -50%; background: linear-gradient(90deg, transparent, #fbffe6 50%, transparent) center / 100% 6% no-repeat, linear-gradient(0deg, transparent, #fbffe6 50%, transparent) center / 6% 60% no-repeat, radial-gradient(circle, rgba(251,255,230,.95), rgba(198,255,61,.5) 14%, transparent 34%); opacity: 0; scale: 0; rotate: 20deg; animation: wxFlare .5s ease-out 2.6s forwards; }
-@keyframes wxFlare { 0% { opacity: 0; scale: 0; } 35% { opacity: 1; scale: 1.6; rotate: 45deg; } 100% { opacity: 0; scale: .4; rotate: 70deg; } }
+.splash__smoke i { position: absolute; left: 50%; bottom: calc(8vh + min(34vh, 230px) - 2vh); width: 40vmin; aspect-ratio: 1; margin: 0 0 -20vmin -20vmin; border-radius: 50%; background: radial-gradient(closest-side, rgba(88,190,70,.85), rgba(45,130,45,.5) 45%, rgba(20,60,20,.18) 72%, transparent); opacity: 0; transform: scale(.15); animation: wxPuff 3s cubic-bezier(.25,.6,.35,1) var(--d) forwards; }
+@keyframes wxPuff { 0% { opacity: 0; transform: translate(0,0) scale(.15) rotate(0); } 10% { opacity: .95; } 70% { opacity: .75; } 100% { opacity: .4; transform: translate(var(--tx), var(--ty)) scale(var(--s)) rotate(var(--r)); } }
+.splash__in { position: relative; z-index: 5; width: min(58vmin, 380px); aspect-ratio: 1; transition: transform .8s ease; }
+.splash.is-out .splash__in { transform: scale(1.05); }
+.splash__logo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; opacity: 0; filter: brightness(.2); animation: wxLogo 1.1s ease 4.1s forwards; }
+@keyframes wxLogo { to { opacity: 1; filter: brightness(1) drop-shadow(0 0 40px rgba(198,255,61,.45)); } }
+.splash__eye { position: absolute; left: var(--ex); top: var(--ey); width: 8.5%; height: 4.2%; translate: -50% -50%; rotate: var(--rot); border-radius: 50%; background: radial-gradient(closest-side, #f6ffd8, #C6FF3D 55%, rgba(198,255,61,0)); box-shadow: 0 0 18px 6px rgba(198,255,61,.45); transform: scaleY(0); opacity: 0; animation: wxOpen .35s cubic-bezier(.3,0,.2,1) 3s forwards, wxBlink .22s ease 3.9s, wxEyeOut .8s ease 4.6s forwards; }
+@keyframes wxOpen { to { transform: scaleY(1); opacity: 1; } }
+@keyframes wxBlink { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.05); } }
+@keyframes wxEyeOut { from { transform: scaleY(1); opacity: 1; } to { transform: scaleY(1); opacity: 0; } }
