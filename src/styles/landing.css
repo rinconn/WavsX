@@ -957,12 +957,26 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .vx__ph { position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background: radial-gradient(70% 80% at 50% 60%, rgba(7, 8, 5, .25), rgba(7, 8, 5, .85)), linear-gradient(transparent 55%, rgba(7, 8, 5, .9)), url(/covers/estudio.jpg) center 35% / cover; }
 
-/* versiones: cada versión es una "toma", la ficha propia de WavsX con el gato del logo */
-.vx .crate .tn, .vx .crate .tn.on { width: 96px; height: 96px; border-radius: 50%; border: 0; padding: 0; backdrop-filter: none; -webkit-mask: none; mask: none;
-  background: #000 url(/covers/toma.jpg) center / 104% 104%; box-shadow: 0 0 0 1px #000, 0 12px 22px rgba(0, 0, 0, .75); filter: saturate(.35) brightness(.7); transition: filter .3s, transform .5s cubic-bezier(.2, .8, .2, 1); }
-.vx .crate .tn:hover, .vx .crate .tn.on { filter: none; }
-.vx .crate .tn.on { box-shadow: 0 0 0 1px #000, 0 0 26px rgba(198, 255, 61, .45), 0 14px 26px rgba(0, 0, 0, .7); }
-.vx .crate .tn::before, .vx .crate .tn::after, .vx .crate .tn[data-i="4"]::after, .vx .crate .tn i, .vx .crate .tn em, .vx .crate .tn small { display: none; }
-.vx .crate .tn b { position: absolute; left: 50%; bottom: -9px; top: auto; right: auto; transform: translateX(-50%); padding: 3px 8px; border-radius: 5px; background: #0B0D06; border: 1px solid #C6FF3D;
-  font: 800 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .06em; color: #C6FF3D; white-space: nowrap; }
-.vx .crate .tn.on b { background: #C6FF3D; color: #0B0D06; }
+/* versiones: cada versión es una "toma", moneda propia de WavsX. Cara: el gato con aro del color de su fase.
+   Cruz: los datos de esa versión. Gira al pasar el ratón y en la seleccionada. */
+.vx .crate .tn, .vx .crate .tn.on { width: 96px; height: 96px; border-radius: 50%; border: 0; padding: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-mask: none; mask: none; overflow: visible; }
+.vx .crate .tn::before, .vx .crate .tn::after, .vx .crate .tn[data-i="4"]::after, .vx .crate .tn > i, .vx .crate .tn > em { display: none; }
+.vx .crate .tn[data-i="0"] { --rc: #8C879A; } .vx .crate .tn[data-i="1"] { --rc: #5BE6B4; } .vx .crate .tn[data-i="2"] { --rc: #E6FF94; } .vx .crate .tn[data-i="3"] { --rc: #8EF05A; } .vx .crate .tn[data-i="4"] { --rc: #C6FF3D; }
+.tk { position: absolute; inset: 0; border-radius: 50%; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+.tk__f, .tk__b { position: absolute; inset: 0; border-radius: 50%; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: 0 0 0 3px var(--rc), 0 0 0 4px #000, 0 12px 22px rgba(0, 0, 0, .75); }
+.tk__f { background: #000 url(/covers/toma.jpg) center / 104% 104%; }
+.tk__f::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: rgba(5, 6, 3, .45); transition: opacity .3s; }
+.tk__b { transform: rotateY(180deg); display: grid; place-content: center; justify-items: center; gap: 2px; text-align: center;
+  background: radial-gradient(circle closest-side, #1a1f0f 0 74%, #0b0d06 75% 78%, transparent 79%), repeating-conic-gradient(var(--rc) 0 3deg, #10130a 3deg 6deg); }
+.tk__b u { text-decoration: none; font: 700 8px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; text-transform: uppercase; color: var(--rc); }
+.tk__b strong { font-size: 22px; font-weight: 800; letter-spacing: -.04em; line-height: 1.05; color: #fff; }
+.tk__b s { text-decoration: none; font: 600 9px/1 ui-monospace, Menlo, monospace; color: rgba(255, 255, 255, .6); }
+.vx .crate .tn:hover .tk, .vx .crate .tn.on .tk { transform: rotateY(180deg); }
+.vx .crate .tn.on .tk__b { box-shadow: 0 0 0 3px var(--rc), 0 0 0 4px #000, 0 0 28px rgba(198, 255, 61, .4), 0 14px 26px rgba(0, 0, 0, .7); }
+.vx .crate .tn > b { position: absolute; left: 50%; top: 106px; bottom: auto; right: auto; transform: translateX(-50%); padding: 3px 7px; border-radius: 5px; background: #0B0D06; border: 1px solid var(--rc);
+  font: 700 10px/1 ui-monospace, Menlo, monospace; letter-spacing: 0; color: var(--rc); white-space: nowrap; transition: opacity .3s; }
+.vx .crate .tn.on > b { background: var(--rc); color: #0B0D06; }
+.vx .crate .tn > small { display: none; }
+.vx .crate:not(.open) .tn > b, .vx .crate:not(.open) .tn > small { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .tk { transition: none; } }
