@@ -290,9 +290,7 @@ if (spec) requestAnimationFrame(frame);
     const chips = $$('.mv__chips i').map((el, n, all) => ({ el, a0: (n / all.length) * 6.283, ring: n % 2 ? 1 : 0.74, sp: n * 1.7 }));
     const subs = $$('.mv__go li'), caps = $$('.mv__cap span');
     const ORB = [3.75, 2.5, 5.65, 0.65];
-    const bolts = subs.map(() => ({ t: -1e9, m: [], br: [], fl: 1, hit: 0, p: [], nx: 0, s0: 0 }));
-    let SP = [];
-    const mid = (A, Bp, off, gens) => { let p = [A, Bp]; for (let g = 0; g < gens; g++) { const n = [p[0]]; for (let i = 1; i < p.length; i++) n.push([(p[i - 1][0] + p[i][0]) / 2, (p[i - 1][1] + p[i][1]) / 2 + (Math.random() * 2 - 1) * off], p[i]); p = n; off *= 0.55; } return p; };
+    const FS = Array.from({ length: 170 }, (_, i) => { const y = 1 - (2 * (i + 0.5)) / 170, r = Math.sqrt(1 - y * y), th = i * 2.39996; return [Math.cos(th) * r, y, Math.sin(th) * r]; });
     const P = Array.from({ length: 760 }, () => ({ a: Math.random() * 6.283, r: 0.12 + Math.random() * 0.88, s: 0.6 + Math.random() }));
     let W = 0, H = 0, run = false, last = 0, T = 0;
     const size = () => {
@@ -352,51 +350,25 @@ if (spec) requestAnimationFrame(frame);
       const cu = seg(ph, 0.54, 0.62);
       cvr.style.opacity = (Math.min(1, cu * 3) * (1 - out)).toFixed(2);
       cvr.style.transform = `scale(${(cu ? back(cu) : 0).toFixed(3)}) rotate(${((1 - eo(cu)) * -14).toFixed(1)}deg)`;
-      /* pompas de plataformas que orbitan en 3D alrededor de la canción, unidas por rayos vivos */
-      const br = mob ? 46 : 60, ORX = Math.min(W * (mob ? 0.36 : 0.31), 430), ORY = mob ? 170 : 150;
-      ctx.globalCompositeOperation = 'lighter';
+      /* plataformas: salen como esfera de puntos girando, se deshace y queda el logo */
+      const br = mob ? 46 : 62, ORX = Math.min(W * (mob ? 0.36 : 0.31), 430), ORY = mob ? 170 : 150;
       subs.forEach((li, i) => {
-        const L = 0.63 + i * 0.035, u = seg(ph, L, L + 0.07), e = eo(u), B = bolts[i];
-        const a = ORB[i] + (ph - 0.63) * CYC * 0.00005, front = (Math.sin(a) + 1) / 2;
-        const ox = Math.cos(a) * ORX * e, oy = (Math.sin(a) * ORY - 14 + Math.sin(T * 0.0017 + i * 1.9) * 6) * e;
-        const wob = Math.sin(T * 0.005 + i * 2.1) * 0.035, sc = (0.25 + 0.75 * back(u)) * (0.78 + 0.3 * front) * (1 + B.hit * 0.07);
-        li.style.opacity = (Math.min(1, u * 4) * (1 - out) * (0.55 + 0.45 * front)).toFixed(2);
-        li.style.zIndex = front > 0.5 ? 3 : 1;
-        li.style.transform = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px) scale(${(sc * (1 + wob)).toFixed(3)},${(sc * (1 - wob)).toFixed(3)})`;
-        li.style.setProperty('--hit', B.hit.toFixed(2));
-        B.hit = Math.max(0, B.hit - dt / 600);
-        if (!u || out >= 1) return;
-        const len = Math.hypot(ox, oy) || 1, k = Math.max(0, len - br * sc) / len, D = len * k, nx = -oy / len, ny = ox / len;
-        const strike = 1 - seg(ph, L, L + 0.1);
-        if (T - B.t > (strike > 0.1 ? 35 : 55 + Math.random() * 60)) {
-          B.t = T; B.m = mid([0, 0], [1, 0], D * (0.08 + strike * 0.12), 5);
-          B.br = []; for (let q = 0; q < 2 + (strike > 0.1 ? 2 : 0); q++) { const s0 = B.m[6 + ((Math.random() * 18) | 0)], r = 0.12 + Math.random() * 0.25, sd = Math.random() < 0.5 ? -1 : 1; B.br.push(mid(s0, [s0[0] + r, s0[1] + sd * r * D * 0.5], D * 0.05, 3)); }
-          B.fl = Math.random() < 0.12 ? 1.5 : 0.6 + Math.random() * 0.4;
+        const L = 0.62 + i * 0.04, u = seg(ph, L, L + 0.06), e = eo(u), d = seg(ph, L + 0.07, L + 0.14), a = ORB[i];
+        const ox = Math.cos(a) * ORX * e, oy = (Math.sin(a) * ORY - 14) * e + Math.sin(T * 0.0015 + i * 1.9) * 5 * e;
+        const lg = eo(d);
+        li.style.opacity = (lg * (1 - out)).toFixed(2);
+        li.style.transform = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px) scale(${(0.8 + 0.2 * back(d)).toFixed(3)})`;
+        if (!u || d >= 1) return;
+        const R = br * (0.35 + 0.65 * e) * (1 + eo(d) * 0.6), x0 = cx + ox, y0 = cy + oy, ry = T * 0.0016 + i, cr = Math.cos(ry), sr = Math.sin(ry), tl = 0.35, ct = Math.cos(tl), st = Math.sin(tl);
+        for (let j = 0; j < FS.length; j++) {
+          const [px, py, pz] = FS[j], X = px * cr + pz * sr, Z0 = -px * sr + pz * cr, Y = py * ct - Z0 * st, Z = py * st + Z0 * ct, f = (Z + 1) / 2;
+          const k = j / FS.length, fade = cl(1 - (d * 1.6 - k * 0.6));
+          if (fade <= 0) continue;
+          ctx.globalAlpha = Math.min(1, u * 3) * fade * (0.25 + 0.75 * f) * (1 - out);
+          ctx.fillStyle = f > 0.75 ? '#E6FF94' : '#C6FF3D';
+          ctx.beginPath(); ctx.arc(x0 + X * R, y0 + Y * R, 0.5 + f * 1.9 * (mob ? 0.8 : 1), 0, 6.283); ctx.fill();
         }
-        const map = (arr) => arr.map(([f, o]) => [cx + ox * k * f + nx * o, cy + oy * k * f + ny * o]);
-        const M = map(B.m), I = (1 - out) * B.fl * (0.45 + 0.55 * front) * (1 + strike);
-        ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 12; ctx.globalAlpha = 0.05 * I; line(M);
-        ctx.lineWidth = 4; ctx.globalAlpha = 0.16 * I; line(M);
-        ctx.strokeStyle = '#F4FFD8'; ctx.lineWidth = 1.3; ctx.globalAlpha = Math.min(1, 0.8 * I); line(M);
-        ctx.strokeStyle = '#C6FF3D'; ctx.lineWidth = 0.9; for (const r of B.br) { ctx.globalAlpha = 0.45 * I; line(map(r)); }
-        /* pulsos de energía que viajan hasta la pompa */
-        if (T > B.nx) { B.p.push(0); B.nx = T + 700 + Math.random() * 900; }
-        B.p = B.p.filter((f) => f < 1);
-        B.p.forEach((f, q) => {
-          const nf = f + dt * 0.0017; B.p[q] = nf;
-          const j = Math.min(M.length - 1, Math.floor(nf * (M.length - 1))), [x, y] = M[j];
-          const g = ctx.createRadialGradient(x, y, 0, x, y, 14); g.addColorStop(0, 'rgba(244,255,216,.95)'); g.addColorStop(0.3, 'rgba(198,255,61,.5)'); g.addColorStop(1, 'rgba(198,255,61,0)');
-          ctx.globalAlpha = 1 - out; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 14, 0, 6.283); ctx.fill();
-          if (nf >= 1) { B.hit = 1; for (let z = 0; z < 12; z++) { const an = Math.random() * 6.283, v = 0.08 + Math.random() * 0.2; SP.push({ x: cx + ox * k, y: cy + oy * k, vx: Math.cos(an) * v, vy: Math.sin(an) * v, l: 1 }); } }
-        });
-        if (strike > 0.9 && !B.s0) { B.s0 = 1; B.hit = 1; }
-        if (strike < 0.5) B.s0 = 0;
       });
-      /* chispas al impactar */
-      ctx.strokeStyle = '#E6FF94'; ctx.lineWidth = 1.2;
-      SP = SP.filter((p) => (p.l -= dt / 450) > 0);
-      for (const p of SP) { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += dt * 0.0002; ctx.globalAlpha = p.l * (1 - out); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx * 30, p.y - p.vy * 30); ctx.stroke(); }
-      ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 1;
       /* rótulos */
       const co = [seg(ph, 0, 0.04) * (1 - seg(ph, 0.3, 0.34)), seg(ph, 0.34, 0.38) * (1 - seg(ph, 0.55, 0.59)), seg(ph, 0.62, 0.67) * (1 - out)];
