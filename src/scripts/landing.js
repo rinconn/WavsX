@@ -284,7 +284,7 @@ if (spec) requestAnimationFrame(frame);
 
 /* ---------- proceso: agujero que se abre, se traga los archivos y escupe la canción ---------- */
 {
-  const cv = $('.mv__dots'), cvr = $('.mv__cv');
+  const cv = $('.mv__dots'), cvr = $('.mv__cv'), sl = $('.mv__sl'), rec = $('.mv__rec'), vy = $('.mv__vy'), tt = $('.mv__tt');
   if (cv && cvr) {
     const ctx = cv.getContext('2d'), CYC = 12000;
     const chips = $$('.mv__chips i').map((el, n, all) => ({ el, a0: (n / all.length) * 6.283, ring: n % 2 ? 1 : 0.74, sp: n * 1.7 }));
@@ -303,7 +303,7 @@ if (spec) requestAnimationFrame(frame);
     const line = (pts) => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); };
     const draw = (T, dt) => {
       const ph = (T % CYC) / CYC, mob = W < 860, s = mob ? 0.38 : 1;
-      const cx = W / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
+      const cx = W / 2, cy = cvr.offsetTop + 125;
       const ho = ph < 0.08 ? eo(ph / 0.08) : ph < 0.52 ? 1 : ph < 0.555 ? 1 + 0.35 * Math.sin(seg(ph, 0.52, 0.555) * Math.PI) : 1 - eo(seg(ph, 0.555, 0.66));
       const pull = seg(ph, 0.3, 0.5) * (1 - seg(ph, 0.52, 0.56)), out = seg(ph, 0.94, 0.99);
       ctx.clearRect(0, 0, W, H);
@@ -346,12 +346,16 @@ if (spec) requestAnimationFrame(frame);
         c.el.style.opacity = (ph > st + 0.09 ? 0 : vin * (u > 0.75 ? (1 - u) / 0.25 : 1)).toFixed(2);
         c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(Math.sin(T * 0.001 + c.sp) * 12 + u * 540).toFixed(1)}deg) scale(${((0.75 + depth * 0.35) * (0.6 + 0.4 * vin) * (1 - u * 0.85)).toFixed(3)})`;
       });
-      /* sale la canción */
-      const cu = seg(ph, 0.54, 0.62);
+      /* sale la canción: funda que salta del agujero y el vinilo que se desliza y gira */
+      const cu = seg(ph, 0.54, 0.62), vs = eo(seg(ph, 0.6, 0.7)), base = mob ? 0.66 : 1.22;
       cvr.style.opacity = (Math.min(1, cu * 3) * (1 - out)).toFixed(2);
-      cvr.style.transform = `scale(${(cu ? back(cu) : 0).toFixed(3)}) rotate(${((1 - eo(cu)) * -14).toFixed(1)}deg)`;
+      cvr.style.transform = `perspective(900px) rotateY(${(Math.sin(T * 0.0007) * 7).toFixed(2)}deg) rotateX(${(Math.sin(T * 0.0005 + 1) * 4).toFixed(2)}deg) scale(${((cu ? back(cu) : 0) * base).toFixed(3)}) rotate(${((1 - eo(cu)) * -14).toFixed(1)}deg)`;
+      sl.style.transform = `translateX(${(-62 * vs).toFixed(1)}px)`;
+      rec.style.transform = `translateX(${(70 * vs).toFixed(1)}px)`;
+      vy.style.transform = `rotate(${(T * 0.2) % 360}deg)`;
+      tt.style.opacity = seg(ph, 0.62, 0.68).toFixed(2);
       /* plataformas: salen como esfera de puntos girando, se deshace y queda el logo */
-      const br = mob ? 46 : 62, ORX = Math.min(W * (mob ? 0.36 : 0.31), 430), ORY = mob ? 170 : 150;
+      const br = mob ? 46 : 62, ORX = Math.min(W * (mob ? 0.37 : 0.36), 530), ORY = mob ? 205 : 150;
       subs.forEach((li, i) => {
         const L = 0.62 + i * 0.04, u = seg(ph, L, L + 0.06), e = eo(u), d = seg(ph, L + 0.07, L + 0.14), a = ORB[i];
         const ox = Math.cos(a) * ORX * e, oy = (Math.sin(a) * ORY - 14) * e + Math.sin(T * 0.0015 + i * 1.9) * 5 * e;
