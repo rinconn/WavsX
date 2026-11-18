@@ -313,7 +313,7 @@ if (spec) requestAnimationFrame(frame);
     const back = (x) => 1 + 2.7 * (x - 1) ** 3 + 1.7 * (x - 1) ** 2;
     const line = (pts) => { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); };
     const draw = (T, dt) => {
-      const ph = (T % CYC) / CYC, mob = W < 860, s = mob ? 0.38 : 1;
+      const HOLD = 120000, tc = T % (CYC + HOLD), ph = tc < 0.93 * CYC ? tc / CYC : tc < 0.93 * CYC + HOLD ? 0.93 : (tc - HOLD) / CYC, mob = W < 860, s = mob ? 0.38 : 1;
       const S = cvr.offsetWidth, cx = cvr.offsetLeft + S / 2, cy = cvr.offsetTop + S / 2;
       const ho = ph < 0.08 ? eo(ph / 0.08) : ph < 0.52 ? 1 : ph < 0.555 ? 1 + 0.35 * Math.sin(seg(ph, 0.52, 0.555) * Math.PI) : 1 - eo(seg(ph, 0.555, 0.66));
       const pull = seg(ph, 0.3, 0.5) * (1 - seg(ph, 0.52, 0.56)), out = seg(ph, 0.94, 0.99);
