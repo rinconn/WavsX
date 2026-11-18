@@ -397,28 +397,42 @@ document.addEventListener('click', (e) => {
   smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });
 
-/* fondo de versiones: disco de puntos con surcos y una onda que sale del centro */
+/* fondo de versiones: vista de arreglo de un DAW, pistas con clips y cabezal que avanza */
 (() => {
   const cv = $('.globe'); if (!cv) return;
-  const g = cv.getContext('2d'), P = [];
-  for (let k = 0; k < 34; k++) {
-    const r = 0.22 + (k / 33) * 0.78, n = Math.round(40 + r * 150);
-    for (let j = 0; j < n; j++) P.push([r, (j / n) * 6.283 + Math.random() * 0.03, 0.5 + Math.pow(Math.random(), 3) * 1.8]);
+  const g = cv.getContext('2d'), L = 7, WV = 1800, C = [];
+  let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < L; i++) for (let x = rnd() * 120; x < WV - 60;) {
+    const w = 90 + rnd() * 260, amp = Array.from({ length: Math.round(w / 5) }, (_, k) => 0.2 + Math.abs(Math.sin(k * (0.3 + rnd() * 0.5))) * 0.8 * (0.5 + rnd() * 0.5));
+    C.push([i, x, Math.min(w, WV - x - 10), amp, i === 2 ? '#5BE6B4' : '#C6FF3D']); x += w + 16 + rnd() * 140;
   }
   let W = 0, H = 0, dpr = 1, rot = 0, tm = 0, tx = 0, ty = 0, mx = 0, my = 0, vis = false, raf = 0, last = 0;
   const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; };
   const draw = () => {
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
-    const R = Math.min(W * 0.46, 420), cx = W / 2 + tx * 40, cy = H * 0.74 + ty * 20, sq = 0.3 + ty * 0.06;
-    for (const [r, a0, s] of P) {
-      const a = a0 + rot, x = Math.cos(a) * r, z = Math.sin(a) * r;
-      const px = cx + x * R, py = cy + z * R * sq;
-      if (py < -4 || py > H + 4) continue;
-      const wave = Math.max(0, Math.sin(r * 18 - tm * 2.2)), front = (z + 1) / 2;
-      g.globalAlpha = 0.1 + front * 0.35 + wave * 0.45;
-      g.fillStyle = wave > 0.85 ? '#E6FF94' : r < 0.5 ? '#5BE6B4' : '#C6FF3D';
-      g.beginPath(); g.arc(px, py, s * (0.6 + front * 0.6) + wave * 0.9, 0, 6.283); g.fill();
+    const top = 26, lh = (H - top) / L, off = (rot * 60 + tx * 30) % WV, ph = W * (0.15 + ((tm * 0.06) % 0.7));
+    g.globalAlpha = 1; g.fillStyle = 'rgba(255,255,255,.035)'; g.fillRect(0, 0, W, top - 4);
+    g.font = '9px ui-monospace,Menlo,monospace'; g.textBaseline = 'middle';
+    for (let b = 0; b * 120 - off % 120 < W; b++) {
+      const x = b * 120 - off % 120, n = Math.floor(off / 120) + b + 1;
+      g.fillStyle = 'rgba(255,255,255,.05)'; g.fillRect(x, top, 1, H - top);
+      g.fillStyle = 'rgba(255,255,255,.28)'; g.fillText(n, x + 4, top / 2 - 1);
     }
+    for (let i = 1; i < L; i++) { g.fillStyle = 'rgba(255,255,255,.04)'; g.fillRect(0, top + i * lh, W, 1); }
+    for (const [i, x0, w, amp, col] of C) for (const k of [0, WV]) {
+      const x = x0 + k - off; if (x > W || x + w < 0) continue;
+      const y = top + i * lh + 4, h = lh - 8, hit = ph > x && ph < x + w;
+      g.globalAlpha = hit ? 0.22 : 0.1; g.fillStyle = col; g.beginPath(); g.roundRect(x, y, w, h, 4); g.fill();
+      g.globalAlpha = hit ? 0.75 : 0.35; g.fillRect(x, y, w, 2);
+      g.globalAlpha = hit ? 0.7 : 0.3;
+      for (let j = 0; j < amp.length; j++) { const a = amp[j] * (h - 10) / 2; g.fillRect(x + 3 + j * 5, y + 2 + h / 2 - a, 2, a * 2); }
+    }
+    g.globalAlpha = 0.85; g.fillStyle = '#E6FF94'; g.fillRect(ph, 0, 1, H);
+    g.beginPath(); g.moveTo(ph - 5, 0); g.lineTo(ph + 6, 0); g.lineTo(ph + 0.5, 7); g.fill();
+    g.globalAlpha = 1;
+    const v = g.createRadialGradient(W / 2, H * 0.62, 40, W / 2, H * 0.62, Math.max(W, H) * 0.6);
+    v.addColorStop(0, 'rgba(10,12,7,.85)'); v.addColorStop(0.45, 'rgba(10,12,7,.35)'); v.addColorStop(1, 'rgba(10,12,7,.6)');
+    g.fillStyle = v; g.fillRect(0, 0, W, H);
   };
   const loop = (t) => { raf = 0; if (!vis) return; const dt = Math.min(50, t - (last || t)); last = t; rot += dt * 0.00009; tm += dt * 0.001; tx += (mx - tx) * 0.05; ty += (my - ty) * 0.05; draw(); raf = requestAnimationFrame(loop); };
   const start = () => { if (still) { draw(); return; } if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
