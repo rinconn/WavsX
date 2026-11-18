@@ -952,17 +952,14 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .globe { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .vx__art { background: #0a0c07; }
 
-/* versiones: la carpeta descansa sobre un vinilo que gira (solo CSS, rotación en GPU) */
-.vx__art { background: radial-gradient(80% 70% at 50% 110%, #161a0e, #0a0c07 70%); }
-.lp { position: absolute; left: 50%; bottom: -190px; width: 660px; aspect-ratio: 1; margin-left: -330px; z-index: 0; transform: perspective(1000px) rotateX(66deg); pointer-events: none; }
-.lp i { position: absolute; inset: 0; border-radius: 50%; will-change: transform; animation: lpspin 3.6s linear infinite;
-  background: radial-gradient(circle, #0a0c07 0 1.6%, #C6FF3D 1.8% 15%, #0b0d06 15.3% 16.5%, transparent 17%),
-    conic-gradient(from 0deg, rgba(255,255,255,.05), transparent 9%, rgba(255,255,255,.07) 23%, transparent 34%, rgba(255,255,255,.04) 52%, transparent 63%, rgba(255,255,255,.06) 80%, transparent 90%),
-    repeating-radial-gradient(circle, #12150b 0 1.2px, #262b1a 1.2px 2.6px), #0e1009;
-  box-shadow: 0 0 0 1px rgba(230, 255, 148, .35), 0 0 0 8px #0b0d06, 0 0 0 9px rgba(198, 255, 61, .25), 0 60px 90px #000; }
-.lp i::after { content: "WAVSX · 33⅓"; position: absolute; left: 50%; top: 39%; transform: translateX(-50%); font: 800 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .2em; color: #0B0D06; }
-.lp::after { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
-  background: conic-gradient(from 25deg, transparent 0 6%, rgba(230, 255, 148, .45) 11%, transparent 18% 50%, rgba(91, 230, 180, .3) 60%, transparent 66%);
-  -webkit-mask: radial-gradient(circle, transparent 16%, #000 17%); mask: radial-gradient(circle, transparent 16%, #000 17%); }
-@keyframes lpspin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .lp i { animation: none; } }
+/* versiones: haces de luz entre neblina que caen sobre la carpeta (solo CSS, transform) */
+.vx__art { background: radial-gradient(60% 55% at 50% 78%, rgba(198, 255, 61, .16), transparent 70%), #070805; }
+.rays { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 30%, transparent 98%); mask: linear-gradient(#000 45%, rgba(0,0,0,.35) 85%, transparent); filter: blur(3px); }
+.rays i { position: absolute; left: 50%; top: -735px; width: 1400px; height: 1400px; margin-left: -700px; border-radius: 50%; will-change: transform;
+  background: conic-gradient(from 138deg at 50% 50%, transparent 0deg, rgba(198,255,61,.3) 6deg, transparent 12deg 19deg, rgba(230,255,148,.2) 23deg, transparent 29deg 34deg, rgba(91,230,180,.3) 39deg, transparent 45deg 51deg, rgba(198,255,61,.38) 57deg, transparent 63deg 68deg, rgba(230,255,148,.18) 73deg, transparent 80deg 84deg);
+  animation: rsw 9s ease-in-out infinite alternate; }
+.rays i + i { animation: rsw2 13s ease-in-out infinite alternate; opacity: .7; }
+@keyframes rsw { from { transform: rotate(-7deg); } to { transform: rotate(6deg); } }
+@keyframes rsw2 { from { transform: rotate(9deg) scaleX(-1); } to { transform: rotate(-5deg) scaleX(-1); } }
+@media (prefers-reduced-motion: reduce) { .rays i { animation: none; } }
