@@ -448,16 +448,12 @@ onScroll();
 }
 
 /* ---------- separadores: forma de onda que se "reproduce" al entrar en pantalla ---------- */
+/* separadores: regla de compases, como la línea de tiempo de un DAW */
+const rulerNames = ['Producto', 'Cómo funciona', 'Empezar'];
 document.querySelectorAll('.ledline').forEach((el, k) => {
-  const hs = waveHeights(1.3 + k * 2.1, 180, 24);
-  el.classList.add('wave');
-  renderWave(el, hs, 0);
-  el.querySelectorAll('span').forEach((s, i) => s.style.setProperty('--i', i));
-  const io = new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) return;
-    el.querySelectorAll('span').forEach((s) => s.classList.add('on'));
-    io.disconnect();
-  }, { threshold: 1 });
+  el.className = 'ruler';
+  el.innerHTML = `<b>${String(k + 2).padStart(2, '0')}</b><i><u></u></i><em>${rulerNames[k] || ''}</em>`;
+  const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('go'); io.disconnect(); } }, { threshold: 1 });
   io.observe(el);
 });
 

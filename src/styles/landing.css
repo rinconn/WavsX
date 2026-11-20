@@ -1028,3 +1028,15 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 .footer nav a:hover { color: var(--text); }
 .footer__c { width: 100%; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 @media (prefers-reduced-motion: reduce) { .drop__cover img, .blk, .kar { transition: none; } }
+
+/* separadores: regla de compases */
+.ruler { max-width: 1280px; margin: 0 auto; padding: 0 48px; display: flex; align-items: flex-end; gap: 14px; height: 22px; }
+.ruler b, .ruler em { flex: none; font: 600 11px/1 ui-monospace, Menlo, monospace; font-style: normal; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+.ruler b { color: var(--c1); }
+.ruler i { position: relative; flex: 1; height: 10px; border-bottom: 1px solid var(--line-2);
+  background: repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 16px) left bottom / 100% 4px no-repeat,
+              repeating-linear-gradient(90deg, #4A4E46 0 1px, transparent 1px 128px) left bottom / 100% 10px no-repeat; }
+.ruler u { position: absolute; left: 0; bottom: -1px; width: 1px; height: 14px; background: var(--c1); transition: left 2.4s cubic-bezier(.3, .1, .2, 1); }
+.ruler.go u { left: 100%; }
+@media (max-width: 700px) { .ruler { padding: 0 20px; } }
+@media (prefers-reduced-motion: reduce) { .ruler u { transition: none; } }
