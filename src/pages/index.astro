@@ -208,33 +208,29 @@ const keeps = [
     <div class="drop reveal" id="drop">
       <label class="drop__zone"><input type="file" accept="audio/*" hidden><b>Suelta aquí tu WAV</b><small>o haz clic para elegirlo</small></label>
       <div class="drop__amb" aria-hidden="true"></div>
-      <div class="drop__cover"><img src="/covers/andromeda.jpg" alt="Portada de Andrómeda"></div>
-      <div class="drop__body">
-        <div class="drop__head">
-          <button class="drop__play" aria-label="Reproducir"></button>
-          <div><b id="dropName">Andrómeda</b><small>Kheis, Isma Pérez · <span id="dropMeta">48 kHz · 24 bit · 3:42</span></small></div>
-          <span class="drop__st">Subiendo…</span>
+      <div class="drop__top">
+        <div class="drop__cover"><img src="/covers/andromeda.jpg" alt="Portada de Andrómeda"></div>
+        <div class="drop__main">
+          <div class="drop__head">
+            <button class="drop__play" aria-label="Reproducir"></button>
+            <div><b id="dropName">Andrómeda</b><small>Kheis, Isma Pérez · <span id="dropMeta">48 kHz · 24 bit · 3:42</span></small></div>
+            <span class="drop__st">Subiendo…</span>
+          </div>
+          <div class="drop__wavebox"><canvas class="drop__wave" id="dropWave"></canvas><span class="ph"></span></div>
+          <div class="kar" id="kar"><p class="kar__prev"></p><p class="kar__now"></p><p class="kar__next"></p></div>
         </div>
-        <canvas class="drop__wave" id="dropWave"></canvas>
-        <div class="drop__grid">
-          <div class="blk blk--stems"><em>Stems</em>
-            <div class="lane"><i>Voz</i><canvas></canvas></div>
-            <div class="lane"><i>Coros</i><canvas></canvas></div>
-            <div class="lane"><i>Beat</i><canvas></canvas></div>
-            <div class="lane"><i>Bajo</i><canvas></canvas></div>
-          </div>
-          <div class="blk blk--lyr"><em>Letra</em>
-            <p><time>0:12</time>Mirando arriba desde el mismo banco</p>
-            <p class="on"><time>0:16</time>la ciudad se apaga y yo sigo despierto</p>
-            <p><time>0:21</time>tú tan lejos como Andrómeda</p>
-          </div>
-          <div class="blk blk--cred"><em>Reparto</em>
-            <div class="split"><span style="--w:40%">Kheis</span><span style="--w:40%">Isma Pérez</span><span style="--w:20%">Prod.</span></div>
-            <small>40 % · 40 % · 20 % — firmado por los 3</small>
-          </div>
-          <div class="blk blk--ver"><em>Versiones</em>
-            <ol><li>Maqueta</li><li>Mezcla</li><li class="on">Máster</li></ol>
-          </div>
+      </div>
+      <div class="drop__bot">
+        <div class="blk blk--stems"><em>Stems · 5 pistas</em><div class="trks"><div class="trk" style="--k:#C6FF3D"><span class="trk__h"><b>Voz</b><i>M</i><i>S</i></span><canvas data-r="Voz lead"></canvas></div><div class="trk" style="--k:#5BE6B4"><span class="trk__h"><b>Coros</b><i>M</i><i>S</i></span><canvas data-r="Coros"></canvas></div><div class="trk" style="--k:#FFD15C"><span class="trk__h"><b>Guitarra</b><i>M</i><i>S</i></span><canvas data-r="Gtr ac."></canvas></div><div class="trk" style="--k:#FF7A45"><span class="trk__h"><b>Beat</b><i>M</i><i>S</i></span><canvas data-r="Beat"></canvas></div><div class="trk" style="--k:#9B8CFF"><span class="trk__h"><b>Bajo</b><i>M</i><i>S</i></span><canvas data-r="808"></canvas></div><span class="ph"></span></div></div>
+        <div class="blk blk--cred"><em>Reparto</em>
+          <div class="who"><img src="/covers/a1.jpg" alt=""><div><b>Kheis</b><small>Letra y voz</small></div><span>40 %</span><u>Firmado</u></div>
+          <div class="who"><img src="/covers/a2.jpg" alt=""><div><b>Isma Pérez</b><small>Letra y voz</small></div><span>40 %</span><u>Firmado</u></div>
+          <div class="who"><img src="/covers/a3.jpg" alt=""><div><b>Lúa Prod.</b><small>Producción</small></div><span>20 %</span><u>Firmado</u></div>
+        </div>
+        <div class="blk blk--ver"><em>Versiones</em>
+          <div class="ver"><b>v1</b><div><span>Maqueta de móvil</span><small>12 mar · voz y guitarra</small></div></div>
+          <div class="ver"><b>v2</b><div><span>Mezcla</span><small>2 abr · con el beat</small></div></div>
+          <div class="ver on"><b>v3</b><div><span>Máster final</span><small>20 abr · la que se publica</small></div></div>
         </div>
       </div>
     </div>

@@ -335,33 +335,71 @@ if (spec) requestAnimationFrame(frame);
 
 /* ---------- 4 · cierre: el WAV se convierte en canción ---------- */
 {
-  const d = $('#drop'), cv = $('#dropWave'), cx = cv.getContext('2d');
-  let peaks = Array.from({ length: 160 }, (_, i) => { const t = i / 160; return Math.min(1, (.25 + .6 * Math.abs(Math.sin(t * 9) * Math.sin(t * 2.3 + 1))) * (.7 + .3 * Math.sin(i * 1.7) ** 2) * (t < .06 ? t / .06 : 1)); });
-  let timers = [], raf, played = false;
-  const bars = (c, pk, p, on, off) => {
-    const g = c.getContext('2d'), w = c.width = c.clientWidth * 2, h = c.height = c.clientHeight * 2, n = pk.length, bw = w / n;
-    g.clearRect(0, 0, w, h);
-    for (let i = 0; i < n; i++) { g.fillStyle = i / n < p ? on : off; const a = Math.max(2, pk[i] * h * .92); g.fillRect(i * bw + .5, (h - a) / 2, Math.max(1, bw - 1.5), a); }
+  const d = $('#drop'), cv = $('#dropWave'), st = $('.drop__st');
+  const N = 180, rnd = (i) => (Math.sin(i * 12.9898) * 43758.5453) % 1;
+  let peaks = Array.from({ length: N }, (_, i) => { const t = i / N; return Math.min(1, (.3 + .55 * Math.abs(Math.sin(t * 9) * Math.sin(t * 2.3 + 1)) + .15 * Math.abs(rnd(i))) * (t < .05 ? t / .05 : 1)); });
+  // pistas: tramos con sonido [inicio, fin] y carácter de cada una
+  const plan = { 'Voz lead': [[.08, .3], [.36, .62], [.7, .96]], 'Coros': [[.36, .62], [.82, .96]], 'Gtr ac.': [[0, .34], [.64, .8]], 'Beat': [[.12, .62], [.66, 1]], '808': [[.12, .62], [.66, 1]] };
+  const trks = [...d.querySelectorAll('.trk canvas')].map((c, k) => ({ c, col: getComputedStyle(c.parentNode).getPropertyValue('--k').trim(), segs: plan[c.dataset.r], k }));
+  const sz = (c) => { c.width = c.clientWidth * 2; c.height = c.clientHeight * 2; return c.getContext('2d'); };
+  const drawMain = (rev, play) => {
+    const g = sz(cv), w = cv.width, h = cv.height, bw = w / N;
+    for (let i = 0; i < N; i++) { if (i / N > rev) break; g.fillStyle = i / N < play ? '#C6FF3D' : 'rgba(198,255,61,.35)'; const a = Math.max(2, peaks[i] * h * .92); g.fillRect(i * bw + .5, (h - a) / 2, Math.max(1, bw - 1.5), a); }
   };
-  const draw = (p) => bars(cv, peaks, p, '#C6FF3D', 'rgba(255,255,255,.14)');
-  const lanes = [...d.querySelectorAll('.lane canvas')].map((c, k) => ({ c, pk: peaks.map((v, i) => Math.max(0, v * (.5 + .5 * Math.sin(i * (.3 + k * .21) + k * 2)) ** 2 * ((k === 0 && i % 40 < 6) ? .1 : 1))) }));
-  const run = () => {
-    timers.forEach(clearTimeout); cancelAnimationFrame(raf); d.className = 'drop reveal is-in s1'; $('.drop__st').textContent = 'Subiendo…';
-    const t0 = performance.now();
-    const step = (t) => { const p = Math.min(1, (t - t0) / 1600); draw(p); const q = Math.min(1, Math.max(0, (t - t0 - 2200) / 1200)); lanes.forEach(l => bars(l.c, l.pk, q, 'rgba(255,255,255,.75)', 'rgba(255,255,255,.1)')); if (q < 1) raf = requestAnimationFrame(step); };
+  const drawTrk = ({ c, col, segs, k }, rev) => {
+    const g = sz(c), w = c.width, h = c.height, n = 120, bw = w / n;
+    for (const [a0, a1] of segs) {
+      if (a0 > rev) continue; const x0 = a0 * w + 2, x1 = Math.min(a1, rev) * w - 2;
+      g.globalAlpha = .22; g.fillStyle = col; g.beginPath(); g.roundRect(x0, 2, x1 - x0, h - 4, 6); g.fill(); g.globalAlpha = 1;
+      for (let i = Math.ceil(a0 * n); i < a1 * n && i / n <= rev; i++) {
+        const t = i / n, pk = peaks[Math.floor(t * N)] || .3;
+        let v = k === 3 ? (i % 4 === 0 ? .95 : i % 2 ? .25 : .5) : k === 4 ? (.55 + .2 * Math.sin(i * .8)) : pk * (.5 + .5 * Math.abs(Math.sin(i * (.5 + k * .3))));
+        const a = Math.max(2, v * (h - 12)); g.fillStyle = col; g.fillRect(i * bw + 1, (h - a) / 2, Math.max(1, bw - 2.5), a);
+      }
+    }
+  };
+  // letra karaoke
+  const lyr = ['Mirando arriba desde el mismo banco', 'la ciudad se apaga y yo sigo despierto', 'te busco entre luces que no son estrellas', 'tú tan lejos como Andrómeda', 'y yo aquí contando el tiempo'];
+  const kp = $('.kar__prev'), kn = $('.kar__now'), kx = $('.kar__next');
+  let li = -1;
+  const setLine = (i, f) => {
+    if (i !== li) { li = i; kp.textContent = lyr[i - 1] || ''; kx.textContent = lyr[i + 1] || ''; kn.innerHTML = lyr[i].split(' ').map(w => `<span>${w}</span>`).join(' '); }
+    const ws = kn.children, on = Math.floor(f * (ws.length + 1)); for (let j = 0; j < ws.length; j++) ws[j].classList.toggle('on', j < on);
+  };
+  let timers = [], raf, played = false, playing = false, pos = 0;
+  const loop = (t0) => {
+    let last = performance.now();
+    const step = (t) => {
+      if (playing) pos = (pos + (t - last) / 26000) % 1; last = t;
+      d.style.setProperty('--p', pos); drawMain(1, pos);
+      const L = lyr.length, x = pos * L; setLine(Math.floor(x), x % 1);
+      raf = requestAnimationFrame(step);
+    };
     raf = requestAnimationFrame(step);
-    [2, 3, 4, 5, 6].forEach((k, i) => timers.push(setTimeout(() => d.classList.add('s' + k), 2000 + i * 700)));
-    timers.push(setTimeout(() => { $('.drop__st').textContent = 'Guardada'; }, 4800));
   };
-  draw(0);
-  new IntersectionObserver(([e]) => { if (e.isIntersecting && !played) { played = true; setTimeout(run, 700); } }, { threshold: .5 }).observe(d);
+  const run = () => {
+    timers.forEach(clearTimeout); cancelAnimationFrame(raf); playing = false; pos = 0; d.className = 'drop reveal is-in s1'; st.textContent = 'Subiendo…';
+    setLine(0, 0); const t0 = performance.now();
+    const step = (t) => {
+      const e = t - t0; drawMain(Math.min(1, e / 1500), 0);
+      const q = Math.min(1, Math.max(0, (e - 1700) / 1400)); trks.forEach(o => drawTrk(o, q));
+      if (q < 1) raf = requestAnimationFrame(step); else { playing = true; d.classList.add('is-play'); loop(); }
+    };
+    raf = requestAnimationFrame(step);
+    [2, 3, 4, 5, 6].forEach((k, i) => timers.push(setTimeout(() => d.classList.add('s' + k), 1500 + i * 600)));
+    timers.push(setTimeout(() => { st.textContent = 'Guardada'; }, 4200));
+  };
+  drawMain(0, 0);
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && !played) { played = true; setTimeout(run, 600); } }, { threshold: .4 }).observe(d);
+  $('.drop__play').addEventListener('click', () => { playing = !playing; d.classList.toggle('is-play', playing); });
+  addEventListener('resize', () => trks.forEach(o => drawTrk(o, 1)));
   const load = async (f) => {
     if (!f) return;
     $('#dropName').textContent = f.name.replace(/\.[^.]+$/, ''); $('#dropMeta').textContent = (f.size / 1048576).toFixed(1) + ' MB';
     try {
       const buf = await new (window.AudioContext || window.webkitAudioContext)().decodeAudioData(await f.arrayBuffer());
-      const ch = buf.getChannelData(0), n = 160, sz = Math.floor(ch.length / n); let mx = 0;
-      peaks = Array.from({ length: n }, (_, i) => { let m = 0; for (let j = i * sz; j < (i + 1) * sz; j += 64) m = Math.max(m, Math.abs(ch[j])); mx = Math.max(mx, m); return m; }).map(v => v / (mx || 1));
+      const ch = buf.getChannelData(0), z = Math.floor(ch.length / N); let mx = 0;
+      peaks = Array.from({ length: N }, (_, i) => { let m = 0; for (let j = i * z; j < (i + 1) * z; j += 64) m = Math.max(m, Math.abs(ch[j])); mx = Math.max(mx, m); return m; }).map(v => v / (mx || 1));
       const s = Math.round(buf.duration); $('#dropMeta').textContent = (buf.sampleRate / 1000) + ' kHz · ' + Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
     } catch (_) {}
     played = true; run();
