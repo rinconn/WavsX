@@ -333,8 +333,7 @@ if (spec) requestAnimationFrame(frame);
   }
 }
 
-/* ---------- 4 · mesa: suben los faders ---------- */
-document.querySelectorAll('.ch').forEach((c, i) => c.style.setProperty('--i', i));
+/* ---------- 4 · cierre ---------- */
 new IntersectionObserver(([e]) => {
   if (e.isIntersecting) $('.onair').classList.add('is-on');
 }, { threshold: 0.45 }).observe($('.onair'));
