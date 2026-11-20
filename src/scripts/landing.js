@@ -448,6 +448,41 @@ onScroll();
 }
 
 /* ---------- separadores: forma de onda que se "reproduce" al entrar en pantalla ---------- */
+/* precios: mensual/anual, luz que sigue al cursor dentro de la tarjeta y fondo de ondas */
+{
+  const sec = $('#precios');
+  if (sec) {
+    const bill = $('.bill'), btns = [...bill.querySelectorAll('button')];
+    const place = (b) => { bill.style.setProperty('--x', b.offsetLeft + 'px'); bill.style.setProperty('--w', b.offsetWidth + 'px'); };
+    place(btns[0]); addEventListener('resize', () => place(bill.querySelector('.on')));
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((x) => x.classList.toggle('on', x === b)); place(b);
+      const k = b.dataset.b;
+      sec.querySelectorAll('.plan__price b').forEach((n) => { n.classList.add('flip'); setTimeout(() => { n.textContent = n.dataset[k]; n.classList.remove('flip'); }, 180); });
+      sec.querySelectorAll('.plan__bill').forEach((n) => { n.textContent = n.dataset[k]; });
+    }));
+    sec.querySelectorAll('.plan').forEach((c) => c.addEventListener('pointermove', (e) => {
+      const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }));
+    // fondo: ondas de un osciloscopio muy lento, finas y sin brillo
+    const cv = $('.plans__bg'), g = cv.getContext('2d'); let run = false, W = 0, H = 0;
+    const size = () => { const d = Math.min(devicePixelRatio || 1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; g.setTransform(d, 0, 0, d, 0, 0); };
+    const draw = (t) => {
+      g.clearRect(0, 0, W, H); const L = 14;
+      for (let l = 0; l < L; l++) {
+        const y0 = H * (.18 + .64 * l / (L - 1)), amp = 18 + 26 * Math.sin(l * .9 + t * .00015) ** 2, ph = t * .0003 * (1 + l * .07) + l;
+        g.beginPath();
+        for (let x = 0; x <= W; x += 8) { const u = x / W; g.lineTo(x, y0 + Math.sin(u * 6.3 + ph) * amp * Math.sin(u * 3.14) + Math.sin(u * 17 + ph * 1.7) * 4); }
+        g.strokeStyle = l % 4 === 1 ? 'rgba(198,255,61,.16)' : 'rgba(255,255,255,.05)'; g.lineWidth = 1; g.stroke();
+      }
+    };
+    const loop = (t) => { if (!run) return; draw(t); requestAnimationFrame(loop); };
+    size(); addEventListener('resize', size);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) draw(0);
+    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) requestAnimationFrame(loop); }).observe(sec);
+  }
+}
+
 /* separadores: regla de compases, como la línea de tiempo de un DAW */
 const rulerNames = ['Producto', 'Cómo funciona', 'Precios', 'Empezar'];
 document.querySelectorAll('.ledline').forEach((el, k) => {

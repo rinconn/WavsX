@@ -233,13 +233,46 @@ const keeps = [
 
   <!-- PRECIOS -->
   <section class="plans" id="precios">
-    <header class="plans__head reveal"><span class="kicker">Precios</span><h2>Empieza gratis.<br><span class="muted">Paga cuando saques el disco.</span></h2></header>
-    <div class="plans__t reveal">
-      <table>
-        <thead><tr><th></th><th><b>Gratis</b><span>0 €</span><a href="/login" class="btn">Empezar</a></th><th class="pro"><b>Pro</b><span>6 € <small>/ mes</small></span><a href="/login" class="btn btn--neon">Probar 14 días</a></th></tr></thead>
-        <tbody><tr><th scope="row">Canciones</th><td>10</td><td>Ilimitadas</td></tr><tr><th scope="row">Espacio</th><td>5 GB</td><td>500 GB</td></tr><tr><th scope="row">WAV, stems, portadas y letra</th><td>✓</td><td>✓</td></tr><tr><th scope="row">Versiones por canción</th><td>3</td><td>Ilimitadas</td></tr><tr><th scope="row">Reparto con firmas</th><td>—</td><td>✓</td></tr><tr><th scope="row">Pre-save y lanzamiento</th><td>—</td><td>✓</td></tr><tr><th scope="row">Compartir con tu equipo</th><td>1 persona</td><td>Sin límite</td></tr></tbody>
-      </table>
-    </div>
+    <canvas class="plans__bg" aria-hidden="true"></canvas>
+    <header class="plans__head reveal"><span class="kicker">Precios</span><h2>Empieza gratis.<br><span class="muted">Paga cuando saques el disco.</span></h2>
+      <div class="bill" role="group" aria-label="Forma de pago"><button type="button" class="on" data-b="m">Mensual</button><button type="button" data-b="y">Anual <em>2 meses gratis</em></button></div>
+    </header>
+    <div class="plans__grid">
+      <article class="plan plan--free reveal">
+        <div class="plan__eq" aria-hidden="true"><i style="--h:44%;--d:0.00s"></i><i style="--h:80%;--d:0.09s"></i><i style="--h:67%;--d:0.18s"></i><i style="--h:71%;--d:0.27s"></i><i style="--h:67%;--d:0.36s"></i><i style="--h:41%;--d:0.45s"></i><i style="--h:32%;--d:0.54s"></i><i style="--h:29%;--d:0.00s"></i><i style="--h:65%;--d:0.09s"></i><i style="--h:25%;--d:0.18s"></i><i style="--h:92%;--d:0.27s"></i><i style="--h:42%;--d:0.36s"></i><i style="--h:81%;--d:0.45s"></i><i style="--h:46%;--d:0.54s"></i><i style="--h:41%;--d:0.00s"></i><i style="--h:28%;--d:0.09s"></i><i style="--h:43%;--d:0.18s"></i><i style="--h:68%;--d:0.27s"></i><i style="--h:51%;--d:0.36s"></i><i style="--h:92%;--d:0.45s"></i><i style="--h:35%;--d:0.54s"></i><i style="--h:77%;--d:0.00s"></i><i style="--h:28%;--d:0.09s"></i><i style="--h:32%;--d:0.18s"></i><i style="--h:31%;--d:0.27s"></i><i style="--h:61%;--d:0.36s"></i><i style="--h:59%;--d:0.45s"></i><i style="--h:75%;--d:0.54s"></i></div>
+        <h3>Gratis</h3><p class="plan__sub">Para tus primeras maquetas</p>
+        <p class="plan__price"><b data-m="0" data-y="0">0</b><span>€ / mes</span></p>
+        <p class="plan__bill" data-m="Sin permanencia" data-y="Pagando el año">Sin permanencia</p>
+        <div class="plan__disk"><span><b>5 GB</b> ≈ 3 canciones completas</span><i style="--f:2%"></i></div>
+        <ul><li>WAV sin recomprimir, siempre</li><li>Stems, portada, letra y créditos</li><li>3 versiones por canción</li><li>Invitados ilimitados y gratis</li></ul>
+        <a href="/login" class="btn plan__cta">Empezar gratis</a>
+      </article>
+      <article class="plan plan--pro reveal"><span class="plan__tag">El más elegido</span>
+        <div class="plan__eq" aria-hidden="true"><i style="--h:42%;--d:0.00s"></i><i style="--h:35%;--d:0.09s"></i><i style="--h:79%;--d:0.18s"></i><i style="--h:58%;--d:0.27s"></i><i style="--h:80%;--d:0.36s"></i><i style="--h:67%;--d:0.45s"></i><i style="--h:51%;--d:0.54s"></i><i style="--h:42%;--d:0.00s"></i><i style="--h:27%;--d:0.09s"></i><i style="--h:54%;--d:0.18s"></i><i style="--h:32%;--d:0.27s"></i><i style="--h:89%;--d:0.36s"></i><i style="--h:32%;--d:0.45s"></i><i style="--h:88%;--d:0.54s"></i><i style="--h:43%;--d:0.00s"></i><i style="--h:53%;--d:0.09s"></i><i style="--h:29%;--d:0.18s"></i><i style="--h:38%;--d:0.27s"></i><i style="--h:57%;--d:0.36s"></i><i style="--h:56%;--d:0.45s"></i><i style="--h:87%;--d:0.54s"></i><i style="--h:45%;--d:0.00s"></i><i style="--h:84%;--d:0.09s"></i><i style="--h:26%;--d:0.18s"></i><i style="--h:44%;--d:0.27s"></i><i style="--h:26%;--d:0.36s"></i><i style="--h:53%;--d:0.45s"></i><i style="--h:48%;--d:0.54s"></i></div>
+        <h3>Artista</h3><p class="plan__sub">Para sacar tu disco</p>
+        <p class="plan__price"><b data-m="7" data-y="5,80">7</b><span>€ / mes</span></p>
+        <p class="plan__bill" data-m="Sin permanencia" data-y="Pagando el año">Sin permanencia</p>
+        <div class="plan__disk"><span><b>200 GB</b> ≈ 150 canciones completas</span><i style="--f:30%"></i></div>
+        <ul><li>Todo lo de Gratis</li><li>Versiones ilimitadas</li><li>Reparto con firmas</li><li>Pre-save y lanzamiento</li><li>Letra sincronizada</li></ul>
+        <a href="/login" class="btn btn--neon plan__cta">Probar 14 días gratis</a>
+      </article>
+      <article class="plan plan--studio reveal">
+        <div class="plan__eq" aria-hidden="true"><i style="--h:27%;--d:0.00s"></i><i style="--h:31%;--d:0.09s"></i><i style="--h:28%;--d:0.18s"></i><i style="--h:74%;--d:0.27s"></i><i style="--h:48%;--d:0.36s"></i><i style="--h:86%;--d:0.45s"></i><i style="--h:63%;--d:0.54s"></i><i style="--h:62%;--d:0.00s"></i><i style="--h:49%;--d:0.09s"></i><i style="--h:28%;--d:0.18s"></i><i style="--h:42%;--d:0.27s"></i><i style="--h:37%;--d:0.36s"></i><i style="--h:83%;--d:0.45s"></i><i style="--h:27%;--d:0.54s"></i><i style="--h:93%;--d:0.00s"></i><i style="--h:38%;--d:0.09s"></i><i style="--h:64%;--d:0.18s"></i><i style="--h:33%;--d:0.27s"></i><i style="--h:30%;--d:0.36s"></i><i style="--h:46%;--d:0.45s"></i><i style="--h:58%;--d:0.54s"></i><i style="--h:80%;--d:0.00s"></i><i style="--h:54%;--d:0.09s"></i><i style="--h:87%;--d:0.18s"></i><i style="--h:34%;--d:0.27s"></i><i style="--h:55%;--d:0.36s"></i><i style="--h:25%;--d:0.45s"></i><i style="--h:44%;--d:0.54s"></i></div>
+        <h3>Estudio</h3><p class="plan__sub">Para productores y estudios</p>
+        <p class="plan__price"><b data-m="19" data-y="15,80">19</b><span>€ / mes</span></p>
+        <p class="plan__bill" data-m="Sin permanencia" data-y="Pagando el año">Sin permanencia</p>
+        <div class="plan__disk"><span><b>1 TB</b> Hasta 15 artistas</span><i style="--f:100%"></i></div>
+        <ul><li>Todo lo de Artista</li><li>Carpetas por artista</li><li>Entregas con tu marca</li><li>Historial de quién descargó qué</li></ul>
+        <a href="/login" class="btn plan__cta">Probar 14 días gratis</a>
+      </article>
+      </div>
+    <div class="plans__label reveal"><b>¿Sello o colectivo?</b><span>Precio por artista, no por persona. Te lo montamos a medida.</span><a href="/login">Hablamos →</a></div>
+    <ul class="plans__always reveal">
+      <li><b>Nunca borramos.</b> Si dejas de pagar, todo queda en solo lectura 90 días y te lo descargas en un ZIP.</li>
+      <li><b>Tu audio, intacto.</b> No recomprimimos ni un WAV, en ningún plan.</li>
+      <li><b>Invitados gratis.</b> Productor, mezcla o mánager entran con un enlace, sin pagar.</li>
+      <li><b>Tus temas son tuyos.</b> No los usamos para nada más. Cancelas en dos clics.</li>
+    </ul>
   </section>
 
   <div class="ledline" aria-hidden="true"><span></span></div>
