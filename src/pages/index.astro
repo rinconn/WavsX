@@ -209,7 +209,7 @@ const keeps = [
       <label class="drop__zone"><input type="file" accept="audio/*" hidden><b>Suelta aquí tu WAV</b><small>o haz clic para elegirlo</small></label>
       <div class="drop__amb" aria-hidden="true"></div>
       <div class="drop__top">
-        <div class="drop__cover"><img src="/covers/andromeda.jpg" alt="Portada de Andrómeda"></div>
+        <div class="drop__cover"><img src="/covers/andromeda.jpg" alt="Portada de Andrómeda" loading="lazy" decoding="async"></div>
         <div class="drop__main">
           <div class="drop__head">
             <button class="drop__play" aria-label="Reproducir"></button>
@@ -223,9 +223,9 @@ const keeps = [
       <div class="drop__bot">
         <div class="blk blk--stems"><em>Stems · 5 pistas</em><div class="trks"><div class="trk" style="--k:#C6FF3D"><span class="trk__h"><b>Voz</b><i>M</i><i>S</i></span><canvas data-r="Voz lead"></canvas></div><div class="trk" style="--k:#5BE6B4"><span class="trk__h"><b>Coros</b><i>M</i><i>S</i></span><canvas data-r="Coros"></canvas></div><div class="trk" style="--k:#FFD15C"><span class="trk__h"><b>Guitarra</b><i>M</i><i>S</i></span><canvas data-r="Gtr ac."></canvas></div><div class="trk" style="--k:#FF7A45"><span class="trk__h"><b>Beat</b><i>M</i><i>S</i></span><canvas data-r="Beat"></canvas></div><div class="trk" style="--k:#9B8CFF"><span class="trk__h"><b>Bajo</b><i>M</i><i>S</i></span><canvas data-r="808"></canvas></div><span class="ph"></span></div></div>
         <div class="blk blk--cred"><em>Reparto</em>
-          <div class="who"><img src="/covers/a1.jpg" alt=""><div><b>Kheis</b><small>Letra y voz</small></div><span>40 %</span><u>Firmado</u></div>
-          <div class="who"><img src="/covers/a2.jpg" alt=""><div><b>Isma Pérez</b><small>Letra y voz</small></div><span>40 %</span><u>Firmado</u></div>
-          <div class="who"><img src="/covers/a3.jpg" alt=""><div><b>SaintCairo</b><small>Producción</small></div><span>20 %</span><u>Firmado</u></div>
+          <div class="who"><img src="/covers/a1.jpg" alt="" loading="lazy" width="32" height="32"><div><b>Kheis</b><small>Letra y voz</small></div><span>40 %</span><u>Firmado</u></div>
+          <div class="who"><img src="/covers/a2.jpg" alt="" loading="lazy" width="32" height="32"><div><b>Isma Pérez</b><small>Letra y voz</small></div><span>40 %</span><u>Firmado</u></div>
+          <div class="who"><img src="/covers/a3.jpg" alt="" loading="lazy" width="32" height="32"><div><b>SaintCairo</b><small>Producción</small></div><span>20 %</span><u>Firmado</u></div>
         </div>
         <div class="blk blk--ver"><em>Versiones</em>
           <div class="ver"><b>v1</b><div><span>Maqueta de móvil</span><small>12 mar · voz y guitarra</small></div></div>
@@ -244,7 +244,8 @@ const keeps = [
 
 <footer class="footer">
   <span class="logo" data-logo style="font-size: 16px">wavsX</span>
-  <span class="muted">Hecho para artistas que todavía no han sacado su mejor tema.</span>
+  <nav aria-label="Pie"><a href="#producto">Producto</a><a href="#como">Cómo funciona</a><a href="#empezar">Precios</a><a href="/login">Entrar</a></nav>
+  <div class="footer__c"><span>Hecho para artistas que todavía no han sacado su mejor tema.</span><span>© 2026 WavsX</span></div>
 </footer>
 <script>import '../scripts/landing.js';</script>
 </Base>

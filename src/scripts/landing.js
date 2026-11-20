@@ -367,10 +367,11 @@ if (spec) requestAnimationFrame(frame);
     if (i !== li) { li = i; kp.textContent = lyr[i - 1] || ''; kx.textContent = lyr[i + 1] || ''; kn.innerHTML = lyr[i].split(' ').map(w => `<span>${w}</span>`).join(' '); }
     const ws = kn.children, on = Math.floor(f * (ws.length + 1)); for (let j = 0; j < ws.length; j++) ws[j].classList.toggle('on', j < on);
   };
-  let timers = [], raf, played = false, playing = false, pos = 0;
+  let timers = [], raf, played = false, playing = false, pos = 0, vis = false;
   const loop = (t0) => {
     let last = performance.now();
     const step = (t) => {
+      if (!vis) { last = t; raf = requestAnimationFrame(step); return; }
       if (playing) pos = (pos + (t - last) / 26000) % 1; last = t;
       d.style.setProperty('--p', pos); drawMain(1, pos);
       const L = lyr.length, x = pos * L; setLine(Math.floor(x), x % 1);
@@ -391,7 +392,7 @@ if (spec) requestAnimationFrame(frame);
     timers.push(setTimeout(() => { st.textContent = 'Guardada'; }, 4200));
   };
   drawMain(0, 0);
-  new IntersectionObserver(([e]) => { if (e.isIntersecting && !played) { played = true; setTimeout(run, 600); } }, { threshold: .4 }).observe(d);
+  new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (e.intersectionRatio >= .4 && !played) { played = true; setTimeout(run, 600); } }, { threshold: [0, .4] }).observe(d);
   $('.drop__play').addEventListener('click', () => { playing = !playing; d.classList.toggle('is-play', playing); });
   addEventListener('resize', () => trks.forEach(o => drawTrk(o, 1)));
   const load = async (f) => {
