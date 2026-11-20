@@ -1185,28 +1185,28 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 
 /* franja de foto real a sangre, con grano y un leve desplazamiento al hacer scroll */
 /* franja del gato: fijada mientras se hace scroll; --p (0→1) la mueve landing.js */
-.shot { --p: 0; position: relative; height: 320vh; margin: 0 0 100px; background: #000; }
+.shot { --p: 0; position: relative; height: 260vh; margin: 0 0 100px; background: #000; }
 .shot__pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-.shot__bg { position: absolute; inset: 0; transform: scale(calc(2.4 - min(1, var(--p) * 1.4) * 1.55)) rotate(calc((1 - min(1, var(--p) * 1.4)) * -6deg)); will-change: transform; }
-.shot__bg { display: grid; place-items: center; }
+.shot__bg { position: absolute; inset: 0; display: grid; place-items: center end; padding-right: 3vw; }
 .shot__bg img { width: min(100vw, 100svh); aspect-ratio: 1; object-fit: cover; image-rendering: pixelated;
   -webkit-mask: radial-gradient(closest-side, #000 72%, transparent); mask: radial-gradient(closest-side, #000 72%, transparent); }
-.shot__pin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000 0%, transparent 18%, transparent 75%, #000 100%); }
-.shot__big { position: absolute; z-index: 1; left: 0; top: 50%; margin: 0; white-space: nowrap; font-weight: 800; letter-spacing: -.06em; line-height: .8;
-  font-size: clamp(120px, 26vw, 420px); color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.55);
-  transform: translate(calc(30vw - var(--p) * 135%), -55%); will-change: transform; }
-.shot__txt { position: absolute; z-index: 3; left: 6vw; bottom: 9vh; max-width: 760px;
-  transform: translateY(calc((1 - min(1, max(0, var(--p) * 3 - .9))) * 80px)); opacity: min(1, calc(var(--p) * 3 - .9)); }
-.shot__txt p { margin: 0; font-size: clamp(40px, 6.4vw, 104px); line-height: .9; letter-spacing: -.055em; font-weight: 800; }
-.shot__txt small { display: block; margin-top: 18px; font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; color: rgba(255,255,255,.6); }
+.shot__pin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000 0%, transparent 16%, transparent 80%, #000 100%); }
+.shot__txt { position: absolute; z-index: 3; left: 6vw; bottom: 10vh; max-width: 62vw; }
+.shot__txt p { margin: 0; font-size: clamp(48px, 8.4vw, 150px); line-height: .86; letter-spacing: -.055em; font-weight: 800; color: #fff; }
+.shot__txt .w { display: inline-block; white-space: nowrap; }
+.shot__txt .ch { display: inline-block; will-change: transform;
+  --k: clamp(0, calc((var(--d) + .22 - var(--p)) * 5), 1);
+  transform: translateY(calc(var(--k) * -105vh)) rotate(calc(var(--k) * var(--r) * 1deg)); }
+.shot__txt small { display: block; margin-top: 34px; font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; color: rgba(255,255,255,.6);
+  opacity: clamp(0, calc((var(--p) - .75) * 6), 1); }
 .shot__tc { font-weight: 400; color: var(--led, #C6FF3D); }
 @media (max-width: 760px) {
-  .shot { height: 220vh; margin-bottom: 60px; }
-  .shot__bg { transform: scale(calc(1.8 - min(1, var(--p) * 1.4) * .8)); }
-  .shot__big { font-size: 38vw; -webkit-text-stroke-width: 1px; top: 30%; }
-  .shot__txt { left: 20px; right: 20px; bottom: 7vh; }
+  .shot { height: 200vh; margin-bottom: 60px; }
+  .shot__bg { place-items: start center; padding: 12vh 0 0; }
+  .shot__txt { left: 20px; right: 20px; bottom: 8vh; max-width: none; }
+  .shot__txt p { font-size: 15vw; }
 }
-@media (prefers-reduced-motion: reduce) { .shot { height: auto; } .shot__pin { position: relative; } .shot { --p: .6; } }
+@media (prefers-reduced-motion: reduce) { .shot { height: auto; --p: 1; } .shot__pin { position: relative; } }
 
 /* franja del muro de grafiti (Skør) */
 .wall { position: relative; margin: 0 0 100px; height: min(72vh, 680px); overflow: hidden; background: #050605; }

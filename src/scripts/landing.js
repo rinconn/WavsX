@@ -480,6 +480,14 @@ onScroll();
 /* franja del gato: progreso del scroll mientras está fijada */
 {
   const sh = document.querySelector('.shot'), tc = sh && sh.querySelector('.shot__tc');
+  // letras sueltas que caen una a una según avanza el scroll
+  const tp = sh && sh.querySelector('.shot__txt p');
+  if (tp) {
+    const lines = tp.innerHTML.split(/<br\s*\/?>/i).map(l => [...l.replace(/<[^>]+>/g, '')]), n = lines.flat().length; let i = 0;
+    tp.setAttribute('aria-label', tp.textContent);
+    const ch = c => `<span class="ch" style="--d:${(i++ / n * .6).toFixed(3)};--r:${((i * 37) % 31) - 15}">${c}</span>`;
+    tp.innerHTML = lines.map(l => l.join('').split(' ').map(w => `<span class="w" aria-hidden="true">${[...w].map(ch).join('')}</span>`).join(' ')).join('<br>');
+  }
   if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let on = false, last = -1;
     const tick = () => {
