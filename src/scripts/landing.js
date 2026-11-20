@@ -469,12 +469,30 @@ onScroll();
 
 /* foto a sangre: se desplaza un poco más lenta que el scroll */
 {
-  for (const sh of document.querySelectorAll('.shot, .wall')) { const im = sh.querySelector('.shot__img, .wall__img');
+  for (const sh of document.querySelectorAll('.wall')) { const im = sh.querySelector('.wall__img');
   if (im && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let on = false;
     const tick = () => { if (!on) return; const r = sh.getBoundingClientRect(), k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; im.style.transform = `translateY(${(k * -6).toFixed(2)}%)`; requestAnimationFrame(tick); };
     new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); }).observe(sh);
   } }
+}
+
+/* franja del gato: progreso del scroll mientras está fijada */
+{
+  const sh = document.querySelector('.shot'), tc = sh && sh.querySelector('.shot__tc');
+  if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let on = false, last = -1;
+    const tick = () => {
+      if (!on) return;
+      const r = sh.getBoundingClientRect(), p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
+      if (Math.abs(p - last) > .0005) {
+        last = p; sh.style.setProperty('--p', p.toFixed(4));
+        const t = Math.round(p * 214); tc.textContent = `00:0${t / 60 | 0}:${String(t % 60).padStart(2, '0')}`;
+      }
+      requestAnimationFrame(tick);
+    };
+    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); }).observe(sh);
+  }
 }
 
 /* separadores: regla de compases, como la línea de tiempo de un DAW */

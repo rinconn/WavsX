@@ -1184,16 +1184,33 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 .plaq--plata .plaq__disc { filter: saturate(.6) brightness(.92); }
 
 /* franja de foto real a sangre, con grano y un leve desplazamiento al hacer scroll */
-.shot { position: relative; margin: 0 0 100px; height: min(78vh, 720px); overflow: hidden; background: #050605; }
-.shot__img { position: absolute; inset: -8% 0; will-change: transform; }
-.shot__img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; filter: saturate(.85) contrast(1.05); }
-.shot::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, var(--bg) 0%, transparent 22%, transparent 50%, rgba(9,9,10,.85) 88%, var(--bg) 100%); }
-.shot::after { content: ''; position: absolute; inset: 0; z-index: 1; opacity: .16; mix-blend-mode: overlay; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-.shot figcaption { position: absolute; z-index: 2; left: 48px; bottom: 48px; max-width: 700px; }
-.shot p { margin: 0; font-size: clamp(36px, 5vw, 76px); line-height: .95; letter-spacing: -.05em; font-weight: 700; text-shadow: 0 4px 30px rgba(0,0,0,.6); }
-.shot small { display: block; margin-top: 16px; font-size: 13px; color: var(--text-2); letter-spacing: .02em; }
-@media (max-width: 700px) { .shot { height: 70vh; margin-bottom: 60px; } .shot__img img { object-position: 52% 40%; } .shot figcaption { left: 20px; right: 20px; bottom: 28px; } }
+/* franja del gato: fijada mientras se hace scroll; --p (0→1) la mueve landing.js */
+.shot { --p: 0; position: relative; height: 320vh; margin: 0 0 100px; background: #000; }
+.shot__pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.shot__bg { position: absolute; inset: 0; transform: scale(calc(1.35 - var(--p) * .35)); will-change: transform; }
+.shot__bg img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; opacity: calc(.55 + var(--p) * .3); }
+.shot__pin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000 0%, transparent 18%, transparent 75%, #000 100%); }
+.shot__big { position: absolute; z-index: 1; left: 0; top: 50%; margin: 0; white-space: nowrap; font-weight: 800; letter-spacing: -.06em; line-height: .8;
+  font-size: clamp(120px, 26vw, 420px); color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.55);
+  transform: translate(calc(30vw - var(--p) * 115%), -55%); will-change: transform; }
+.shot__cat { position: absolute; z-index: 2; margin: 0; right: 7vw; top: 50%; width: min(56vw, 860px);
+  transform: translateY(calc(-30% - var(--p) * 40%)) rotate(calc(-4deg + var(--p) * 5deg)) scale(calc(.82 + var(--p) * .26));
+  clip-path: inset(calc(max(0, .3 - var(--p)) * 100%) 0 0 0); will-change: transform, clip-path; }
+.shot__cat img { display: block; width: 100%; aspect-ratio: 2 / 1; object-fit: cover; filter: saturate(.9) contrast(1.05); box-shadow: 0 40px 80px rgba(0,0,0,.7); }
+.shot__cat figcaption { display: flex; justify-content: space-between; margin-top: 8px; font: 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; color: rgba(255,255,255,.55); }
+.shot__txt { position: absolute; z-index: 3; left: 6vw; bottom: 9vh; max-width: 760px;
+  transform: translateY(calc((1 - min(1, max(0, var(--p) * 3 - .9))) * 80px)); opacity: min(1, calc(var(--p) * 3 - .9)); }
+.shot__txt p { margin: 0; font-size: clamp(40px, 6.4vw, 104px); line-height: .9; letter-spacing: -.055em; font-weight: 800; }
+.shot__txt small { display: block; margin-top: 18px; font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; color: rgba(255,255,255,.6); }
+.shot__tc { font-weight: 400; color: var(--led, #C6FF3D); }
+@media (max-width: 760px) {
+  .shot { height: 220vh; margin-bottom: 60px; }
+  .shot__bg { transform: none; }
+  .shot__big { font-size: 38vw; -webkit-text-stroke-width: 1px; top: 30%; }
+  .shot__cat { right: -6vw; width: 96vw; transform: translateY(calc(-50% - var(--p) * 25%)) rotate(-3deg); clip-path: none; }
+  .shot__txt { left: 20px; right: 20px; bottom: 7vh; }
+}
+@media (prefers-reduced-motion: reduce) { .shot { height: auto; } .shot__pin { position: relative; } .shot { --p: .6; } }
 
 /* franja del muro de grafiti (Skør) */
 .wall { position: relative; margin: 0 0 100px; height: min(72vh, 680px); overflow: hidden; background: #050605; }
@@ -1213,5 +1230,4 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 .wall__disc span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 1100px) { .wall__disc li { width: 110px; } .wall__disc img { width: 110px; height: 110px; } }
 @media (max-width: 860px) { .wall { height: auto; min-height: 60vh; padding: 120px 0 60px; } .wall__in { position: relative; left: auto; right: auto; bottom: auto; padding: 0 20px; flex-direction: column; align-items: flex-start; flex-wrap: wrap; } .wall__disc { margin: 8px 0 0; gap: 10px; } .wall__disc li { width: calc((100vw - 60px) / 3); } .wall__disc img { width: 100%; height: auto; aspect-ratio: 1; } }
-.shot__img img[src*="cosmos"] { object-position: 50% 82%; image-rendering: pixelated; filter: none; }
 .wall__disc img[src$=".gif"] { image-rendering: pixelated; }
