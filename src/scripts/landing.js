@@ -449,7 +449,7 @@ onScroll();
 
 /* ---------- separadores: forma de onda que se "reproduce" al entrar en pantalla ---------- */
 /* separadores: regla de compases, como la línea de tiempo de un DAW */
-const rulerNames = ['Producto', 'Cómo funciona', 'Empezar'];
+const rulerNames = ['Producto', 'Cómo funciona', 'Precios', 'Empezar'];
 document.querySelectorAll('.ledline').forEach((el, k) => {
   el.className = 'ruler';
   el.innerHTML = `<b>${String(k + 2).padStart(2, '0')}</b><i><u></u></i><em>${rulerNames[k] || ''}</em>`;
