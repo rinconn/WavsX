@@ -1185,9 +1185,10 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 
 /* franja de foto real a sangre, con grano y un leve desplazamiento al hacer scroll */
 /* franja del gato: fijada mientras se hace scroll; --p (0→1) la mueve landing.js */
-.shot { --p: 0; position: relative; height: 260vh; margin: 0 0 100px; background: #000; }
+.shot { --p: 0; position: relative; height: 340vh; margin: 0 0 100px; background: #000; }
 .shot__pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-.shot__bg { position: absolute; inset: 0; display: grid; place-items: center end; padding-right: 3vw; }
+.shot__bg { position: absolute; inset: 0; display: grid; place-items: center end; padding-right: 3vw;
+  transform: scale(calc(2.2 - min(1, var(--p) * 2) * 1.2)) rotate(calc((1 - min(1, var(--p) * 2)) * -5deg)); will-change: transform; }
 .shot__bg img { width: min(100vw, 100svh); aspect-ratio: 1; object-fit: cover; image-rendering: pixelated;
   -webkit-mask: radial-gradient(closest-side, #000 72%, transparent); mask: radial-gradient(closest-side, #000 72%, transparent); }
 .shot__pin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000 0%, transparent 16%, transparent 80%, #000 100%); }
@@ -1195,10 +1196,10 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 .shot__txt p { margin: 0; font-size: clamp(48px, 8.4vw, 150px); line-height: .86; letter-spacing: -.055em; font-weight: 800; color: #fff; }
 .shot__txt .w { display: inline-block; white-space: nowrap; }
 .shot__txt .ch { display: inline-block; will-change: transform;
-  --k: clamp(0, calc((var(--d) + .22 - var(--p)) * 5), 1);
+  --k: clamp(0, calc((var(--d) + .55 - var(--p)) * 3.2), 1);
   transform: translateY(calc(var(--k) * -105vh)) rotate(calc(var(--k) * var(--r) * 1deg)); }
 .shot__txt small { display: block; margin-top: 34px; font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; color: rgba(255,255,255,.6);
-  opacity: clamp(0, calc((var(--p) - .75) * 6), 1); }
+  opacity: clamp(0, calc((var(--p) - .88) * 9), 1); }
 .shot__tc { font-weight: 400; color: var(--led, #C6FF3D); }
 @media (max-width: 760px) {
   .shot { height: 200vh; margin-bottom: 60px; }
