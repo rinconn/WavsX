@@ -192,14 +192,14 @@ $('#rsign').addEventListener('click', rsign);
 
 /* versiones */
 const V = [
-  ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB'],
-  ['v3', 'maqueta con bajo', '28 mar', 'Entra el bajo y se cierra la estructura · 4:41 · 48 MB'],
-  ['v5', 'mezcla con voz nueva', '2 jun', 'Voz regrabada en estudio · comentario de Marcos en 0:48'],
-  ['v7', 'mezcla final', '19 sep', 'Aprobada por todos · 24-bit / 48 kHz · 5:04'],
-  ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB'],
+  ['v1', 'demo del móvil', '12 mar', 'Primera idea grabada con el móvil · 3:12 · 6 MB', 'Hierro', '3:12', '6 MB'],
+  ['v3', 'maqueta con bajo', '28 mar', 'Entra el bajo y se cierra la estructura · 4:41 · 48 MB', 'Bronce', '4:41', '48 MB'],
+  ['v5', 'mezcla con voz nueva', '2 jun', 'Voz regrabada en estudio · comentario de Marcos en 0:48', 'Plata', '5:02', '1 nota'],
+  ['v7', 'mezcla final', '19 sep', 'Aprobada por todos · 24-bit / 48 kHz · 5:04', 'Oro', '5:04', '24-bit'],
+  ['v9', 'master', 'hoy', 'Listo para distribuidora · -9,4 LUFS · 87 MB', 'Platino', '-9,4', 'LUFS'],
 ];
 const nodes = $('.tl__nodes');
-if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}"><i></i><b>${v[0]}</b><em>${v[2]}</em><small>${v[1]}</small></button>`).join('');
+if (nodes) nodes.innerHTML = V.map((v, i) => `<button type="button" class="tn" data-i="${i}" style="--i:${i}" aria-label="${v[0]} · ${v[1]}"><span class="tk"><span class="tk__f"></span><span class="tk__b"><u>${v[4]}</u><strong>${v[5]}</strong><s>${v[6]}</s></span></span><b>${v[0]} · ${['demo','maqueta','mezcla','final','master'][i]}</b><small>${v[2]}</small></button>`).join('');
 const crate = $('#crate'), cfront = $('.crate__front');
 if (crate) cfront.addEventListener('click', () => { const o = crate.classList.toggle('open'); cfront.setAttribute('aria-expanded', o); cfront.setAttribute('aria-label', o ? 'Cerrar la carpeta de versiones' : 'Abrir la carpeta de versiones'); });
 let tlI = -1;
@@ -275,7 +275,7 @@ const frame = (t) => {
     else { const n = Math.ceil(g * LY[i][1].length); if (n !== lyN) { lyN = n; lbig.innerHTML = `<span class="r">${LY[i][1].slice(0, n)}</span><span class="car"></span><span class="h">${LY[i][1].slice(n)}</span>`; } }
   } else if (cur === 5 && !still) {
     if (!lt0) lt0 = t;
-    if (t - lt0 > 2800) { lt0 = t; setV((tlI + 1) % V.length); }
+    if (t - lt0 > 5000) { lt0 = t; setV((tlI + 1) % V.length); }
   }
   fT = t;
   requestAnimationFrame(frame);
@@ -467,36 +467,6 @@ document.addEventListener('click', (e) => {
   smooth.to(t.getBoundingClientRect().top + scrollY - 20);
 });
 
-/* fondo de versiones: disco de puntos con surcos y una onda que sale del centro */
-(() => {
-  const cv = $('.globe'); if (!cv) return;
-  const g = cv.getContext('2d'), P = [];
-  for (let k = 0; k < 34; k++) {
-    const r = 0.22 + (k / 33) * 0.78, n = Math.round(40 + r * 150);
-    for (let j = 0; j < n; j++) P.push([r, (j / n) * 6.283 + Math.random() * 0.03, 0.5 + Math.pow(Math.random(), 3) * 1.8]);
-  }
-  let W = 0, H = 0, dpr = 1, rot = 0, tm = 0, tx = 0, ty = 0, mx = 0, my = 0, vis = false, raf = 0, last = 0;
-  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; };
-  const draw = () => {
-    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
-    const R = Math.min(W * 0.46, 420), cx = W / 2 + tx * 40, cy = H * 0.74 + ty * 20, sq = 0.3 + ty * 0.06;
-    for (const [r, a0, s] of P) {
-      const a = a0 + rot, x = Math.cos(a) * r, z = Math.sin(a) * r;
-      const px = cx + x * R, py = cy + z * R * sq;
-      if (py < -4 || py > H + 4) continue;
-      const wave = Math.max(0, Math.sin(r * 18 - tm * 2.2)), front = (z + 1) / 2;
-      g.globalAlpha = 0.1 + front * 0.35 + wave * 0.45;
-      g.fillStyle = wave > 0.85 ? '#E6FF94' : r < 0.5 ? '#5BE6B4' : '#C6FF3D';
-      g.beginPath(); g.arc(px, py, s * (0.6 + front * 0.6) + wave * 0.9, 0, 6.283); g.fill();
-    }
-  };
-  const loop = (t) => { raf = 0; if (!vis) return; const dt = Math.min(50, t - (last || t)); last = t; rot += dt * 0.00009; tm += dt * 0.001; tx += (mx - tx) * 0.05; ty += (my - ty) * 0.05; draw(); raf = requestAnimationFrame(loop); };
-  const start = () => { if (still) { draw(); return; } if (!raf) { last = 0; raf = requestAnimationFrame(loop); } };
-  size(); draw();
-  addEventListener('resize', () => { size(); draw(); });
-  const art = cv.parentElement;
-  art.addEventListener('pointermove', (e) => { const r = art.getBoundingClientRect(); mx = (e.clientX - r.left) / r.width - 0.5; my = (e.clientY - r.top) / r.height - 0.5; });
-  art.addEventListener('pointerleave', () => { mx = 0; my = 0; });
-  new IntersectionObserver((es) => { vis = es[0].isIntersecting && cv.offsetParent !== null; if (vis) { size(); start(); } }, { threshold: 0.05 }).observe(art);
-  new MutationObserver(() => { if (cv.offsetParent !== null) { vis = true; size(); start(); } else vis = false; }).observe(cv.closest('.pane'), { attributes: true, attributeFilter: ['class'] });
-})();
+
+
+

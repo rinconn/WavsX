@@ -48,7 +48,7 @@ button { cursor: pointer; }
 
 /* logo */
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 20px; letter-spacing: -0.04em; }
-.logo__mark { width: 26px; height: 26px; flex: none; }
+.logo__mark { width: 34px; height: 34px; flex: none; border-radius: 50%; box-shadow: 0 0 14px rgba(198,255,61,.45); }
 
 /* botones */
 .btn {
@@ -104,7 +104,7 @@ button { cursor: pointer; }
 @keyframes blurIn { from { opacity: 0; filter: blur(10px); } to { opacity: 1; filter: none; } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
+  body > :not(.splash), body > :not(.splash) *, body > :not(.splash) *::before, body > :not(.splash) *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; }
 }
 
 /* selector de paleta (temporal, para decidir) */

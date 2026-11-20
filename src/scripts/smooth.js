@@ -1,6 +1,6 @@
 // Scroll suave con inercia para rueda y trackpad (sin dependencias).
 // El táctil y el teclado siguen siendo nativos. Se desactiva con "reducir movimiento".
-export function smoothScroll({ ease = 0.085 } = {}) {
+export function smoothScroll({ ease = 0.16 } = {}) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || matchMedia('(pointer: coarse)').matches) {
     return { to: (y) => scrollTo({ top: y, behavior: 'smooth' }) };
   }
