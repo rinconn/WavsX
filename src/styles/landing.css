@@ -352,17 +352,22 @@ main { overflow-x: clip; }
 
 /* ---------- 4 · on air ---------- */
 .onair { position: relative; overflow: hidden; min-height: 92vh; padding: 140px 24px 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.onair__glow { position: absolute; left: 50%; top: 18%; width: 760px; height: 420px; margin-left: -380px; border-radius: 50%; background: rgba(var(--c2-rgb), .0); filter: blur(100px); transition: background 1.2s; pointer-events: none; }
-.onair.is-on .onair__glow { background: rgba(var(--c2-rgb), .22); }
-.sign {
-  position: relative; display: inline-flex; align-items: center; gap: 14px; padding: 16px 30px; border-radius: 16px;
-  border: 2px solid var(--line-2); color: #3A3644; font-size: 30px; font-weight: 800; letter-spacing: .22em;
-  background: rgba(19, 18, 25, .8); margin-bottom: 48px; transition: color .2s, border-color .2s, box-shadow .2s, text-shadow .2s;
-}
-.sign__dot { width: 12px; height: 12px; border-radius: 50%; background: #3A3644; transition: background .2s, box-shadow .2s; }
-.onair.is-on .sign { color: var(--c2); border-color: var(--c2); text-shadow: 0 0 18px rgba(var(--c2-rgb), .9); box-shadow: 0 0 30px rgba(var(--c2-rgb), .45), inset 0 0 22px rgba(var(--c2-rgb), .25); animation: flicker 1.4s linear both; }
-.onair.is-on .sign__dot { background: var(--c2); box-shadow: 0 0 12px var(--c2); animation: pulse 1.6s ease-in-out 1.4s infinite; }
-@keyframes flicker { 0%, 8% { opacity: .3; } 10% { opacity: 1; } 14% { opacity: .35; } 18%, 30% { opacity: 1; } 33% { opacity: .5; } 36%, 100% { opacity: 1; } }
+.console { display: flex; gap: 2px; padding: 14px 14px 10px; margin-bottom: 56px; border-radius: 6px; background: #15161A; border: 1px solid #24262B; box-shadow: 0 30px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05); }
+.ch { position: relative; width: 64px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 0 8px; border-right: 1px solid #0C0D10; }
+.ch:last-child { border-right: 0; }
+.tape { display: block; width: 58px; padding: 5px 0 4px; font: 400 13px/1 'Permanent Marker', cursive; font-style: normal; color: #1E1D1A; background: #E9E2CC; transform: rotate(var(--r, -1.5deg)); box-shadow: 0 1px 2px rgba(0,0,0,.4); clip-path: polygon(2% 0, 98% 6%, 100% 94%, 0 100%); }
+.ch:nth-child(2n) .tape { --r: 1.2deg; }
+.ch--you .tape { color: #8A8470; background: #D9D2BC; }
+.knob { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #4A4C52, #1C1D21 70%); box-shadow: 0 2px 3px rgba(0,0,0,.6); position: relative; }
+.knob::after { content: ''; position: absolute; left: 12px; top: 3px; width: 2px; height: 8px; background: #D8D8D8; transform-origin: 1px 10px; transform: rotate(calc(var(--v) * 2.4deg - 120deg)); }
+.rail { position: relative; width: 6px; height: 150px; margin: 6px 0; border-radius: 3px; background: #050506; box-shadow: inset 0 1px 2px #000; }
+.fad { position: absolute; left: -13px; bottom: 0; width: 32px; height: 18px; border-radius: 2px; background: linear-gradient(#7C7F86, #3D3F44 45%, #2A2B2F 55%, #5A5C62); box-shadow: 0 3px 4px rgba(0,0,0,.6); transition: bottom 1.4s var(--ease); }
+.fad::after { content: ''; position: absolute; left: 3px; right: 3px; top: 8px; height: 2px; background: #EDEDED; }
+.onair.is-on .fad { bottom: calc(var(--v) * 1.32px); }
+.ch:nth-child(n) .fad { transition-delay: calc(var(--i, 0) * 80ms); }
+.ch--you .fad::after { background: var(--led, #C6FF3D); }
+.ch em { font: 600 11px/1 var(--font); font-style: normal; color: #6B6E75; }
+@media (max-width: 620px) { .ch { width: 40px; } .tape { width: 38px; font-size: 9px; } .knob { width: 20px; height: 20px; } .knob::after { left: 9px; } .ch:nth-child(n+6):not(.ch--you) { display: none; } }
 .onair h2 { position: relative; margin: 0; font-size: clamp(48px, 7.4vw, 120px); line-height: .95; letter-spacing: -0.055em; font-weight: 700; }
 .onair p { position: relative; margin: 24px 0 0; font-size: 18px; color: var(--text-2); }
 .onair__cta { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 32px; }
@@ -387,7 +392,6 @@ main { overflow-x: clip; }
 
   .desk__view { padding: 20px; min-height: 0; }
   .ledline { margin: 0 20px; }
-  .sign { font-size: 22px; padding: 12px 20px; }
 }
 .heroC .pin { color: #0A090D; }
 /* separador: la forma de onda de un tema, que se enciende entera en verde al entrar en pantalla */
