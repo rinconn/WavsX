@@ -999,3 +999,4 @@ video.m { width: 100%; height: 100%; object-fit: cover; }
 /* versiones: globo de puntos detrás de la carpeta */
 .globe { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
 .vx__art { background: radial-gradient(70% 60% at 50% 100%, rgba(198, 255, 61, .08), transparent 70%), #0a0c07; }
+.onair h2 .lime { color: #C6FF3D; }
