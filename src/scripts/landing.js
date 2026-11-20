@@ -333,10 +333,42 @@ if (spec) requestAnimationFrame(frame);
   }
 }
 
-/* ---------- 4 · cierre ---------- */
-new IntersectionObserver(([e]) => {
-  if (e.isIntersecting) $('.onair').classList.add('is-on');
-}, { threshold: 0.45 }).observe($('.onair'));
+/* ---------- 4 · cierre: el WAV se convierte en canción ---------- */
+{
+  const d = $('#drop'), cv = $('#dropWave'), cx = cv.getContext('2d');
+  let peaks = Array.from({ length: 160 }, (_, i) => { const t = i / 160; return Math.min(1, (.25 + .6 * Math.abs(Math.sin(t * 9) * Math.sin(t * 2.3 + 1))) * (.7 + .3 * Math.sin(i * 1.7) ** 2) * (t < .06 ? t / .06 : 1)); });
+  let timers = [], raf, played = false;
+  const draw = (p) => {
+    const w = cv.width = cv.clientWidth * 2, h = cv.height = cv.clientHeight * 2, n = peaks.length, bw = w / n;
+    cx.clearRect(0, 0, w, h);
+    for (let i = 0; i < n; i++) { cx.fillStyle = i / n < p ? '#C6FF3D' : '#2A2C24'; const a = Math.max(2, peaks[i] * h * .92); cx.fillRect(i * bw + 1, (h - a) / 2, bw - 2, a); }
+  };
+  const run = () => {
+    timers.forEach(clearTimeout); cancelAnimationFrame(raf); d.className = 'drop reveal is-in s1'; $('.drop__st').textContent = 'Subiendo…';
+    const t0 = performance.now();
+    const step = (t) => { const p = Math.min(1, (t - t0) / 1600); draw(p); if (p < 1) raf = requestAnimationFrame(step); };
+    raf = requestAnimationFrame(step);
+    [2, 3, 4, 5, 6].forEach((k, i) => timers.push(setTimeout(() => d.classList.add('s' + k), 1800 + i * 550)));
+    timers.push(setTimeout(() => { $('.drop__st').textContent = 'Guardada'; }, 4100));
+  };
+  draw(0);
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && !played) { played = true; setTimeout(run, 700); } }, { threshold: .5 }).observe(d);
+  const load = async (f) => {
+    if (!f) return;
+    $('#dropName').textContent = f.name; $('#dropMeta').textContent = (f.size / 1048576).toFixed(1) + ' MB';
+    try {
+      const buf = await new (window.AudioContext || window.webkitAudioContext)().decodeAudioData(await f.arrayBuffer());
+      const ch = buf.getChannelData(0), n = 160, sz = Math.floor(ch.length / n); let mx = 0;
+      peaks = Array.from({ length: n }, (_, i) => { let m = 0; for (let j = i * sz; j < (i + 1) * sz; j += 64) m = Math.max(m, Math.abs(ch[j])); mx = Math.max(mx, m); return m; }).map(v => v / (mx || 1));
+      const s = Math.round(buf.duration); $('#dropMeta').textContent = (buf.sampleRate / 1000) + ' kHz · ' + Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    } catch (_) {}
+    played = true; run();
+  };
+  $('.drop__zone input').addEventListener('change', (e) => load(e.target.files[0]));
+  d.addEventListener('dragover', (e) => { e.preventDefault(); d.classList.add('is-over'); });
+  d.addEventListener('dragleave', () => d.classList.remove('is-over'));
+  d.addEventListener('drop', (e) => { e.preventDefault(); d.classList.remove('is-over'); load(e.dataTransfer.files[0]); });
+}
 
 /* ---------- aparición al hacer scroll ---------- */
 const io = new IntersectionObserver((entries) => {
