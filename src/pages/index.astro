@@ -204,18 +204,39 @@ const keeps = [
   <!-- 4 · CIERRE: tu canción se monta en vivo -->
   <section class="onair" id="empezar">
     <h2 class="reveal">Tu próxima canción<br><span class="grad-text">empieza aquí.</span></h2>
-    <p class="reveal">Suelta un WAV y mira cómo queda.</p>
+    <p class="reveal">Sube un WAV y mira cómo se ordena todo lo demás.</p>
     <div class="drop reveal" id="drop">
       <label class="drop__zone"><input type="file" accept="audio/*" hidden><b>Suelta aquí tu WAV</b><small>o haz clic para elegirlo</small></label>
-      <div class="drop__head"><span class="drop__ic"></span><div><b id="dropName">maqueta_v3.wav</b><small id="dropMeta">48 kHz · 24 bit · 3:42</small></div><span class="drop__st">Subiendo…</span></div>
-      <canvas class="drop__wave" id="dropWave"></canvas>
-      <ul class="drop__rows">
-        <li><em>Stems</em><span class="lanes"><i>Voz</i><i>Guitarra</i><i>Bajo</i><i>Batería</i></span></li>
-        <li><em>Portada</em><span class="cov" style="background-image:url(/covers/foto.jpg)"></span><span>foto.jpg · 3000 × 3000</span></li>
-        <li><em>Letra</em><span>«Me quedé en la esquina de siempre…»</span></li>
-        <li><em>Créditos</em><span>Tú 60 % · Producción 30 % · Mezcla 10 %</span></li>
-        <li><em>Versiones</em><span>v1 maqueta → v2 mezcla → <b>v3 máster</b></span></li>
-      </ul>
+      <div class="drop__amb" aria-hidden="true"></div>
+      <div class="drop__cover"><img src="/covers/andromeda.jpg" alt="Portada de Andrómeda"></div>
+      <div class="drop__body">
+        <div class="drop__head">
+          <button class="drop__play" aria-label="Reproducir"></button>
+          <div><b id="dropName">Andrómeda</b><small>Kheis, Isma Pérez · <span id="dropMeta">48 kHz · 24 bit · 3:42</span></small></div>
+          <span class="drop__st">Subiendo…</span>
+        </div>
+        <canvas class="drop__wave" id="dropWave"></canvas>
+        <div class="drop__grid">
+          <div class="blk blk--stems"><em>Stems</em>
+            <div class="lane"><i>Voz</i><canvas></canvas></div>
+            <div class="lane"><i>Coros</i><canvas></canvas></div>
+            <div class="lane"><i>Beat</i><canvas></canvas></div>
+            <div class="lane"><i>Bajo</i><canvas></canvas></div>
+          </div>
+          <div class="blk blk--lyr"><em>Letra</em>
+            <p><time>0:12</time>Mirando arriba desde el mismo banco</p>
+            <p class="on"><time>0:16</time>la ciudad se apaga y yo sigo despierto</p>
+            <p><time>0:21</time>tú tan lejos como Andrómeda</p>
+          </div>
+          <div class="blk blk--cred"><em>Reparto</em>
+            <div class="split"><span style="--w:40%">Kheis</span><span style="--w:40%">Isma Pérez</span><span style="--w:20%">Prod.</span></div>
+            <small>40 % · 40 % · 20 % — firmado por los 3</small>
+          </div>
+          <div class="blk blk--ver"><em>Versiones</em>
+            <ol><li>Maqueta</li><li>Mezcla</li><li class="on">Máster</li></ol>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="onair__cta reveal">
       <a href="/login" class="btn btn--neon btn--lg">Guardar mi canción gratis</a>

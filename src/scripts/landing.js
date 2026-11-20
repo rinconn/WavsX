@@ -338,24 +338,26 @@ if (spec) requestAnimationFrame(frame);
   const d = $('#drop'), cv = $('#dropWave'), cx = cv.getContext('2d');
   let peaks = Array.from({ length: 160 }, (_, i) => { const t = i / 160; return Math.min(1, (.25 + .6 * Math.abs(Math.sin(t * 9) * Math.sin(t * 2.3 + 1))) * (.7 + .3 * Math.sin(i * 1.7) ** 2) * (t < .06 ? t / .06 : 1)); });
   let timers = [], raf, played = false;
-  const draw = (p) => {
-    const w = cv.width = cv.clientWidth * 2, h = cv.height = cv.clientHeight * 2, n = peaks.length, bw = w / n;
-    cx.clearRect(0, 0, w, h);
-    for (let i = 0; i < n; i++) { cx.fillStyle = i / n < p ? '#C6FF3D' : '#2A2C24'; const a = Math.max(2, peaks[i] * h * .92); cx.fillRect(i * bw + 1, (h - a) / 2, bw - 2, a); }
+  const bars = (c, pk, p, on, off) => {
+    const g = c.getContext('2d'), w = c.width = c.clientWidth * 2, h = c.height = c.clientHeight * 2, n = pk.length, bw = w / n;
+    g.clearRect(0, 0, w, h);
+    for (let i = 0; i < n; i++) { g.fillStyle = i / n < p ? on : off; const a = Math.max(2, pk[i] * h * .92); g.fillRect(i * bw + .5, (h - a) / 2, Math.max(1, bw - 1.5), a); }
   };
+  const draw = (p) => bars(cv, peaks, p, '#C6FF3D', 'rgba(255,255,255,.14)');
+  const lanes = [...d.querySelectorAll('.lane canvas')].map((c, k) => ({ c, pk: peaks.map((v, i) => Math.max(0, v * (.5 + .5 * Math.sin(i * (.3 + k * .21) + k * 2)) ** 2 * ((k === 0 && i % 40 < 6) ? .1 : 1))) }));
   const run = () => {
     timers.forEach(clearTimeout); cancelAnimationFrame(raf); d.className = 'drop reveal is-in s1'; $('.drop__st').textContent = 'Subiendo…';
     const t0 = performance.now();
-    const step = (t) => { const p = Math.min(1, (t - t0) / 1600); draw(p); if (p < 1) raf = requestAnimationFrame(step); };
+    const step = (t) => { const p = Math.min(1, (t - t0) / 1600); draw(p); const q = Math.min(1, Math.max(0, (t - t0 - 2200) / 1200)); lanes.forEach(l => bars(l.c, l.pk, q, 'rgba(255,255,255,.75)', 'rgba(255,255,255,.1)')); if (q < 1) raf = requestAnimationFrame(step); };
     raf = requestAnimationFrame(step);
-    [2, 3, 4, 5, 6].forEach((k, i) => timers.push(setTimeout(() => d.classList.add('s' + k), 1800 + i * 550)));
-    timers.push(setTimeout(() => { $('.drop__st').textContent = 'Guardada'; }, 4100));
+    [2, 3, 4, 5, 6].forEach((k, i) => timers.push(setTimeout(() => d.classList.add('s' + k), 2000 + i * 700)));
+    timers.push(setTimeout(() => { $('.drop__st').textContent = 'Guardada'; }, 4800));
   };
   draw(0);
   new IntersectionObserver(([e]) => { if (e.isIntersecting && !played) { played = true; setTimeout(run, 700); } }, { threshold: .5 }).observe(d);
   const load = async (f) => {
     if (!f) return;
-    $('#dropName').textContent = f.name; $('#dropMeta').textContent = (f.size / 1048576).toFixed(1) + ' MB';
+    $('#dropName').textContent = f.name.replace(/\.[^.]+$/, ''); $('#dropMeta').textContent = (f.size / 1048576).toFixed(1) + ' MB';
     try {
       const buf = await new (window.AudioContext || window.webkitAudioContext)().decodeAudioData(await f.arrayBuffer());
       const ch = buf.getChannelData(0), n = 160, sz = Math.floor(ch.length / n); let mx = 0;
