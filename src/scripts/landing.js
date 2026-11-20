@@ -467,6 +467,16 @@ onScroll();
   }
 }
 
+/* foto a sangre: se desplaza un poco más lenta que el scroll */
+{
+  const sh = $('.shot'), im = sh && sh.querySelector('.shot__img');
+  if (im && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let on = false;
+    const tick = () => { if (!on) return; const r = sh.getBoundingClientRect(), k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; im.style.transform = `translateY(${(k * -6).toFixed(2)}%)`; requestAnimationFrame(tick); };
+    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); }).observe(sh);
+  }
+}
+
 /* separadores: regla de compases, como la línea de tiempo de un DAW */
 const rulerNames = ['Producto', 'Cómo funciona', 'Precios', 'Empezar'];
 document.querySelectorAll('.ledline').forEach((el, k) => {
