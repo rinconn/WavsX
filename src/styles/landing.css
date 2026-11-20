@@ -1194,3 +1194,14 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 .shot p { margin: 0; font-size: clamp(36px, 5vw, 76px); line-height: .95; letter-spacing: -.05em; font-weight: 700; text-shadow: 0 4px 30px rgba(0,0,0,.6); }
 .shot small { display: block; margin-top: 16px; font-size: 13px; color: var(--text-2); letter-spacing: .02em; }
 @media (max-width: 700px) { .shot { height: 70vh; margin-bottom: 60px; } .shot__img img { object-position: 52% 40%; } .shot figcaption { left: 20px; right: 20px; bottom: 28px; } }
+
+/* franja del muro de grafiti (Skør) */
+.wall { position: relative; margin: 0 0 100px; height: min(56vh, 520px); overflow: hidden; background: #050605; }
+.wall__img { position: absolute; inset: -8% 0; will-change: transform; }
+.wall__img img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; filter: contrast(1.1) brightness(.62); }
+.wall::before { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, var(--bg) 0%, transparent 25%, transparent 70%, var(--bg) 100%), linear-gradient(90deg, rgba(9,9,10,.75), transparent 60%); }
+.wall__in { position: absolute; z-index: 2; left: 48px; right: 48px; bottom: 15%; display: flex; align-items: center; gap: 28px; margin: 0; }
+.wall__face { width: clamp(110px, 12vw, 160px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 4px; filter: grayscale(1) contrast(1.1); box-shadow: 0 20px 40px rgba(0,0,0,.6); transform: rotate(-3deg); }
+.wall p { margin: 0; font-size: clamp(36px, 5vw, 76px); line-height: .95; letter-spacing: -.05em; font-weight: 700; text-shadow: 0 4px 30px rgba(0,0,0,.7); }
+.wall small { display: block; margin-top: 14px; font-size: 13px; color: var(--text-2); }
+@media (max-width: 700px) { .wall { height: 60vh; margin-bottom: 60px; } .wall__in { left: 20px; right: 20px; flex-direction: column; align-items: flex-start; gap: 18px; bottom: 10%; } }
