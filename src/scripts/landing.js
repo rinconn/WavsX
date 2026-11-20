@@ -360,7 +360,7 @@ if (spec) requestAnimationFrame(frame);
     }
   };
   // letra karaoke
-  const lyr = ['Mirando arriba desde el mismo banco', 'la ciudad se apaga y yo sigo despierto', 'te busco entre luces que no son estrellas', 'tú tan lejos como Andrómeda', 'y yo aquí contando el tiempo'];
+  const lyr = ['Mirando arriba desde el mismo banco', 'la ciudad se apaga y yo sigo despierto', 'te busco entre luces que no son estrellas', 'trazos en la pared que nadie borra', 'y yo aquí contando el tiempo'];
   const kp = $('.kar__prev'), kn = $('.kar__now'), kx = $('.kar__next');
   let li = -1;
   const setLine = (i, f) => {
