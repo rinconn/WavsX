@@ -1213,3 +1213,5 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 .wall__disc span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 1100px) { .wall__disc li { width: 110px; } .wall__disc img { width: 110px; height: 110px; } }
 @media (max-width: 860px) { .wall { height: auto; min-height: 60vh; padding: 120px 0 60px; } .wall__in { position: relative; left: auto; right: auto; bottom: auto; padding: 0 20px; flex-direction: column; align-items: flex-start; flex-wrap: wrap; } .wall__disc { margin: 8px 0 0; gap: 10px; } .wall__disc li { width: calc((100vw - 60px) / 3); } .wall__disc img { width: 100%; height: auto; aspect-ratio: 1; } }
+.shot__img img[src*="cosmos"] { object-position: 50% 82%; image-rendering: pixelated; filter: none; }
+.wall__disc img[src$=".gif"] { image-rendering: pixelated; }
