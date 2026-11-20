@@ -306,12 +306,13 @@ if (spec) requestAnimationFrame(frame);
       const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
       const Rx = W * 0.62, Ry = Rx * 0.5;
       ctx.fillStyle = `rgba(${bg},.24)`; ctx.fillRect(0, 0, W, H);
+      const fade = ph < 0.05 ? ph / 0.05 : ph < 0.5 ? 1 : ph < 0.58 ? 1 - (ph - 0.5) / 0.08 : 0;
       for (const p of P) {
         p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
         p.r -= dt * (0.000014 + 0.00002 * (1 - p.r)) * (1 + k * 7);
         if (p.r < 0.05) { p.r = 1; p.a = Math.random() * 6.28; }
         const x = cx + Math.cos(p.a) * p.r * Rx, y = cy + Math.sin(p.a) * p.r * Ry;
-        ctx.globalAlpha = Math.min(1, 0.2 + (1 - p.r) * 0.65 + k * 0.25);
+        ctx.globalAlpha = Math.min(1, 0.2 + (1 - p.r) * 0.65 + k * 0.25) * fade;
         ctx.fillStyle = p.r < 0.3 ? '#E6FF94' : p.r < 0.65 ? '#C6FF3D' : '#5BE6B4';
         ctx.beginPath(); ctx.arc(x, y, (0.5 + (1 - p.r) * 1.2) * p.s, 0, 6.2832); ctx.fill();
       }
