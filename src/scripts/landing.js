@@ -492,7 +492,7 @@ onScroll();
   const au = sh && sh.querySelector('.shot__au'), btn = sh && sh.querySelector('.shot__play');
   const cv = sh && sh.querySelector('.shot__cv'), art = sh && sh.querySelector('.shot__art');
   const bars = btn ? btn.querySelectorAll('.shot__eq i') : [];
-  let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = [];
+  let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = []; let off, oc; const img = art && art.querySelector('img');
   const fmt = (t) => `00:${String(t / 60 | 0).padStart(2, '0')}:${String(t % 60 | 0).padStart(2, '0')}`;
   if (btn) btn.addEventListener('click', () => {
     if (!an) {
@@ -519,20 +519,32 @@ onScroll();
     avg = avg * .95 + lo * .05;
     if (lo > avg * 1.18 && lo > .35 && performance.now() - lastKick > 220) {
       lastKick = performance.now();
-      const n = 150 + (lo * 120 | 0);
-      waves.push({ t: 0, d: Array.from({ length: n }, (_, i) => [i / n * 6.283 + Math.random() * .05, .75 + Math.random() * .5, Math.random() < .25 ? 2 : 1]) });
+      waves.push({ t: 0, p: Math.min(1, .5 + lo) });
     }
-    const cx = w * .62, cy = h * .59, px = Math.max(2, Math.round(w / 420));
+    // la onda no se dibuja encima: ilumina las estrellas reales de la imagen por las que pasa
+    const cx = w * .62, cy = h * .59;
+    if (!off) { off = document.createElement('canvas'); oc = off.getContext('2d'); }
+    if (waves.length || bass > .05) {
+      off.width = w >> 1; off.height = h >> 1;
+      oc.drawImage(img, 0, 0, off.width, off.height);             // fotograma actual del gif
+      oc.globalCompositeOperation = 'multiply';            // negro sigue negro, las estrellas toman el color
+      const g = oc.createRadialGradient(cx / 2, cy / 2, 0, cx / 2, cy / 2, w * .3);
+      g.addColorStop(0, '#E6FF94'); g.addColorStop(.4, '#C6FF3D'); g.addColorStop(1, '#5BE6B4');
+      oc.fillStyle = g; oc.fillRect(0, 0, off.width, off.height); oc.globalCompositeOperation = 'source-over';
+    }
+    x.imageSmoothingEnabled = false; x.globalCompositeOperation = 'lighter';
     for (let k = waves.length - 1; k >= 0; k--) {
-      const wv = waves[k]; wv.t += .012;
+      const wv = waves[k]; wv.t += .011;
       if (wv.t >= 1) { waves.splice(k, 1); continue; }
-      const e = 1 - Math.pow(1 - wv.t, 3), R = e * w * .42, al = (1 - wv.t) * .9;
-      x.fillStyle = `rgba(255,255,255,${al.toFixed(3)})`;
-      for (const [a, f, sz] of wv.d) {
-        const r = R * f, sw = a + e * .5 * f;                     // gira un poco, como la espiral
-        x.fillRect(Math.round((cx + Math.cos(sw) * r) / px) * px, Math.round((cy + Math.sin(sw) * r * .92) / px) * px, px * sz, px * sz);
-      }
+      const e = 1 - Math.pow(1 - wv.t, 2.4), R = 10 + e * w * .55, bw = w * (.025 + e * .07);
+      x.save(); x.beginPath(); x.arc(cx, cy, R + bw, 0, 6.283); x.arc(cx, cy, Math.max(0, R - bw), 0, 6.283, true); x.clip();
+      x.globalAlpha = (1 - wv.t) * wv.p; x.drawImage(off, 0, 0, w, h);
+      x.filter = `blur(${w / 260 | 0}px)`; x.drawImage(off, 0, 0, w, h); x.restore();   // segunda pasada borrosa = halo
     }
+    // núcleo: se enciende con los graves
+    x.save(); x.beginPath(); x.arc(cx, cy, w * (.05 + bass * .07), 0, 6.283); x.clip();
+    x.globalAlpha = bass * .9; x.drawImage(off, 0, 0, w, h); x.filter = `blur(${w / 200 | 0}px)`; x.drawImage(off, 0, 0, w, h); x.restore();
+    x.globalCompositeOperation = 'source-over';
   };
   if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let on = false, last = -1;
