@@ -488,21 +488,21 @@ onScroll();
     const ch = c => `<span class="ch" style="--d:${(i++ / n * .38).toFixed(3)};--r:${((i * 37) % 31) - 15}">${c}</span>`;
     tp.innerHTML = lines.map(l => l.join('').split(' ').map(w => `<span class="w" aria-hidden="true">${[...w].map(ch).join('')}</span>`).join(' ')).join('<br>');
   }
-  // audio: la galaxia late con la canción. Sin sonido late igual, con los golpes reales del tema
-  // (ENV: graves del trozo a 30 fps, 0-9), para que se entienda que va con música antes de pulsar.
+  // galaxia: todo se pinta en un solo canvas a partir de un vídeo (más ligero que el gif).
+  // Late sola con los golpes reales del tema (ENV: graves a 30 fps, 0-9); al tocarla suena de verdad.
   const ENV = '22333445542222222222222222222222222222222222222222222222222222476555554349854445443222222222389544545532222222222796444545422222222226974445554222222222249855544222245555532232222222222222222795784322222279732222223222222222222222222259754444555555532222232222222223544445775885444444555554322223222222222257555555559645543225985555532232222222222222223884884322222379632222223222222222576555557579754454555555556555332222222222222223864985222222265555444454443222222365544444479655453222256555422332223232223322224974964222222489522222223222232222222222222279544445555555432222322222222223544445865965444444455553222223222222222376555555488455542237965555422322222222222222225975964322222599522222223222222223665555567488644445455555565654322222222222222225856974222222365555444454442222222454444333366444432222243333222222222222222222222';
   const au = sh && sh.querySelector('.shot__au'), btn = sh && sh.querySelector('.shot__play');
-  const art = sh && sh.querySelector('.shot__art');
+  const art = sh && sh.querySelector('.shot__art'), cv = sh && sh.querySelector('.shot__cv'), vid = sh && sh.querySelector('.shot__vid');
   const bars = btn ? btn.querySelectorAll('.shot__eq i') : [];
-  let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = [];
+  let an = null, fd, playing = false, bass = 0, avg = 0, lastKick = 0, t0 = performance.now(), idleT = 0;
+  const waves = [];
   const fmt = (t) => `00:${String(t / 60 | 0).padStart(2, '0')}:${String(t % 60 | 0).padStart(2, '0')}`;
-  let t0 = performance.now(), idleT = 0;
   const toggle = () => {
     if (!an) {
       const ac = new (window.AudioContext || window.webkitAudioContext)();
-      an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = .7;
+      an = ac.createAnalyser(); an.fftSize = 512; an.smoothingTimeConstant = .7;
       ac.createMediaElementSource(au).connect(an); an.connect(ac.destination);
-      td = new Uint8Array(an.fftSize); fd = new Uint8Array(an.frequencyBinCount); an.ac = ac;
+      fd = new Uint8Array(an.frequencyBinCount); an.ac = ac;
     }
     an.ac.resume();
     if (au.paused) { au.currentTime = idleT; au.play(); sh.classList.add('heard'); } else au.pause();
@@ -513,35 +513,55 @@ onScroll();
     au.addEventListener('play', () => { playing = true; btn.setAttribute('aria-pressed', 'true'); btn.querySelector('.shot__lbl').textContent = 'Pausa'; });
     au.addEventListener('pause', () => { playing = false; t0 = performance.now() - au.currentTime * 1000; btn.setAttribute('aria-pressed', 'false'); btn.querySelector('.shot__lbl').textContent = 'Escuchar'; });
   }
+  // lienzos: principal (S px), estrellas teñidas a media resolución y halo a 1/8 (desenfoque barato al ampliarlo)
+  const S = 720, x = cv && cv.getContext('2d');
+  const mk = (n) => { const c = document.createElement('canvas'); c.width = c.height = n; return [c, c.getContext('2d')]; };
+  const [tc2, tx] = mk(S / 2), [hc, hx] = mk(S / 8), [gc, gx] = mk(S / 2);
+  { const g = gx.createRadialGradient(S * .31, S * .295, 0, S * .31, S * .295, S * .3);
+    g.addColorStop(0, '#F2FFC2'); g.addColorStop(.22, '#C6FF3D'); g.addColorStop(.5, '#8EF05A'); g.addColorStop(1, '#5BE6B4');
+    gx.fillStyle = g; gx.fillRect(0, 0, S / 2, S / 2); }
+  const CX = S * .62, CY = S * .59;
+  const ring = (r0, r1) => { x.beginPath(); x.arc(CX, CY, r1, 0, 6.283); if (r0 > 0) x.arc(CX, CY, r0, 0, 6.283, true); x.clip(); };
   const draw = (p) => {
-    let lo;
+    const o = Math.min(1, p * 2);
+    let lo = 0;
     if (playing && an) {
-      an.getByteFrequencyData(fd); lo = 0; for (let i = 1; i < 8; i++) lo += fd[i]; lo /= 7 * 255; idleT = au.currentTime;
+      an.getByteFrequencyData(fd); for (let i = 1; i < 5; i++) lo += fd[i]; lo /= 4 * 255; idleT = au.currentTime;
     } else if (p > .45) {
       idleT = ((performance.now() - t0) / 1000) % 28;
       lo = +ENV[Math.min(ENV.length - 1, idleT * 30 | 0)] / 9 * .9;
-    } else { bass = 0; waves.length = 0; art.style.setProperty('--b', 0); art.style.setProperty('--c0', '0%'); for (let k = 0; k < 3; k++) art.style.setProperty(`--a${k}`, 0); return; }
-    bass = Math.min(1, Math.max(lo * lo * 1.2, bass * .88)); art.style.setProperty('--b', bass.toFixed(3));
-    bars.forEach((b, k) => { b.style.height = `${20 + (playing && an ? fd[2 + k * 12] / 255 : lo * (1 - k * .2)) * 80}%`; });
-    // golpe de bombo: el núcleo suelta un anillo de píxeles que se expande como polvo
+    }
+    bass = Math.min(1, Math.max(lo * lo * 1.2, bass * .88));
     avg = avg * .95 + lo * .05;
-    if (lo > avg * 1.18 && lo > .35 && performance.now() - lastKick > 220) {
-      lastKick = performance.now();
-      waves.push({ t: 0, p: Math.min(1, .5 + lo) });
-    }
-    // la onda no copia la imagen: abre una máscara sobre una segunda capa del mismo gif teñida,
-    // así las estrellas iluminadas siguen moviéndose igual que el resto
+    if (lo > avg * 1.18 && lo > .35 && performance.now() - lastKick > 220) { lastKick = performance.now(); waves.push({ t: 0, p: Math.min(1, .5 + lo) }); if (waves.length > 3) waves.shift(); }
+    bars.forEach((b, k) => { b.style.height = `${20 + (playing && an ? fd[1 + k * 6] / 255 : lo * (1 - k * .2)) * 80}%`; });
+
+    x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1; x.imageSmoothingEnabled = false;
+    x.clearRect(0, 0, S, S);
+    if (vid.readyState >= 2) x.drawImage(vid, 0, 0, S, S);
     for (let k = waves.length - 1; k >= 0; k--) { waves[k].t += .011; if (waves[k].t >= 1) waves.splice(k, 1); }
-    while (waves.length > 3) waves.shift();
-    for (let k = 0; k < 3; k++) {
-      const wv = waves[k], e = wv ? 1 - Math.pow(1 - wv.t, 2.4) : 0;
-      art.style.setProperty(`--r${k}`, `${(2 + e * 62).toFixed(2)}%`);
-      art.style.setProperty(`--w${k}`, `${(3 + e * 9).toFixed(2)}%`);
-      art.style.setProperty(`--a${k}`, wv ? ((1 - wv.t) * wv.p).toFixed(3) : 0);
+    if (waves.length || bass > .03) {
+      tx.globalCompositeOperation = 'source-over'; tx.drawImage(vid, 0, 0, S / 2, S / 2);
+      tx.globalCompositeOperation = 'multiply'; tx.drawImage(gc, 0, 0);        // negro sigue negro, las estrellas toman el color
+      hx.clearRect(0, 0, S / 8, S / 8); hx.drawImage(tc2, 0, 0, S / 8, S / 8);
+      x.globalCompositeOperation = 'lighter';
+      const lit = (a) => { x.globalAlpha = a; x.imageSmoothingEnabled = false; x.drawImage(tc2, 0, 0, S, S); x.imageSmoothingEnabled = true; x.globalAlpha = a * .9; x.drawImage(hc, 0, 0, S, S); };
+      for (const wv of waves) {
+        const e = 1 - Math.pow(1 - wv.t, 2.4), R = 8 + e * S * .62, bw = S * (.02 + e * .08);
+        x.save(); ring(Math.max(0, R - bw), R + bw); lit((1 - wv.t) * wv.p); x.restore();
+      }
+      if (bass > .03) { x.save(); ring(0, S * (.03 + bass * .08)); lit(bass); x.restore(); }
     }
-    art.style.setProperty('--c0', `${(bass * 11).toFixed(2)}%`);
+    // apertura desde la mano + borde suave redondo
+    x.globalCompositeOperation = 'destination-in'; x.globalAlpha = 1;
+    const rr = Math.max(1, o * S * .9);
+    const g1 = x.createRadialGradient(CX, CY, rr * .82, CX, CY, rr); g1.addColorStop(0, '#000'); g1.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g1; x.fillRect(0, 0, S, S);
+    const g2 = x.createRadialGradient(S / 2, S / 2, S * .36, S / 2, S / 2, S * .5); g2.addColorStop(0, '#000'); g2.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = g2; x.fillRect(0, 0, S, S);
   };
-  if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (sh && cv && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    cv.width = cv.height = S; art.classList.add('cvon');
     let on = false, last = -1;
     const tick = () => {
       if (!on) return;
@@ -551,7 +571,10 @@ onScroll();
       draw(p);
       requestAnimationFrame(tick);
     };
-    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); else if (au) au.pause(); }).observe(sh);
+    new IntersectionObserver(([e]) => {
+      on = e.isIntersecting;
+      if (on) { vid.play().catch(() => {}); requestAnimationFrame(tick); } else { vid.pause(); if (au) au.pause(); }
+    }).observe(sh);
   }
 }
 
