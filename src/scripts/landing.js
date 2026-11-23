@@ -282,55 +282,31 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- proceso: agujero de gusano que absorbe los archivos ---------- */
+/* ---------- proceso: el caos real (mensajes, enlaces caducados, nombres imposibles) se ordena ---------- */
 {
-  const cv = $('.mv__dots'), cvr = $('.mv__cv');
-  if (cv && cvr) {
-    const ctx = cv.getContext('2d');
-    const chips = $$('.mv__chips i').map((el, n) => ({
-      el, a: Math.random() * 6.28, rx: 110 + Math.random() * 360, ry: 50 + Math.random() * 120,
-      w: (0.00016 + Math.random() * 0.0002) * (n % 2 ? 1 : -1), sp: Math.random() * 3
-    }));
-    const P = Array.from({ length: 1000 }, () => ({ a: Math.random() * 6.28, r: 0.05 + Math.random() * 0.95, s: 0.5 + Math.random() * 1.2 }));
-    let W = 0, H = 0, run = false, last = 0, bg = '9,9,11';
-    const size = () => {
-      const d = Math.min(devicePixelRatio || 1, 2);
-      W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-      bg = getComputedStyle(document.body).backgroundColor.replace('rgb(', '').replace(')', '');
-      ctx.fillStyle = `rgb(${bg})`; ctx.fillRect(0, 0, W, H);
+  const st = $('.mv__stage'), ms = $$('.mv__mess .mx');
+  if (st && ms.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // un solo reloj de 10 s: cada pieza entra a su ritmo y todas se recogen a la vez hacia la portada
+    const T = 10000, n = ms.length;
+    const go = () => {
+      ms.forEach((el, i) => {
+        const d = .02 + i / n * .28, tr = (x, y, r, k) => `translate(${x}, ${y}) rotate(${r}) scale(${k})`;
+        const X = 'calc(var(--x) * var(--s))', Y = 'calc(var(--y) * var(--s))';
+        el.animate([
+          { offset: 0, opacity: 0, transform: tr(X, Y, 'var(--r)', .85) },
+          { offset: d, opacity: 0, transform: tr(X, Y, 'var(--r)', .85) },
+          { offset: d + .025, opacity: 1, transform: tr(X, Y, 'var(--r)', 1.04), easing: 'ease-out' },
+          { offset: d + .04, opacity: 1, transform: tr(X, Y, 'var(--r)', 1) },
+          { offset: .355, opacity: 1, transform: tr(X, Y, 'var(--r)', 1), easing: 'cubic-bezier(.6,0,.9,.4)' },
+          { offset: .43, opacity: 0, transform: tr('0px', '-30px', '0deg', .15) },
+          { offset: 1, opacity: 0, transform: tr('0px', '-30px', '0deg', .15) }
+        ], { duration: T, iterations: Infinity });
+      });
+      // portada, plataformas y textos (animaciones CSS) arrancan en el mismo instante
+      st.parentElement.getAnimations({ subtree: true }).forEach((an) => { an.currentTime = 0; });
     };
-    const ease = (x) => x * x * (3 - 2 * x);
-    const draw = (t, dt) => {
-      const ph = (t % 10000) / 10000;
-      const k = ph < 0.3 ? 0 : ph < 0.46 ? ease((ph - 0.3) / 0.16) : ph < 0.56 ? 1 - (ph - 0.46) / 0.1 : 0;
-      const cx = cvr.offsetLeft + cvr.offsetWidth / 2, cy = cvr.offsetTop + cvr.offsetWidth / 2;
-      const Rx = W * 0.62, Ry = Rx * 0.5;
-      ctx.fillStyle = `rgba(${bg},.24)`; ctx.fillRect(0, 0, W, H);
-      const fade = ph < 0.05 ? ph / 0.05 : ph < 0.5 ? 1 : ph < 0.58 ? 1 - (ph - 0.5) / 0.08 : 0;
-      for (const p of P) {
-        p.a += dt * 0.00035 / (p.r + 0.14) * (1 + k * 2.2);
-        p.r -= dt * (0.000014 + 0.00002 * (1 - p.r)) * (1 + k * 7);
-        if (p.r < 0.05) { p.r = 1; p.a = Math.random() * 6.28; }
-        const x = cx + Math.cos(p.a) * p.r * Rx, y = cy + Math.sin(p.a) * p.r * Ry;
-        ctx.globalAlpha = Math.min(1, 0.2 + (1 - p.r) * 0.65 + k * 0.25) * fade;
-        ctx.fillStyle = p.r < 0.3 ? '#E6FF94' : p.r < 0.65 ? '#C6FF3D' : '#5BE6B4';
-        ctx.beginPath(); ctx.arc(x, y, (0.5 + (1 - p.r) * 1.2) * p.s, 0, 6.2832); ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      const sc = Math.min(1.7, W / 1000);
-      for (const c of chips) {
-        c.a += dt * c.w * (1 + k * 14);
-        const rr = 1 - k, wob = Math.sin(t * 0.0012 + c.sp) * 10;
-        const x = cx + Math.cos(c.a) * c.rx * sc * rr, y = cy + Math.sin(c.a) * c.ry * rr + wob * rr;
-        const depth = (Math.sin(c.a) + 1) / 2, vis = ph < 0.03 ? ph / 0.03 : ph < 0.44 ? 1 : ph < 0.47 ? 1 - (ph - 0.44) / 0.03 : 0;
-        c.el.style.opacity = vis.toFixed(2);
-        c.el.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) rotate(${(c.a * 40 + Math.sin(t * 0.001 + c.sp) * 25).toFixed(1)}deg) scale(${((0.7 + depth * 0.5) * (1 - k * 0.8)).toFixed(2)})`;
-      }
-    };
-    const loop = (t) => { if (!run) return; draw(t, Math.min(48, t - last)); last = t; requestAnimationFrame(loop); };
-    size(); addEventListener('resize', size);
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { for (let i = 0; i < 40; i++) draw(4800, 32); }
-    else new IntersectionObserver(([e]) => { run = e.isIntersecting; if (run) { last = performance.now(); requestAnimationFrame(loop); } }).observe(cv);
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { go(); io.disconnect(); } }, { threshold: .3 });
+    io.observe(st);
   }
 }
 
