@@ -25,7 +25,12 @@ export function smoothScroll({ ease = 0.16 } = {}) {
     }
     e.preventDefault();
     if (!raf) current = scrollY;
-    target = clamp(target + e.deltaY * (e.deltaMode === 1 ? 40 : 1));
+    let k = 1;                                                         // zonas [data-slow]: el scroll pesa más
+    for (const z of document.querySelectorAll('[data-slow]')) {
+      const r = z.getBoundingClientRect();
+      if (r.top <= 1 && r.bottom >= innerHeight - 1) k = +z.dataset.slow || 1;
+    }
+    target = clamp(target + e.deltaY * (e.deltaMode === 1 ? 40 : 1) * k);
     run();
   }, { passive: false });
   // si el scroll llega por otra vía (teclado, barra, táctil), lo seguimos sin pelear

@@ -1185,24 +1185,29 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
 
 /* franja de foto real a sangre, con grano y un leve desplazamiento al hacer scroll */
 /* franja del gato: fijada mientras se hace scroll; --p (0→1) la mueve landing.js */
-.shot { --p: 0; position: relative; height: 340vh; margin: 0 0 100px; background: #000; }
+.shot { --p: 0; position: relative; height: 460vh; margin: 0 0 100px; background: #000; }
 .shot__pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
-.shot__bg { position: absolute; inset: 0; display: grid; place-items: center end; padding-right: 3vw;
-  transform: scale(calc(2.2 - min(1, var(--p) * 2) * 1.2)) rotate(calc((1 - min(1, var(--p) * 2)) * -5deg)); will-change: transform; }
+/* fases: 0–.5 la galaxia sale de la mano y se aleja; .3–.8 caen las letras; .8–1 quieta para mirarla */
+.shot { --o: min(1, calc(var(--p) * 2)); }
+.shot__bg { position: absolute; inset: 0; display: grid; place-items: center end; padding-right: 3vw; }
 .shot__bg img { width: min(100vw, 100svh); aspect-ratio: 1; object-fit: cover; image-rendering: pixelated;
-  -webkit-mask: radial-gradient(closest-side, #000 72%, transparent); mask: radial-gradient(closest-side, #000 72%, transparent); }
+  transform-origin: 62% 59%; will-change: transform;
+  transform: scale(calc(3.4 - var(--o) * var(--o) * 2.4)) rotate(calc((1 - var(--o)) * 24deg));
+  -webkit-mask: radial-gradient(circle at 62% 59%, #000 calc(var(--o) * 78% - 6%), transparent calc(var(--o) * 78% + 4%)), radial-gradient(closest-side, #000 72%, transparent);
+  mask: radial-gradient(circle at 62% 59%, #000 calc(var(--o) * 78% - 6%), transparent calc(var(--o) * 78% + 4%)), radial-gradient(closest-side, #000 72%, transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
 .shot__pin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000 0%, transparent 16%, transparent 80%, #000 100%); }
 .shot__txt { position: absolute; z-index: 3; left: 6vw; bottom: 10vh; max-width: 62vw; }
 .shot__txt p { margin: 0; font-size: clamp(48px, 8.4vw, 150px); line-height: .86; letter-spacing: -.055em; font-weight: 800; color: #fff; }
 .shot__txt .w { display: inline-block; white-space: nowrap; }
 .shot__txt .ch { display: inline-block; will-change: transform;
-  --k: clamp(0, calc((var(--d) + .55 - var(--p)) * 3.2), 1);
+  --k: clamp(0, calc((var(--d) + .42 - var(--p)) * 4), 1);
   transform: translateY(calc(var(--k) * -105vh)) rotate(calc(var(--k) * var(--r) * 1deg)); }
 .shot__txt small { display: block; margin-top: 34px; font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .1em; color: rgba(255,255,255,.6);
-  opacity: clamp(0, calc((var(--p) - .88) * 9), 1); }
+  opacity: clamp(0, calc((var(--p) - .78) * 9), 1); }
 .shot__tc { font-weight: 400; color: var(--led, #C6FF3D); }
 @media (max-width: 760px) {
-  .shot { height: 200vh; margin-bottom: 60px; }
+  .shot { height: 280vh; margin-bottom: 60px; }
   .shot__bg { place-items: start center; padding: 12vh 0 0; }
   .shot__txt { left: 20px; right: 20px; bottom: 8vh; max-width: none; }
   .shot__txt p { font-size: 15vw; }
