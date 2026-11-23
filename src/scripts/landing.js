@@ -488,18 +488,52 @@ onScroll();
     const ch = c => `<span class="ch" style="--d:${(i++ / n * .38).toFixed(3)};--r:${((i * 37) % 31) - 15}">${c}</span>`;
     tp.innerHTML = lines.map(l => l.join('').split(' ').map(w => `<span class="w" aria-hidden="true">${[...w].map(ch).join('')}</span>`).join(' ')).join('<br>');
   }
+  // audio: la galaxia late con la canción y del núcleo sale una onda circular
+  const au = sh && sh.querySelector('.shot__au'), btn = sh && sh.querySelector('.shot__play');
+  const cv = sh && sh.querySelector('.shot__cv'), art = sh && sh.querySelector('.shot__art');
+  const bars = btn ? btn.querySelectorAll('.shot__eq i') : [];
+  let an = null, td, fd, playing = false, bass = 0;
+  const fmt = (t) => `00:${String(t / 60 | 0).padStart(2, '0')}:${String(t % 60 | 0).padStart(2, '0')}`;
+  if (btn) btn.addEventListener('click', () => {
+    if (!an) {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = .7;
+      ac.createMediaElementSource(au).connect(an); an.connect(ac.destination);
+      td = new Uint8Array(an.fftSize); fd = new Uint8Array(an.frequencyBinCount); an.ac = ac;
+    }
+    an.ac.resume();
+    if (au.paused) au.play(); else au.pause();
+  });
+  if (au) {
+    au.addEventListener('play', () => { playing = true; btn.setAttribute('aria-pressed', 'true'); btn.querySelector('.shot__lbl').textContent = 'Pausa'; });
+    au.addEventListener('pause', () => { playing = false; btn.setAttribute('aria-pressed', 'false'); btn.querySelector('.shot__lbl').textContent = 'Escuchar'; });
+  }
+  const draw = () => {
+    const x = cv.getContext('2d'), w = cv.width = art.offsetWidth, h = cv.height = art.offsetHeight;
+    if (!playing || !an) { bass = 0; art.style.setProperty('--b', 0); return; }
+    an.getByteTimeDomainData(td); an.getByteFrequencyData(fd);
+    let lo = 0; for (let i = 1; i < 8; i++) lo += fd[i]; lo /= 7 * 255;
+    bass = Math.min(1, Math.max(lo * lo * 1.2, bass * .88)); art.style.setProperty('--b', bass.toFixed(3));
+    bars.forEach((b, k) => { b.style.height = `${20 + fd[2 + k * 12] / 255 * 80}%`; });
+    const cx = w * .62, cy = h * .59, r0 = w * (.045 + bass * .03), n = 180;
+    x.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = i / n * Math.PI * 2, v = (td[(i * 3) % td.length] - 128) / 128, r = r0 + v * w * .05;
+      i ? x.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r) : x.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+    }
+    x.strokeStyle = '#C6FF3D'; x.lineWidth = Math.max(1.5, w / 500); x.stroke();
+  };
   if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let on = false, last = -1;
     const tick = () => {
       if (!on) return;
       const r = sh.getBoundingClientRect(), p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
-      if (Math.abs(p - last) > .0005) {
-        last = p; sh.style.setProperty('--p', p.toFixed(4));
-        const t = Math.round(p * 214); tc.textContent = `00:0${t / 60 | 0}:${String(t % 60).padStart(2, '0')}`;
-      }
+      if (Math.abs(p - last) > .0005) { last = p; sh.style.setProperty('--p', p.toFixed(4)); }
+      tc.textContent = playing ? fmt(70.5 + au.currentTime) : fmt(Math.round(p * 214));
+      draw();
       requestAnimationFrame(tick);
     };
-    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); }).observe(sh);
+    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); else if (au) au.pause(); }).observe(sh);
   }
 }
 

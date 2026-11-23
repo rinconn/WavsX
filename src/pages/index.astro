@@ -214,7 +214,9 @@ const keeps = [
 
   <section class="shot" data-slow=".45" aria-label="Foto de Skør">
     <div class="shot__pin">
-      <div class="shot__bg"><img src="/covers/cosmos.gif" alt="" loading="lazy" decoding="async"></div>
+      <div class="shot__bg"><div class="shot__art"><img src="/covers/cosmos.gif" alt="" loading="lazy" decoding="async"><canvas class="shot__cv" aria-hidden="true"></canvas></div></div>
+      <button type="button" class="shot__play" aria-pressed="false"><span class="shot__eq" aria-hidden="true"><i></i><i></i><i></i></span><span class="shot__lbl">Escuchar</span><em>m suben los kalores!</em></button>
+      <audio class="shot__au" src="/audio/kalores.mp3" preload="none" loop></audio>
       <div class="shot__txt">
         <p>Sin sello.<br>Con todo guardado.</p>
         <small>Skør · <b class="shot__tc">00:00:00</b></small>
