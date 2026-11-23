@@ -39,7 +39,8 @@
 .tab[aria-pressed="true"] { background: var(--text); color: var(--on-accent); }
 .listen__body { display: flex; align-items: center; gap: 24px; }
 .listen__track { position: relative; flex: 1; min-width: 0; padding-top: 34px; }
-.listen__track .wave { cursor: pointer; }
+.listen__track .wave { cursor: pointer; overflow: hidden; }
+.card { min-width: 0; }
 .pin { position: absolute; top: 0; transform: translateX(-50%); font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--text); color: var(--on-accent); }
 .pin::after { content: ''; position: absolute; left: 50%; top: 100%; width: 1px; height: 120px; background: rgba(242, 242, 245, .3); pointer-events: none; }
 .listen__time { display: flex; justify-content: space-between; font-size: 13px; padding-left: 88px; }

@@ -282,34 +282,6 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- proceso: el caos real (mensajes, enlaces caducados, nombres imposibles) se ordena ---------- */
-{
-  const st = $('.mv__stage'), ms = $$('.mv__mess .mx');
-  if (st && ms.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // un solo reloj de 10 s: cada pieza entra a su ritmo y todas se recogen a la vez hacia la portada
-    const T = 10000, n = ms.length;
-    const go = () => {
-      ms.forEach((el, i) => {
-        const d = .02 + i / n * .28, tr = (x, y, r, k) => `translate(${x}, ${y}) rotate(${r}) scale(${k})`;
-        const X = 'calc(var(--x) * var(--s))', Y = 'calc(var(--y) * var(--s))';
-        el.animate([
-          { offset: 0, opacity: 0, transform: tr(X, Y, 'var(--r)', .85) },
-          { offset: d, opacity: 0, transform: tr(X, Y, 'var(--r)', .85) },
-          { offset: d + .025, opacity: 1, transform: tr(X, Y, 'var(--r)', 1.04), easing: 'ease-out' },
-          { offset: d + .04, opacity: 1, transform: tr(X, Y, 'var(--r)', 1) },
-          { offset: .355, opacity: 1, transform: tr(X, Y, 'var(--r)', 1), easing: 'cubic-bezier(.6,0,.9,.4)' },
-          { offset: .43, opacity: 0, transform: tr('0px', '-30px', '0deg', .15) },
-          { offset: 1, opacity: 0, transform: tr('0px', '-30px', '0deg', .15) }
-        ], { duration: T, iterations: Infinity });
-      });
-      // portada, plataformas y textos (animaciones CSS) arrancan en el mismo instante
-      st.parentElement.getAnimations({ subtree: true }).forEach((an) => { an.currentTime = 0; });
-    };
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { go(); io.disconnect(); } }, { threshold: .3 });
-    io.observe(st);
-  }
-}
-
 /* ---------- 4 · cierre: el WAV se convierte en canción ---------- */
 {
   const d = $('#drop'), cv = $('#dropWave'), st = $('.drop__st');
