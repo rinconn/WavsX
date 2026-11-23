@@ -488,13 +488,16 @@ onScroll();
     const ch = c => `<span class="ch" style="--d:${(i++ / n * .38).toFixed(3)};--r:${((i * 37) % 31) - 15}">${c}</span>`;
     tp.innerHTML = lines.map(l => l.join('').split(' ').map(w => `<span class="w" aria-hidden="true">${[...w].map(ch).join('')}</span>`).join(' ')).join('<br>');
   }
-  // audio: la galaxia late con la canción y del núcleo sale una onda circular
+  // audio: la galaxia late con la canción. Sin sonido late igual, con los golpes reales del tema
+  // (ENV: graves del trozo a 30 fps, 0-9), para que se entienda que va con música antes de pulsar.
+  const ENV = '22333445542222222222222222222222222222222222222222222222222222476555554349854445443222222222389544545532222222222796444545422222222226974445554222222222249855544222245555532232222222222222222795784322222279732222223222222222222222222259754444555555532222232222222223544445775885444444555554322223222222222257555555559645543225985555532232222222222222223884884322222379632222223222222222576555557579754454555555556555332222222222222223864985222222265555444454443222222365544444479655453222256555422332223232223322224974964222222489522222223222232222222222222279544445555555432222322222222223544445865965444444455553222223222222222376555555488455542237965555422322222222222222225975964322222599522222223222222223665555567488644445455555565654322222222222222225856974222222365555444454442222222454444333366444432222243333222222222222222222222';
   const au = sh && sh.querySelector('.shot__au'), btn = sh && sh.querySelector('.shot__play');
   const cv = sh && sh.querySelector('.shot__cv'), art = sh && sh.querySelector('.shot__art');
   const bars = btn ? btn.querySelectorAll('.shot__eq i') : [];
   let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = []; let off, oc; const img = art && art.querySelector('img');
   const fmt = (t) => `00:${String(t / 60 | 0).padStart(2, '0')}:${String(t % 60 | 0).padStart(2, '0')}`;
-  if (btn) btn.addEventListener('click', () => {
+  let t0 = performance.now(), idleT = 0;
+  const toggle = () => {
     if (!an) {
       const ac = new (window.AudioContext || window.webkitAudioContext)();
       an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = .7;
@@ -502,19 +505,25 @@ onScroll();
       td = new Uint8Array(an.fftSize); fd = new Uint8Array(an.frequencyBinCount); an.ac = ac;
     }
     an.ac.resume();
-    if (au.paused) au.play(); else au.pause();
-  });
+    if (au.paused) { au.currentTime = idleT; au.play(); sh.classList.add('heard'); } else au.pause();
+  };
+  if (btn) btn.addEventListener('click', toggle);
+  if (art) art.addEventListener('click', toggle);
   if (au) {
     au.addEventListener('play', () => { playing = true; btn.setAttribute('aria-pressed', 'true'); btn.querySelector('.shot__lbl').textContent = 'Pausa'; });
-    au.addEventListener('pause', () => { playing = false; btn.setAttribute('aria-pressed', 'false'); btn.querySelector('.shot__lbl').textContent = 'Escuchar'; });
+    au.addEventListener('pause', () => { playing = false; t0 = performance.now() - au.currentTime * 1000; btn.setAttribute('aria-pressed', 'false'); btn.querySelector('.shot__lbl').textContent = 'Escuchar'; });
   }
-  const draw = () => {
+  const draw = (p) => {
     const x = cv.getContext('2d'), w = cv.width = art.offsetWidth, h = cv.height = art.offsetHeight;
-    if (!playing || !an) { bass = 0; waves.length = 0; art.style.setProperty('--b', 0); return; }
-    an.getByteTimeDomainData(td); an.getByteFrequencyData(fd);
-    let lo = 0; for (let i = 1; i < 8; i++) lo += fd[i]; lo /= 7 * 255;
+    let lo;
+    if (playing && an) {
+      an.getByteFrequencyData(fd); lo = 0; for (let i = 1; i < 8; i++) lo += fd[i]; lo /= 7 * 255; idleT = au.currentTime;
+    } else if (p > .45) {
+      idleT = ((performance.now() - t0) / 1000) % 28;
+      lo = +ENV[Math.min(ENV.length - 1, idleT * 30 | 0)] / 9 * .9;
+    } else { bass = 0; waves.length = 0; art.style.setProperty('--b', 0); return; }
     bass = Math.min(1, Math.max(lo * lo * 1.2, bass * .88)); art.style.setProperty('--b', bass.toFixed(3));
-    bars.forEach((b, k) => { b.style.height = `${20 + fd[2 + k * 12] / 255 * 80}%`; });
+    bars.forEach((b, k) => { b.style.height = `${20 + (playing && an ? fd[2 + k * 12] / 255 : lo * (1 - k * .2)) * 80}%`; });
     // golpe de bombo: el núcleo suelta un anillo de píxeles que se expande como polvo
     avg = avg * .95 + lo * .05;
     if (lo > avg * 1.18 && lo > .35 && performance.now() - lastKick > 220) {
@@ -552,8 +561,8 @@ onScroll();
       if (!on) return;
       const r = sh.getBoundingClientRect(), p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight)));
       if (Math.abs(p - last) > .0005) { last = p; sh.style.setProperty('--p', p.toFixed(4)); }
-      tc.textContent = playing ? fmt(70.5 + au.currentTime) : fmt(Math.round(p * 214));
-      draw();
+      tc.textContent = fmt(70.5 + idleT);
+      draw(p);
       requestAnimationFrame(tick);
     };
     new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) requestAnimationFrame(tick); else if (au) au.pause(); }).observe(sh);
