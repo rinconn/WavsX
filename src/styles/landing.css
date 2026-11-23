@@ -1197,15 +1197,20 @@ i:has(> video.gifv) { position: relative; overflow: hidden; }
   mask: radial-gradient(circle at 62% 59%, #000 calc(var(--o) * 78% - 6%), transparent calc(var(--o) * 78% + 4%)), radial-gradient(closest-side, #000 72%, transparent);
   -webkit-mask-composite: source-in; mask-composite: intersect; }
 .shot__art img { width: 100%; height: 100%; display: block; object-fit: cover; image-rendering: pixelated; filter: brightness(calc(1 + var(--b) * .5)); }
-.shot__cv { image-rendering: pixelated; }
 .shot__art { cursor: pointer; }
-.shot__hint { position: absolute; z-index: 2; left: 68%; top: 66%; display: flex; align-items: center; gap: 8px;
+.shot__hint { position: absolute; z-index: 2; left: 62%; top: 70%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px;
   padding: 8px 14px; border-radius: 999px; background: #000; border: 1px solid rgba(198,255,61,.45); color: #E6FF94;
   font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: .06em; white-space: nowrap; pointer-events: none;
   opacity: calc(clamp(0, (var(--p) - .5) * 6, 1) * (.85 + var(--b) * .15)); transition: opacity .4s; }
 .shot__hint svg { width: 14px; height: 14px; }
 .shot.heard .shot__hint { opacity: 0; }
-.shot__cv { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.shot__art { --c0: 0%; --r0: 0%; --r1: 0%; --r2: 0%; --w0: 1%; --w1: 1%; --w2: 1%; --a0: 0; --a1: 0; --a2: 0; }
+/* capa iluminada: el mismo gif (va sincronizado), teñido y con halo; solo se ve por las ondas */
+.shot__lit { position: absolute; inset: 0; pointer-events: none; isolation: isolate; filter: brightness(1.25) drop-shadow(0 0 2px rgba(230,255,148,.9)) drop-shadow(0 0 9px rgba(198,255,61,.7));
+  -webkit-mask: radial-gradient(circle at 62% 59%, #000 var(--c0), transparent calc(var(--c0) + 4%)), radial-gradient(circle at 62% 59%, transparent calc(var(--r0) - var(--w0)), rgba(0,0,0,var(--a0)) var(--r0), transparent calc(var(--r0) + var(--w0))), radial-gradient(circle at 62% 59%, transparent calc(var(--r1) - var(--w1)), rgba(0,0,0,var(--a1)) var(--r1), transparent calc(var(--r1) + var(--w1))), radial-gradient(circle at 62% 59%, transparent calc(var(--r2) - var(--w2)), rgba(0,0,0,var(--a2)) var(--r2), transparent calc(var(--r2) + var(--w2))); mask: radial-gradient(circle at 62% 59%, #000 var(--c0), transparent calc(var(--c0) + 4%)), radial-gradient(circle at 62% 59%, transparent calc(var(--r0) - var(--w0)), rgba(0,0,0,var(--a0)) var(--r0), transparent calc(var(--r0) + var(--w0))), radial-gradient(circle at 62% 59%, transparent calc(var(--r1) - var(--w1)), rgba(0,0,0,var(--a1)) var(--r1), transparent calc(var(--r1) + var(--w1))), radial-gradient(circle at 62% 59%, transparent calc(var(--r2) - var(--w2)), rgba(0,0,0,var(--a2)) var(--r2), transparent calc(var(--r2) + var(--w2))); }
+.shot__lit img { width: 100%; height: 100%; display: block; object-fit: cover; image-rendering: pixelated; }
+.shot__lit::after { content: ''; position: absolute; inset: 0; mix-blend-mode: multiply;
+  background: radial-gradient(circle at 62% 59%, #F2FFC2, #C6FF3D 22%, #8EF05A 45%, #5BE6B4 75%); }
 .shot__play { position: absolute; z-index: 4; right: 6vw; bottom: 10vh; display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 20px 0 14px;
   border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.55); color: #fff; font: 600 14px var(--font);
   opacity: clamp(0, calc((var(--p) - .42) * 6), 1); transition: border-color .2s, background .2s; }

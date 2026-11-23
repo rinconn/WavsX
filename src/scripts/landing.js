@@ -492,9 +492,9 @@ onScroll();
   // (ENV: graves del trozo a 30 fps, 0-9), para que se entienda que va con música antes de pulsar.
   const ENV = '22333445542222222222222222222222222222222222222222222222222222476555554349854445443222222222389544545532222222222796444545422222222226974445554222222222249855544222245555532232222222222222222795784322222279732222223222222222222222222259754444555555532222232222222223544445775885444444555554322223222222222257555555559645543225985555532232222222222222223884884322222379632222223222222222576555557579754454555555556555332222222222222223864985222222265555444454443222222365544444479655453222256555422332223232223322224974964222222489522222223222232222222222222279544445555555432222322222222223544445865965444444455553222223222222222376555555488455542237965555422322222222222222225975964322222599522222223222222223665555567488644445455555565654322222222222222225856974222222365555444454442222222454444333366444432222243333222222222222222222222';
   const au = sh && sh.querySelector('.shot__au'), btn = sh && sh.querySelector('.shot__play');
-  const cv = sh && sh.querySelector('.shot__cv'), art = sh && sh.querySelector('.shot__art');
+  const art = sh && sh.querySelector('.shot__art');
   const bars = btn ? btn.querySelectorAll('.shot__eq i') : [];
-  let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = []; let off, oc; const img = art && art.querySelector('img');
+  let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = [];
   const fmt = (t) => `00:${String(t / 60 | 0).padStart(2, '0')}:${String(t % 60 | 0).padStart(2, '0')}`;
   let t0 = performance.now(), idleT = 0;
   const toggle = () => {
@@ -514,14 +514,13 @@ onScroll();
     au.addEventListener('pause', () => { playing = false; t0 = performance.now() - au.currentTime * 1000; btn.setAttribute('aria-pressed', 'false'); btn.querySelector('.shot__lbl').textContent = 'Escuchar'; });
   }
   const draw = (p) => {
-    const x = cv.getContext('2d'), w = cv.width = art.offsetWidth, h = cv.height = art.offsetHeight;
     let lo;
     if (playing && an) {
       an.getByteFrequencyData(fd); lo = 0; for (let i = 1; i < 8; i++) lo += fd[i]; lo /= 7 * 255; idleT = au.currentTime;
     } else if (p > .45) {
       idleT = ((performance.now() - t0) / 1000) % 28;
       lo = +ENV[Math.min(ENV.length - 1, idleT * 30 | 0)] / 9 * .9;
-    } else { bass = 0; waves.length = 0; art.style.setProperty('--b', 0); return; }
+    } else { bass = 0; waves.length = 0; art.style.setProperty('--b', 0); art.style.setProperty('--c0', '0%'); for (let k = 0; k < 3; k++) art.style.setProperty(`--a${k}`, 0); return; }
     bass = Math.min(1, Math.max(lo * lo * 1.2, bass * .88)); art.style.setProperty('--b', bass.toFixed(3));
     bars.forEach((b, k) => { b.style.height = `${20 + (playing && an ? fd[2 + k * 12] / 255 : lo * (1 - k * .2)) * 80}%`; });
     // golpe de bombo: el núcleo suelta un anillo de píxeles que se expande como polvo
@@ -530,30 +529,17 @@ onScroll();
       lastKick = performance.now();
       waves.push({ t: 0, p: Math.min(1, .5 + lo) });
     }
-    // la onda no se dibuja encima: ilumina las estrellas reales de la imagen por las que pasa
-    const cx = w * .62, cy = h * .59;
-    if (!off) { off = document.createElement('canvas'); oc = off.getContext('2d'); }
-    if (waves.length || bass > .05) {
-      off.width = w >> 1; off.height = h >> 1;
-      oc.drawImage(img, 0, 0, off.width, off.height);             // fotograma actual del gif
-      oc.globalCompositeOperation = 'multiply';            // negro sigue negro, las estrellas toman el color
-      const g = oc.createRadialGradient(cx / 2, cy / 2, 0, cx / 2, cy / 2, w * .3);
-      g.addColorStop(0, '#E6FF94'); g.addColorStop(.4, '#C6FF3D'); g.addColorStop(1, '#5BE6B4');
-      oc.fillStyle = g; oc.fillRect(0, 0, off.width, off.height); oc.globalCompositeOperation = 'source-over';
+    // la onda no copia la imagen: abre una máscara sobre una segunda capa del mismo gif teñida,
+    // así las estrellas iluminadas siguen moviéndose igual que el resto
+    for (let k = waves.length - 1; k >= 0; k--) { waves[k].t += .011; if (waves[k].t >= 1) waves.splice(k, 1); }
+    while (waves.length > 3) waves.shift();
+    for (let k = 0; k < 3; k++) {
+      const wv = waves[k], e = wv ? 1 - Math.pow(1 - wv.t, 2.4) : 0;
+      art.style.setProperty(`--r${k}`, `${(2 + e * 62).toFixed(2)}%`);
+      art.style.setProperty(`--w${k}`, `${(3 + e * 9).toFixed(2)}%`);
+      art.style.setProperty(`--a${k}`, wv ? ((1 - wv.t) * wv.p).toFixed(3) : 0);
     }
-    x.imageSmoothingEnabled = false; x.globalCompositeOperation = 'lighter';
-    for (let k = waves.length - 1; k >= 0; k--) {
-      const wv = waves[k]; wv.t += .011;
-      if (wv.t >= 1) { waves.splice(k, 1); continue; }
-      const e = 1 - Math.pow(1 - wv.t, 2.4), R = 10 + e * w * .55, bw = w * (.025 + e * .07);
-      x.save(); x.beginPath(); x.arc(cx, cy, R + bw, 0, 6.283); x.arc(cx, cy, Math.max(0, R - bw), 0, 6.283, true); x.clip();
-      x.globalAlpha = (1 - wv.t) * wv.p; x.drawImage(off, 0, 0, w, h);
-      x.filter = `blur(${w / 260 | 0}px)`; x.drawImage(off, 0, 0, w, h); x.restore();   // segunda pasada borrosa = halo
-    }
-    // núcleo: se enciende con los graves
-    x.save(); x.beginPath(); x.arc(cx, cy, w * (.05 + bass * .07), 0, 6.283); x.clip();
-    x.globalAlpha = bass * .9; x.drawImage(off, 0, 0, w, h); x.filter = `blur(${w / 200 | 0}px)`; x.drawImage(off, 0, 0, w, h); x.restore();
-    x.globalCompositeOperation = 'source-over';
+    art.style.setProperty('--c0', `${(bass * 11).toFixed(2)}%`);
   };
   if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let on = false, last = -1;
