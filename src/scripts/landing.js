@@ -282,6 +282,32 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
+/* ---------- escaparate: la página real de la canción en el móvil ---------- */
+{
+  const mb = $('.mob');
+  if (mb) {
+    const page = $('.mob__page'), pulls = $$('.mob__pull'), caps = $$('.mob__cap li');
+    let i = -1, timer = 0, live = false, hold = false, left = 0, startedAt = 0;
+    const D = 4200;
+    const set = (n) => {
+      i = (n + caps.length) % caps.length;
+      caps.forEach((c, k) => c.classList.toggle('on', k === i));
+      pulls.forEach((p) => p.classList.remove('on')); mb.classList.remove('lift');
+      page.style.transform = `translateY(-${pulls[i].dataset.t}px)`;
+      clearTimeout(pulls.t); pulls.t = setTimeout(() => { pulls[i].classList.add('on'); mb.classList.add('lift'); }, 1000);
+      run(D);
+    };
+    const run = (ms) => { clearTimeout(timer); left = ms; startedAt = performance.now(); if (live && !hold) timer = setTimeout(() => set(i + 1), ms); };
+    caps.forEach((c, k) => c.querySelector('button').addEventListener('click', () => set(k)));
+    mb.addEventListener('pointerenter', () => { hold = true; mb.classList.add('hold'); clearTimeout(timer); left -= performance.now() - startedAt; });
+    mb.addEventListener('pointerleave', () => { hold = false; mb.classList.remove('hold'); run(Math.max(400, left)); });
+    new IntersectionObserver(([e]) => {
+      live = e.isIntersecting;
+      if (live) { if (i < 0) set(0); else run(D); } else clearTimeout(timer);
+    }, { threshold: .35 }).observe(mb);
+  }
+}
+
 /* ---------- 4 · cierre: el WAV se convierte en canción ---------- */
 {
   const d = $('#drop'), cv = $('#dropWave'), st = $('.drop__st');

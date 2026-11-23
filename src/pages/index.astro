@@ -2,6 +2,19 @@
 import Base from '../layouts/Base.astro';
 import '../styles/landing.css';
 import fs from 'node:fs';
+import mob from '../data/mob.json';
+const MK = 278 / mob.width, MH = 608;
+const mobSteps = mob.steps.map((st) => {
+  const t = Math.round(Math.min(Math.max(0, st.top - 40), mob.height - MH / MK) * MK);
+  return { t, x: Math.round(st.x * MK), y: Math.round(st.y * MK - t), w: Math.round(st.w * MK) };
+});
+const mobCaps = [
+  'La portada, las versiones y en qué punto está.',
+  'Se escucha aquí, y tu productor deja la nota en el segundo exacto.',
+  'Cada archivo con su versión. Se acabó el <em>FINAL_v7_ahora_si</em>.',
+  'Quién hizo qué y cuánto le toca, firmado.',
+  'Lista para salir a Spotify, Apple Music y el resto.'
+];
 const splash = 'data:image/webp;base64,' + fs.readFileSync('src/assets-splash.webp').toString('base64');
 const keeps = [
   ['wav', 'Audio WAV', '24-bit · 48 kHz'],
@@ -231,13 +244,12 @@ const keeps = [
     <div class="story__in">
       <h2 class="reveal">De tu estudio a Spotify,<br>sin dolor de cabeza.</h2>
       <div class="mob reveal">
-        <div class="mob__dev" aria-hidden="true"><div class="mob__scr"><img src="/covers/app-cancion.jpg" alt="" loading="lazy" decoding="async"></div><i class="mob__isl"></i></div>
+        <div class="mob__stage">
+          <div class="mob__dev" aria-hidden="true"><div class="mob__scr"><img class="mob__page" src="/covers/app-cancion.jpg" alt="" loading="lazy" decoding="async"></div><i class="mob__isl"></i></div>
+          {mobSteps.map((st, i) => <img class="mob__pull" src={`/covers/app-pull-${i}.png`} alt="" aria-hidden="true" loading="lazy" decoding="async" data-t={st.t} style={`--x:${st.x}px;--y:${st.y}px;--w:${st.w}px`} />)}
+        </div>
         <ol class="mob__cap">
-          <li><b>01</b><span>La portada, las versiones y en qué punto está.</span></li>
-          <li><b>02</b><span>Se escucha aquí, y tu productor deja la nota en el segundo exacto.</span></li>
-          <li><b>03</b><span>Cada archivo con su versión. Nada de <em>FINAL_v7_ahora_si</em>.</span></li>
-          <li><b>04</b><span>Quién hizo qué y cuánto le toca, firmado.</span></li>
-          <li><b>05</b><span>Lista para salir a Spotify, Apple Music y el resto.</span></li>
+          {mobCaps.map((c, i) => <li><button type="button" data-i={i}><b>{String(i + 1).padStart(2, '0')}</b><span set:html={c} /><i class="mob__bar" aria-hidden="true"></i></button></li>)}
         </ol>
       </div>
     </div>
