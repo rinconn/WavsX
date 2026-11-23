@@ -552,7 +552,7 @@ onScroll();
     new IntersectionObserver(([e]) => {
       on = e.isIntersecting;
       if (on) { measure(); vid.play().catch(() => {}); requestAnimationFrame(tick); } else { vid.pause(); if (au) au.pause(); }
-    }).observe(sh);
+    }, { rootMargin: '900px 0px' }).observe(sh);                      // empieza a cargar el vídeo antes de llegar
   }
 }
 
