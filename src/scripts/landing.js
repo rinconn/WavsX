@@ -492,7 +492,7 @@ onScroll();
   const au = sh && sh.querySelector('.shot__au'), btn = sh && sh.querySelector('.shot__play');
   const cv = sh && sh.querySelector('.shot__cv'), art = sh && sh.querySelector('.shot__art');
   const bars = btn ? btn.querySelectorAll('.shot__eq i') : [];
-  let an = null, td, fd, playing = false, bass = 0;
+  let an = null, td, fd, playing = false, bass = 0, avg = 0, lastKick = 0; const waves = [];
   const fmt = (t) => `00:${String(t / 60 | 0).padStart(2, '0')}:${String(t % 60 | 0).padStart(2, '0')}`;
   if (btn) btn.addEventListener('click', () => {
     if (!an) {
@@ -510,18 +510,29 @@ onScroll();
   }
   const draw = () => {
     const x = cv.getContext('2d'), w = cv.width = art.offsetWidth, h = cv.height = art.offsetHeight;
-    if (!playing || !an) { bass = 0; art.style.setProperty('--b', 0); return; }
+    if (!playing || !an) { bass = 0; waves.length = 0; art.style.setProperty('--b', 0); return; }
     an.getByteTimeDomainData(td); an.getByteFrequencyData(fd);
     let lo = 0; for (let i = 1; i < 8; i++) lo += fd[i]; lo /= 7 * 255;
     bass = Math.min(1, Math.max(lo * lo * 1.2, bass * .88)); art.style.setProperty('--b', bass.toFixed(3));
     bars.forEach((b, k) => { b.style.height = `${20 + fd[2 + k * 12] / 255 * 80}%`; });
-    const cx = w * .62, cy = h * .59, r0 = w * (.045 + bass * .03), n = 180;
-    x.beginPath();
-    for (let i = 0; i <= n; i++) {
-      const a = i / n * Math.PI * 2, v = (td[(i * 3) % td.length] - 128) / 128, r = r0 + v * w * .05;
-      i ? x.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r) : x.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+    // golpe de bombo: el núcleo suelta un anillo de píxeles que se expande como polvo
+    avg = avg * .95 + lo * .05;
+    if (lo > avg * 1.18 && lo > .35 && performance.now() - lastKick > 220) {
+      lastKick = performance.now();
+      const n = 150 + (lo * 120 | 0);
+      waves.push({ t: 0, d: Array.from({ length: n }, (_, i) => [i / n * 6.283 + Math.random() * .05, .75 + Math.random() * .5, Math.random() < .25 ? 2 : 1]) });
     }
-    x.strokeStyle = '#C6FF3D'; x.lineWidth = Math.max(1.5, w / 500); x.stroke();
+    const cx = w * .62, cy = h * .59, px = Math.max(2, Math.round(w / 420));
+    for (let k = waves.length - 1; k >= 0; k--) {
+      const wv = waves[k]; wv.t += .012;
+      if (wv.t >= 1) { waves.splice(k, 1); continue; }
+      const e = 1 - Math.pow(1 - wv.t, 3), R = e * w * .42, al = (1 - wv.t) * .9;
+      x.fillStyle = `rgba(255,255,255,${al.toFixed(3)})`;
+      for (const [a, f, sz] of wv.d) {
+        const r = R * f, sw = a + e * .5 * f;                     // gira un poco, como la espiral
+        x.fillRect(Math.round((cx + Math.cos(sw) * r) / px) * px, Math.round((cy + Math.sin(sw) * r * .92) / px) * px, px * sz, px * sz);
+      }
+    }
   };
   if (sh && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let on = false, last = -1;
