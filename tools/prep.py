@@ -10,6 +10,7 @@ for f in glob.glob(src + '/_astro/*'):
 for f in glob.glob(src + '/covers/*'):
     shutil.copy(f, out + '/covers/' + os.path.basename(f))
 shutil.copy(src + '/theme.js', out + '/theme.js')
+if os.path.isdir(src + '/audio'): shutil.copytree(src + '/audio', out + '/audio')
 h = open(src + '/index.html').read()
 css = ''
 for m in re.findall(r'<link rel="stylesheet" href="/_astro/([^"]+)">', h):
@@ -21,7 +22,7 @@ theme = open(src + '/theme.js').read()
 h = re.sub(r'<script[^>]*src="[^"]*"[^>]*></script>', '', h)
 h = re.sub(r'<script type="module">.*?</script>', '', h, flags=re.S)
 body = re.search(r'<body[^>]*>(.*)</body>', h, re.S).group(1)
-body = body.replace('url(/covers/', 'url(covers/').replace('src="/covers/', 'src="covers/').replace('poster="/covers/', 'poster="covers/').replace('/_astro/', 'assets/')
+body = body.replace('src="/audio/', 'src="audio/').replace('url(/covers/', 'url(covers/').replace('src="/covers/', 'src="covers/').replace('poster="/covers/', 'poster="covers/').replace('/_astro/', 'assets/')
 css = css.replace('/covers/', 'covers/').replace('/_astro/', 'assets/')
 import base64
 fav='data:image/png;base64,'+base64.b64encode(open(src+'/favicon.png','rb').read()).decode()
