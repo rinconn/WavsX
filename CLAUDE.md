@@ -33,8 +33,8 @@ Ver `TODO` en la sección "Lo que guarda cada canción" más abajo.
 Lista a la izquierda + panel a la derecha, con animación solo en el panel visible (bucle en `landing.js`): espectrograma que desfila (WAV), vúmetros y M/S (stems), reproductor con 4 portadas (cambian al pulsar), letra karaoke, reparto con donut y firmas, línea de versiones que avanza.
 Falta: las portadas son procedurales (`.c0`-`.c3`); sustituir por fotos reales de Unsplash (entorno "wavsx") en `public/covers/` y un vídeo/gif corto para la animada.
 
-### Escaparate del móvil ("De tu estudio a Spotify")
-Enseña la página real `/cancion` en un móvil. Si cambia el diseño de la app: `npm run build && node tools/capture-cancion.cjs && npm run build` (regenera capturas y `src/data/mob.json`).
+### "De tu estudio a Spotify" (`.life`, id `como`)
+Sección fija al hacer scroll: vista de pistas tipo DAW en un canvas. En cada etapa (Idea, Demo, Grabación, Mezcla, Fuera) entran pistas, y al final todo baja a un máster. El botón "Escúchala crecer" pone `kalores.mp3` con un filtro que se abre en cada etapa. Ya descartado aquí: el móvil con capturas y las fotos a pantalla completa.
 
 ## Publicar para el dueño (no puede abrir localhost)
 `npm run build && python3 tools/prep.py` deja en `pub/` un `index.html` con CSS y JS dentro, y `pub/covers/` y `pub/assets/`. Publícalo en el artifact https://claude.ai/artifact/NDtmmfirVkScpEaN9JvgUx: léelo antes con la acción `read` y sube covers/ y assets/ en `files`.
