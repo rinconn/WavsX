@@ -2,18 +2,12 @@
 import Base from '../layouts/Base.astro';
 import '../styles/landing.css';
 import fs from 'node:fs';
-import mob from '../data/mob.json';
-const MK = 278 / mob.width, MH = 608;
-const mobSteps = mob.steps.map((st) => {
-  const t = Math.round(Math.min(Math.max(0, st.top - 40), mob.height - MH / MK) * MK);
-  return { t, x: Math.round(st.x * MK), y: Math.round(st.y * MK - t), w: Math.round(st.w * MK) };
-});
-const mobCaps = [
-  'La portada, las versiones y en qué punto está.',
-  'Se escucha aquí, y tu productor deja la nota en el segundo exacto.',
-  'Cada archivo con su versión. Se acabó el <em>FINAL_v7_ahora_si</em>.',
-  'Quién hizo qué y cuánto le toca, firmado.',
-  'Lista para salir a Spotify, Apple Music y el resto.'
+const life = [
+  { w: 'Idea', img: 'trazos.jpg', f: 'kalores_idea.m4a', m: '0:41 · nota de voz', t: 'Una nota de voz a las 3 de la mañana. Ya está dentro, con su fecha.' },
+  { w: 'Demo', img: 'muro.jpg', f: 'kalores_demo_v2.wav', m: '2:07 · 128 BPM · Fm', t: 'La base y la letra juntas. Cada versión se queda, ninguna se pisa.' },
+  { w: 'Grabación', img: 'estudio.jpg', f: 'kalores_voz_toma14.wav', m: '14 tomas · 24-bit', t: 'Las tomas y los stems, ordenados. Se acabó el <s>FINAL_v7_ahora_si</s>.' },
+  { w: 'Mezcla', img: 'mesa.jpg', f: 'kalores_v5_mezcla2.wav', m: 'Dani · nota en 1:12', t: 'Tu productor deja la nota en el segundo exacto. Y el reparto, firmado.' },
+  { w: 'Fuera', img: 'foto.jpg', f: 'kalores_MASTER_24b48k.wav', m: 'Spotify · Apple Music · TIDAL', t: 'Máster, portada, letra y créditos. Lista para salir.' }
 ];
 const splash = 'data:image/webp;base64,' + fs.readFileSync('src/assets-splash.webp').toString('base64');
 const keeps = [
@@ -240,18 +234,15 @@ const keeps = [
   <div class="ledline" aria-hidden="true"><span></span></div>
 
   <!-- 3 · LA VIDA DE UNA CANCIÓN -->
-  <section class="story" id="como">
-    <div class="story__in">
-      <h2 class="reveal">De tu estudio a Spotify,<br>sin dolor de cabeza.</h2>
-      <div class="mob reveal">
-        <div class="mob__stage">
-          <div class="mob__dev" aria-hidden="true"><div class="mob__scr"><img class="mob__page" src="/covers/app-cancion.jpg" alt="" loading="lazy" decoding="async"></div><i class="mob__isl"></i></div>
-          {mobSteps.map((st, i) => <img class="mob__pull" src={`/covers/app-pull-${i}.png`} alt="" aria-hidden="true" loading="lazy" decoding="async" data-t={st.t} style={`--x:${st.x}px;--y:${st.y}px;--w:${st.w}px`} />)}
-        </div>
-        <ol class="mob__cap">
-          {mobCaps.map((c, i) => <li><button type="button" data-i={i}><b>{String(i + 1).padStart(2, '0')}</b><span set:html={c} /><i class="mob__bar" aria-hidden="true"></i></button></li>)}
-        </ol>
-      </div>
+  <section class="life" id="como" style={`--n:${life.length}`}>
+    <div class="life__pin">
+      {life.map((st, i) => <img class={`life__ph${i === 0 ? ' on' : ''}`} src={`/covers/${st.img}`} alt="" loading="lazy" decoding="async" />)}
+      <p class="life__h">De tu estudio a Spotify,<br>sin dolor de cabeza.</p>
+      <div class="life__words" aria-hidden="true">{life.map((st, i) => <b class={i === 0 ? 'on' : ''}>{st.w}</b>)}</div>
+      <div class="life__file"><span class="life__dot"></span><code id="lifeF">{life[0].f}</code><small id="lifeM">{life[0].m}</small></div>
+      <p class="life__t" id="lifeT" set:html={life[0].t} />
+      <ol class="life__rail">{life.map((st, i) => <li class={i === 0 ? 'on' : ''}><button type="button" data-i={i}><b>{String(i + 1).padStart(2, '0')}</b>{st.w}<i></i></button></li>)}</ol>
+      <script type="application/json" id="lifeData" set:html={JSON.stringify(life)} />
     </div>
   </section>
 
