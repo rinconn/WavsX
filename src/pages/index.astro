@@ -3,11 +3,11 @@ import Base from '../layouts/Base.astro';
 import '../styles/landing.css';
 import fs from 'node:fs';
 const life = [
-  { w: 'Idea', img: 'trazos.jpg', f: 'kalores_idea.m4a', m: '0:41 · nota de voz', t: 'Una nota de voz a las 3 de la mañana. Ya está dentro, con su fecha.' },
-  { w: 'Demo', img: 'muro.jpg', f: 'kalores_demo_v2.wav', m: '2:07 · 128 BPM · Fm', t: 'La base y la letra juntas. Cada versión se queda, ninguna se pisa.' },
-  { w: 'Grabación', img: 'estudio.jpg', f: 'kalores_voz_toma14.wav', m: '14 tomas · 24-bit', t: 'Las tomas y los stems, ordenados. Se acabó el <s>FINAL_v7_ahora_si</s>.' },
-  { w: 'Mezcla', img: 'mesa.jpg', f: 'kalores_v5_mezcla2.wav', m: 'Dani · nota en 1:12', t: 'Tu productor deja la nota en el segundo exacto. Y el reparto, firmado.' },
-  { w: 'Fuera', img: 'foto.jpg', f: 'kalores_MASTER_24b48k.wav', m: 'Spotify · Apple Music · TIDAL', t: 'Máster, portada, letra y créditos. Lista para salir.' }
+  { w: 'Idea', f: 'kalores_idea.m4a', m: 'nota de voz · móvil', t: 'Una nota de voz a las 3 de la mañana. Ya está dentro, con su fecha.' },
+  { w: 'Demo', f: 'kalores_demo_v2.wav', m: '128 BPM · Fm', t: 'Entra la base. Cada versión se queda, ninguna pisa a la anterior.' },
+  { w: 'Grabación', f: 'kalores_voz_comp.wav', m: '14 tomas → 1', t: 'Catorce tomas, una voz. Se acabó el <s>FINAL_v7_ahora_si</s>.' },
+  { w: 'Mezcla', f: 'kalores_v5_mezcla2.wav', m: 'Dani dejó una nota', t: 'Tu productor deja la nota en el segundo exacto. El reparto, firmado.' },
+  { w: 'Fuera', f: 'kalores_MASTER.wav', m: '−14 LUFS · 24-bit · 48 kHz', t: 'Todo baja a un máster. Portada, letra y créditos: lista para salir.' }
 ];
 const splash = 'data:image/webp;base64,' + fs.readFileSync('src/assets-splash.webp').toString('base64');
 const keeps = [
@@ -233,15 +233,21 @@ const keeps = [
 
   <div class="ledline" aria-hidden="true"><span></span></div>
 
-  <!-- 3 · LA VIDA DE UNA CANCIÓN -->
+  <!-- 3 · LA VIDA DE UNA CANCIÓN: la canción crece mientras bajas -->
   <section class="life" id="como" style={`--n:${life.length}`}>
     <div class="life__pin">
-      {life.map((st, i) => <img class={`life__ph${i === 0 ? ' on' : ''}`} src={`/covers/${st.img}`} alt="" loading="lazy" decoding="async" />)}
-      <p class="life__h">De tu estudio a Spotify,<br>sin dolor de cabeza.</p>
-      <div class="life__words" aria-hidden="true">{life.map((st, i) => <b class={i === 0 ? 'on' : ''}>{st.w}</b>)}</div>
-      <div class="life__file"><span class="life__dot"></span><code id="lifeF">{life[0].f}</code><small id="lifeM">{life[0].m}</small></div>
+      <div class="life__top">
+        <p class="life__h">De tu estudio a Spotify,<br>sin dolor de cabeza.</p>
+        <button type="button" class="life__snd" aria-pressed="false"><span class="shot__eq" aria-hidden="true"><i></i><i></i><i></i></span><span>Escúchala crecer</span></button>
+      </div>
+      <div class="life__head">
+        <div class="life__words" aria-hidden="true">{life.map((st, i) => <b class={i === 0 ? 'on' : ''}>{st.w}</b>)}</div>
+        <div class="life__file"><span class="life__dot"></span><code id="lifeF">{life[0].f}</code><small id="lifeM">{life[0].m}</small></div>
+      </div>
+      <canvas class="life__cv" aria-label="Pistas de la canción"></canvas>
       <p class="life__t" id="lifeT" set:html={life[0].t} />
-      <ol class="life__rail">{life.map((st, i) => <li class={i === 0 ? 'on' : ''}><button type="button" data-i={i}><b>{String(i + 1).padStart(2, '0')}</b>{st.w}<i></i></button></li>)}</ol>
+      <ol class="life__rail">{life.map((st, i) => <li class={i === 0 ? 'on' : ''}><button type="button"><b>{String(i + 1).padStart(2, '0')}</b>{st.w}<i></i></button></li>)}</ol>
+      <audio class="life__au" src="/audio/kalores.mp3" preload="none" loop></audio>
       <script type="application/json" id="lifeData" set:html={JSON.stringify(life)} />
     </div>
   </section>

@@ -282,33 +282,128 @@ const frame = (t) => {
 };
 if (spec) requestAnimationFrame(frame);
 
-/* ---------- 3 · la vida de una canción: el scroll pasa de escena en escena ---------- */
+/* ---------- 3 · la vida de una canción: al bajar entran pistas y el sonido pasa de nota de voz a máster ---------- */
 {
   const lf = $('.life');
   if (lf) {
     const D = JSON.parse($('#lifeData').textContent), n = D.length;
-    const ph = $$('.life__ph'), ws = $$('.life__words b'), rl = $$('.life__rail li');
-    const F = $('#lifeF'), M = $('#lifeM'), T = $('#lifeT');
-    let cur = 0, on = false;
+    const ws = $$('.life__words b'), rl = $$('.life__rail li'), cv = $('.life__cv'), g = cv.getContext('2d');
+    const F = $('#lifeF'), M = $('#lifeM'), T = $('#lifeT'), au = $('.life__au'), snd = $('.life__snd');
+    const LIME = '#C6FF3D', cl = (v) => Math.max(0, Math.min(1, v));
+    const rnd = (i) => { const x = Math.sin(i * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const N = 240, pk = Array.from({ length: N }, (_, i) => { const t = i / N; return .25 + .6 * Math.abs(Math.sin(t * 9) * Math.sin(t * 2.3 + 1)) + .15 * rnd(i); });
+    // pistas: etapa en la que entran, color, tramos con sonido y forma
+    const L = [
+      { nm: 'Memo', s: 0, c: '#E6FF94', seg: [[.03, .97]], k: 0 },
+      { nm: 'Beat', s: 1, c: '#8EF05A', seg: [[.12, .62], [.66, 1]], k: 1 },
+      { nm: '808', s: 1, c: '#5BE6B4', seg: [[.12, .62], [.66, 1]], k: 2 },
+      { nm: 'Voz', s: 2, c: LIME, seg: [[.08, .3], [.36, .62], [.7, .96]], k: 3 },
+      { nm: 'Coros', s: 3, c: '#E6FF94', seg: [[.36, .62], [.82, .96]], k: 4 },
+      { nm: 'Guitarra', s: 3, c: '#5BE6B4', seg: [[0, .34], [.64, .8]], k: 5 }
+    ];
+    const amp = (l, i) => l.k === 1 ? (i % 4 === 0 ? .95 : i % 2 ? .22 : .5) : l.k === 2 ? .5 + .25 * Math.sin(i * .35) : pk[i % N] * (.55 + .45 * Math.abs(Math.sin(i * (.4 + l.k * .23))));
+    let P = 0, cur = 0, on = false, t0 = performance.now();
     const show = (i) => {
       if (i === cur) return; cur = i;
-      [ph, ws].forEach((L) => L.forEach((e, k) => e.classList.toggle('on', k === i)));
+      ws.forEach((e, k) => e.classList.toggle('on', k === i));
       F.textContent = D[i].f; M.textContent = D[i].m; T.innerHTML = D[i].t;
       lf.classList.toggle('end', i === n - 1);
+    };
+    // sonido: un filtro que se abre con cada etapa (móvil → máster)
+    let ac, lp, hp, gn;
+    const tone = () => {
+      if (!ac) return;
+      const s = Math.min(P, n - .001), now = ac.currentTime;
+      const f = [1100, 2600, 6500, 16000, 20000][Math.floor(s)], h = [700, 120, 60, 30, 20][Math.floor(s)];
+      lp.frequency.setTargetAtTime(f, now, .25); hp.frequency.setTargetAtTime(h, now, .25);
+      gn.gain.setTargetAtTime([.55, .7, .8, .9, 1][Math.floor(s)], now, .25);
+    };
+    snd.addEventListener('click', () => {
+      if (!ac) {
+        ac = new (window.AudioContext || window.webkitAudioContext)();
+        const src = ac.createMediaElementSource(au);
+        hp = ac.createBiquadFilter(); hp.type = 'highpass';
+        lp = ac.createBiquadFilter(); lp.type = 'lowpass';
+        gn = ac.createGain(); src.connect(hp).connect(lp).connect(gn).connect(ac.destination); tone();
+      }
+      const play = au.paused;
+      if (play) { ac.resume(); const o = $('.shot__au'); if (o && !o.paused) $('.shot__play').click(); au.play(); } else au.pause();
+      snd.setAttribute('aria-pressed', play); snd.lastElementChild.textContent = play ? 'Sonando' : 'Escúchala crecer';
+    });
+    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (!on && !au.paused) snd.click(); }).observe(lf);
+    const draw = () => {
+      const r = devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+      if (cv.width !== W * r || cv.height !== H * r) { cv.width = W * r; cv.height = H * r; }
+      g.setTransform(r, 0, 0, r, 0, 0); g.clearRect(0, 0, W, H);
+      const nameW = W < 500 ? 62 : 108, x0 = nameW, LW = W - nameW - 12, top = 26, rowH = (H - top - 10) / L.length;
+      const col = cl((P - 4) * 2.2); // las pistas bajan al máster
+      // regla de compases
+      g.font = '10px ui-monospace, Menlo, monospace'; g.textBaseline = 'middle';
+      for (let b = 0; b < 32; b++) {
+        const x = x0 + LW * b / 32; g.fillStyle = b % 4 ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.09)'; g.fillRect(x, top, 1, H - top);
+        if (b % 4 === 0) { g.fillStyle = 'rgba(255,255,255,.35)'; g.fillText(String(b + 1), x + 4, 13); }
+      }
+      g.fillStyle = 'rgba(255,255,255,.08)'; g.fillRect(0, top, W, 1);
+      // pistas
+      L.forEach((l, li) => {
+        const a = cl((P - l.s) * 3) * (1 - col), y = top + li * rowH, cy = y + rowH / 2;
+        const yy = cy + (H / 2 - cy) * col;
+        if (a <= 0 && col < 1) return;
+        g.globalAlpha = a;
+        g.fillStyle = 'rgba(255,255,255,.6)'; g.font = `600 ${W < 500 ? 11 : 13}px Inter, system-ui, sans-serif`; g.fillText(l.nm, 12, yy);
+        g.fillStyle = 'rgba(255,255,255,.05)'; g.fillRect(0, y + rowH - 1, W, 1);
+        const rev = cl((P - l.s) * 1.6), bars = Math.round(LW / 4), bw = LW / bars;
+        // en Grabación la voz son 14 tomas que se juntan en una
+        const takes = l.k === 3 ? Math.round(1 + 13 * (1 - cl((P - 2.35) * 2.2))) : 1;
+        for (const [s0, s1] of l.seg) {
+          if (s0 > rev) continue;
+          const xa = x0 + s0 * LW + 1, xb = x0 + Math.min(s1, rev) * LW - 1, h = rowH - 10;
+          for (let tk = 0; tk < takes; tk++) {
+            const th = h / takes, ty = yy - h / 2 + tk * th;
+            g.fillStyle = l.c; g.globalAlpha = a * (takes > 1 ? .12 : .16); g.beginPath(); g.roundRect(xa, ty + .5, xb - xa, th - 1, Math.min(5, th / 2)); g.fill();
+            g.globalAlpha = a * (takes > 1 && tk ? .55 : 1);
+            for (let i = Math.ceil(s0 * bars); i < bars && i / bars < Math.min(s1, rev); i++) {
+              const v = Math.max(.06, amp(l, i + tk * 7)) * (th - 4); g.fillRect(x0 + i * bw, ty + (th - v) / 2, Math.max(1, bw - 1.5), v);
+            }
+          }
+          if (l.k === 0 && P > 1) { g.globalAlpha = a * .5; g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(xa, yy - h / 2, xb - xa, h); }
+        }
+        g.globalAlpha = 1;
+      });
+      // nota del productor en 1:12
+      const na = cl((P - 3.25) * 3) * (1 - col);
+      if (na > 0) {
+        const nx = x0 + LW * .567, ny = top + 3 * rowH + 6; g.globalAlpha = na;
+        g.fillStyle = '#ff3b30'; g.fillRect(nx, top, 2, H - top);
+        const txt = 'Dani · 1:12 — sube la voz aquí, se la come el 808'; g.font = `600 ${W < 500 ? 11 : 13}px Inter, system-ui, sans-serif`;
+        const tw = g.measureText(txt).width + 20, bx = Math.min(nx + 8, W - tw - 6);
+        g.fillStyle = '#16120f'; g.beginPath(); g.roundRect(bx, ny - 15, tw, 30, 8); g.fill(); g.strokeStyle = '#ff3b30'; g.stroke();
+        g.fillStyle = '#fff'; g.fillText(txt, bx + 10, ny); g.globalAlpha = 1;
+      }
+      // máster: todo en una onda estéreo
+      if (col > 0) {
+        g.globalAlpha = col; const h = (H - top) * .7 * col, bars = Math.round(LW / 3), bw = LW / bars;
+        g.fillStyle = 'rgba(255,255,255,.7)'; g.font = `600 ${W < 500 ? 11 : 13}px Inter, system-ui, sans-serif`; g.fillText('MÁSTER', 12, H / 2);
+        for (let i = 0; i < bars; i++) { const v = Math.max(.08, pk[Math.floor(i / bars * N)] * .9 + .1) * h / 2; g.fillStyle = LIME; g.fillRect(x0 + i * bw, H / 2 - v, Math.max(1, bw - 1), v * 2); }
+        g.globalAlpha = 1;
+      }
+      // cabezal
+      const ph = !au.paused && au.duration ? au.currentTime / au.duration : ((performance.now() - t0) / 26000) % 1;
+      const px = x0 + LW * ph; g.fillStyle = '#fff'; g.fillRect(px, top - 6, 1.5, H - top + 6); g.beginPath(); g.moveTo(px - 5, top - 10); g.lineTo(px + 6.5, top - 10); g.lineTo(px + .75, top - 3); g.fill();
     };
     const tick = () => {
       if (on) {
         const r = lf.getBoundingClientRect(), span = r.height - innerHeight;
-        const p = Math.min(.9999, Math.max(0, -r.top / span)) * n, i = Math.floor(p);
-        show(i);
-        rl.forEach((li, k) => { li.classList.toggle('on', k === i); li.classList.toggle('done', k < i); li.querySelector('i').style.setProperty('--f', k === i ? (p - i).toFixed(3) : k < i ? 1 : 0); });
+        P = cl(-r.top / span) * n * .9999; const i = Math.floor(P);
+        show(i); tone();
+        rl.forEach((li, k) => { li.classList.toggle('on', k === i); li.classList.toggle('done', k < i); li.querySelector('i').style.setProperty('--f', k === i ? (P - i).toFixed(3) : k < i ? 1 : 0); });
+        draw();
       }
       requestAnimationFrame(tick);
     };
-    new IntersectionObserver(([e]) => { on = e.isIntersecting; }).observe(lf);
     rl.forEach((li, k) => li.querySelector('button').addEventListener('click', () => {
       const top = lf.getBoundingClientRect().top + scrollY, span = lf.offsetHeight - innerHeight;
-      scrollTo({ top: top + span * (k + .5) / n, behavior: 'smooth' });
+      scrollTo({ top: top + span * (k + .6) / n, behavior: 'smooth' });
     }));
     tick();
   }
